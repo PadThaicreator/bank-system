@@ -1,4 +1,4 @@
-package com.banking.common.response;
+package com.configuration.common.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

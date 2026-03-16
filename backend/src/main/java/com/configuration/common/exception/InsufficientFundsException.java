@@ -1,4 +1,4 @@
-package com.banking.common.exception;
+package com.configuration.common.exception;
 
 import java.math.BigDecimal;
 

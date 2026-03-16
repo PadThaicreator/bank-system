@@ -1,6 +1,6 @@
-package com.banking.common.exception;
+package com.configuration.common.exception;
 
-import com.banking.common.response.ApiResponse;
+import com.configuration.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
