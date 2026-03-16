@@ -6,10 +6,17 @@ spring:
 #    url: jdbc:postgresql://localhost:5432/banking_db
 #    username: postgres
 #    password: postgres
-    url: jdbc:postgresql://dpg-d6s2h7kr85hc73emgo6g-a.singapore-postgres.render.com:5432/banksystem_a6cy
-    username: banksystem_a6cy_user
-    password: DnpQblWLecfZ1RMl3oTI38ZJBCb4wn4P
-    driver-class-name: org.postgresql.Driver
+    
+#    LOCALHOST
+#    url: jdbc:postgresql://dpg-d6s2h7kr85hc73emgo6g-a.singapore-postgres.render.com:5432/banksystem_a6cy
+#    username: banksystem_a6cy_user
+#    password: DnpQblWLecfZ1RMl3oTI38ZJBCb4wn4P
+
+#    Production
+     url: ${DATABASE_URL}
+     username: ${DATABASE_USERNAME}
+     password: ${DATABASE_PASSWORD}
+     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
