@@ -1,0 +1,18 @@
+# application-prod.yml — override ค่าตอน deploy จริง
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+logging:
+  level:
+    com.banking: INFO            # production log น้อยลง
+    org.springframework.security: WARN
+
+# Swagger ปิดใน production
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
