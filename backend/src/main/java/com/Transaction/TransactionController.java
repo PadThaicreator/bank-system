@@ -1,20 +1,16 @@
 package com.Transaction;
 
-import com.dtos.ReturnClass;
-import com.models.AccountModel;
-import com.models.UserModel;
-import com.repositories.AccountRepository;
-import com.repositories.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.configuration.account.Account;
+import com.configuration.account.AccountRepository;
+import com.models.ReturnClass;
+import com.models.ReturnDataClass;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +20,7 @@ public class TransactionController {
     private final TransactionRepository transactionRepository ;
     private final AccountRepository accountRepository ;
 
-    public TransactionController(TransactionRepository transactionRepository ,AccountRepository accountRepository) {
+    public TransactionController(TransactionRepository transactionRepository , AccountRepository accountRepository) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
     }
@@ -33,7 +29,7 @@ public class TransactionController {
 
     @Transactional
     @PostMapping("/transaction")
-    public ReturnClass register(@RequestBody TransactionDTO req) {
+    public ReturnClass postTransaction(@RequestBody TransactionDTO req) {
 
         ReturnClass rs = new ReturnClass();
         TransactionModel data = new TransactionModel();
@@ -47,8 +43,8 @@ public class TransactionController {
             UUID fromAccountId;
             UUID toAccountId = null;
 
-            AccountModel fromAccount = null;
-            AccountModel toAccount = null;
+            Account fromAccount = null;
+            Account toAccount = null;
 
 
             if (type.equals("DEPOSIT") || type.equals("WITHDRAW")) {
@@ -82,39 +78,39 @@ public class TransactionController {
                 throw new RuntimeException("Invalid transaction type");
             }
 
-            Float amount = req.getAmount();
+            BigDecimal amount = req.getAmount();
 
-            if (amount == null || amount <= 0) {
+            if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
                 throw new RuntimeException("Invalid amount");
             }
 
-            Float fromBalance = fromAccount.getBalance();
+            BigDecimal fromBalance = fromAccount.getBalance();
 
             if (type.equals("DEPOSIT")) {
 
-                fromAccount.setBalance(fromBalance + amount);
+                fromAccount.setBalance(fromBalance.add(amount));
                 accountRepository.save(fromAccount);
                 data.setTransaction_type(TransactionModel.Transaction.DEPOSIT);
 
             }
             else if (type.equals("WITHDRAW")) {
 
-                if (fromBalance < amount) {
+                if (fromBalance.compareTo(amount) < 0) {
                     throw new RuntimeException("Insufficient balance");
                 }
                 data.setTransaction_type(TransactionModel.Transaction.WITHDRAW);
-                fromAccount.setBalance(fromBalance - amount);
+                fromAccount.setBalance(fromBalance.subtract(amount));
                 accountRepository.save(fromAccount);
 
             }
             else if (type.equals("TRANSFER")) {
 
-                if (fromBalance < amount) {
+                if (fromBalance.compareTo(amount) < 0) {
                     throw new RuntimeException("Insufficient balance");
                 }
 
-                fromAccount.setBalance(fromBalance - amount);
-                toAccount.setBalance(toAccount.getBalance() + amount);
+                fromAccount.setBalance(fromBalance.subtract(amount));
+                toAccount.setBalance(toAccount.getBalance().add(amount));
                 data.setTransaction_type(TransactionModel.Transaction.TRANSFER);
                 accountRepository.save(fromAccount);
                 accountRepository.save(toAccount);
@@ -142,13 +138,13 @@ public class TransactionController {
 
             data.setAmount(amount);
             data.setCreated_at(LocalDateTime.now());
-            data.setFrom_account_id(
+            data.setFromAccountId(
                     req.getFrom_account() != null
                             ? UUID.fromString(req.getFrom_account())
                             : null
             );
 
-            data.setTo_account_id(
+            data.setToAccountId(
                     req.getTo_account() != null
                             ? UUID.fromString(req.getTo_account())
                             : null
@@ -169,6 +165,22 @@ public class TransactionController {
         }
 
         return rs;
+    }
+
+    @Transactional
+    @GetMapping("/getHistory/{id}")
+    public  ReturnClass getHistory(@PathVariable  UUID id){
+        ReturnClass rs = new ReturnClass();
+        ReturnDataClass rsData = new ReturnDataClass();
+
+        List<TransactionModel> transactionList = transactionRepository.findByFromAccountId(id);
+        rsData.setTransactionList(transactionList);
+        rs.setSuccessReturn();
+        rs.setCODE("200");
+        rs.setMSG(id.toString());
+        rs.setData(rsData);
+
+        return  rs;
     }
 
 

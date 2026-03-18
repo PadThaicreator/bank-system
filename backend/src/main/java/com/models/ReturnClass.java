@@ -1,17 +1,15 @@
-package com.dtos;
+package com.models;
 
+import com.MainApplication;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.models.UserModel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
 
 @Getter
 @Setter
-public class ReturnClass {
+public  class ReturnClass {
 
     @JsonProperty("MSG")
     private String MSG;

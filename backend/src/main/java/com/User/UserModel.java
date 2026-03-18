@@ -1,11 +1,10 @@
-package com.Transaction;
+package com.User;
 
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,17 +17,17 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "transactions")
-public class TransactionModel {
+public class UserModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "uuid")
     private UUID id;
     @Column(name = "from_account_id")
-    private UUID fromAccountId;
+    private UUID from_account_id;
 
     @Column(name = "to_account_id")
-    private UUID toAccountId;
+    private UUID to_account_id;
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)

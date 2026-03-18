@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 
@@ -24,7 +25,7 @@ public class TransactionDTO {
     private String type;
 
     @JsonProperty("amount")
-    private Float amount;
+    private BigDecimal amount;
 
     @JsonProperty("note")
     private String note;
