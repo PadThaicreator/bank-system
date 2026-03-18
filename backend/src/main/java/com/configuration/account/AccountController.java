@@ -1,5 +1,6 @@
 package com.configuration.account;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import com.configuration.account.dto.AccountResponse;
 import com.configuration.account.dto.CreateAccountRequest;
 import com.configuration.common.response.ApiResponse;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -43,6 +45,14 @@ class AccountController {
             @RequestBody CreateAccountRequest request) {
         AccountResponse response = accountService.createAccount(userId, request);
         return ResponseEntity.ok(ApiResponse.success("Account created successfully", response));
+    }
+
+    @PostMapping("/accounts/{accountId}/change-balance")
+    public ResponseEntity<ApiResponse<AccountResponse>> changeBalance(
+            @PathVariable UUID accountId,
+            @RequestParam BigDecimal amount) {
+        AccountResponse response = accountService.changeBalance(accountId, amount);
+        return ResponseEntity.ok(ApiResponse.success("Balance changed successfully", response));
     }
 
 }
