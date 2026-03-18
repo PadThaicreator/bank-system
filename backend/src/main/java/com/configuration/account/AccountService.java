@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountService {
     private final AccountRepository accountRepository;
 
+    // ======= Create Account =======
     @Transactional
     public AccountResponse createAccount(UUID userId, CreateAccountRequest request) {
         // String userIdStr =
@@ -37,6 +38,18 @@ public class AccountService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
+        Account saved = accountRepository.save(account);
+        return AccountResponse.from(saved);
+    }
+
+    // ======= Change Balance =======
+    @Transactional
+    public AccountResponse changeBalance(UUID accountId, BigDecimal amount) {
+
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        account.setBalance(account.getBalance().add(amount));
         Account saved = accountRepository.save(account);
         return AccountResponse.from(saved);
     }
