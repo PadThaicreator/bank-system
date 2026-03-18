@@ -50,9 +50,6 @@ public class TransactionController {
             AccountModel fromAccount = null;
             AccountModel toAccount = null;
 
-            // =============================
-            // LOAD ACCOUNT ตามประเภท
-            // =============================
 
             if (type.equals("DEPOSIT") || type.equals("WITHDRAW")) {
 
@@ -93,10 +90,6 @@ public class TransactionController {
 
             Float fromBalance = fromAccount.getBalance();
 
-            // =============================
-            // PROCESS TRANSACTION
-            // =============================
-
             if (type.equals("DEPOSIT")) {
 
                 fromAccount.setBalance(fromBalance + amount);
@@ -127,9 +120,7 @@ public class TransactionController {
                 accountRepository.save(toAccount);
             }
 
-            // =============================
-            // GENERATE REF NO
-            // =============================
+
 
             String prefix = switch (type) {
                 case "DEPOSIT" -> "DEPO";
