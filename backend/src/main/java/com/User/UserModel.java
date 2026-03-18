@@ -1,59 +1,65 @@
 package com.User;
 
 
+import com.Transaction.TransactionModel;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "users")
 public class UserModel {
+        @Id
+        @GeneratedValue(strategy = GenerationType.UUID)
+        @Column(columnDefinition = "uuid")
+        private UUID id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "uuid")
-    private UUID id;
-    @Column(name = "from_account_id")
-    private UUID from_account_id;
+        @Column(name = "full_name", nullable=false)
+        @NotBlank(message = "Username is required")
+        private String fullName;
 
-    @Column(name = "to_account_id")
-    private UUID to_account_id;
-    private BigDecimal amount;
+        @Column(nullable=false , unique = true)
+        @Email(message = "Invalid email format")
+        @NotBlank(message = "Email is required")
+        private String email;
 
-    @Enumerated(EnumType.STRING)
-    private Transaction transaction_type;
+        @Column(name = "password_hash", nullable=false)
+        @NotBlank(message = "Password is required")
+        @Size(min = 6, message = "Password must be at least 6 characters")
+        private String passwordHash;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
-    private String reference_no;
-    private String note;
+        @Column(nullable=false)
+        private String phone;
+
+        @Enumerated(EnumType.STRING)
+        private Role role;
+
+        @Enumerated(EnumType.STRING)
+        private TransactionModel.Status status;
+
+        @Column(name = "created_at")
+        private LocalDateTime createdAt;
+
+        @Column(name = "updated_at")
+        private LocalDateTime updatedAt;
 
 
-    private LocalDateTime created_at;
+    public enum Role {
+        CUSTOMER,
+        ADMIN,
 
-
-    public enum Status {
-        ACTIVE,
-        INACTIVE,
-        SUSPENDED
     }
-
-    public enum Transaction {
-        WITHDRAW,
-        DEPOSIT,
-        TRANSFER
-    }
-
-
-
 }

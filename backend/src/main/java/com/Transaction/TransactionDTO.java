@@ -16,10 +16,10 @@ public class TransactionDTO {
 
 
     @JsonProperty("to_account")
-    private String to_account;
+    private UUID to_account;
 
     @JsonProperty("from_account")
-    private String from_account;
+    private UUID from_account;
 
     @JsonProperty("type")
     private String type;
