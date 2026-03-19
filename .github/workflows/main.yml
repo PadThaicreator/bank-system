@@ -26,6 +26,18 @@ jobs:
             cd backend
             chmod +x gradlew   
             ./gradlew build
+            
+      - name: Run Backend Unit Tests
+        run: |
+            cd backend
+            chmod +x gradlew
+            ./gradlew test
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-test-report
+          path: backend/build/reports/tests/test
 
   frontend:
     runs-on: ubuntu-latest
