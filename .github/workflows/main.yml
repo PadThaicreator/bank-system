@@ -2,9 +2,9 @@ name: Full CI
 
 on:
   push:
-    branches: [ "main" , "dev-namo" ]
+    branches: [ "main" , "dev-namo" , "japan12345" ]
   pull_request:
-    branches: [ "main"  , "dev-namo" ]
+    branches: [ "main"  , "dev-namo" , "japan12345"]
 
 jobs:
   backend:
