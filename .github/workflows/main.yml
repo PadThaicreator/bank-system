@@ -17,6 +17,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+          
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./backend/gradlew
+        
       - name: Build Backend
         run: ./backend/gradlew build
 
