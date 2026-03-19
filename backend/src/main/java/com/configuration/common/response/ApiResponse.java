@@ -3,10 +3,13 @@ package com.configuration.common.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+
 import java.time.Instant;
 
 @Getter
 @Builder
+
 public class ApiResponse<T> {
     private final boolean success;
     private final String message;
@@ -34,6 +37,8 @@ public class ApiResponse<T> {
 
     @Getter
     @AllArgsConstructor
+    @Setter
+
     public static class ErrorDetail {
         private final String code;
         private final String details;

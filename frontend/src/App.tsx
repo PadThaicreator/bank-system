@@ -1,6 +1,6 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import VitePage from "./pages/vite/page";
-import NavBarComponent from "./components/navbar";
+import NavBarComponent from "./components/navbar/navbar";
 import AuthenComponent from "./components/auth";
 import LoginPage from "./pages/auth/loginPage/page";
 
