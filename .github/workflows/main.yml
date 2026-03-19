@@ -22,7 +22,10 @@ jobs:
         run: chmod +x ./backend/gradlew
         
       - name: Build Backend
-        run: ./backend/gradlew build
+        run: |
+            cd backend
+            chmod +x gradlew   
+            ./gradlew build
 
   frontend:
     runs-on: ubuntu-latest
