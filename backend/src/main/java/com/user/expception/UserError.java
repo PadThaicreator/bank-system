@@ -1,4 +1,4 @@
-package com.User.expception;
+package com.user.expception;
 
 public class UserError extends RuntimeException  {
 

@@ -1,4 +1,4 @@
-package com.Transaction;
+package com.transaction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.User.expception;
+package com.user.expception;
 
 public class AuthenError extends RuntimeException  {
 
@@ -18,6 +18,13 @@ public class AuthenError extends RuntimeException  {
         public InvalidForm(String MSG) {
 
             super("INVALID_FORM", MSG);
+        }
+    }
+
+    public static class InactiveUser extends AuthenError {
+        public InactiveUser(String MSG) {
+
+            super("USER_DISABLE", MSG);
         }
     }
 

@@ -1,10 +1,11 @@
-package com.User;
+package com.user;
 
 
-import com.Transaction.TransactionModel;
-import com.User.dto.LoginDTO;
-import com.User.expception.AuthenError;
-import com.User.expception.UserError;
+import com.models.StatusType;
+import com.transaction.TransactionModel;
+import com.user.dto.LoginDTO;
+import com.user.expception.AuthenError;
+import com.user.expception.UserError;
 import com.configuration.auth.jwt.JwtUtil;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
@@ -32,7 +33,7 @@ public  class UserService {
         ReturnClass rs = new ReturnClass();
         String password = data.getPasswordHash();
         data.setPasswordHash(passwordEncoder.encode(password));
-        data.setStatus(TransactionModel.Status.ACTIVE);
+        data.setStatus(StatusType.ACTIVE);
         data.setCreatedAt(LocalDateTime.now());
 
         if (UserRepository.existsByEmail(data.getEmail())) {
@@ -63,9 +64,12 @@ public  class UserService {
 
             UserModel user = UserRepository.findByEmail(email).orElseThrow(() -> new AuthenError.InvalidForm("Invalid Email"));
 
+            if(user.getStatus().equals(StatusType.INACTIVE)){
+                throw new AuthenError.InactiveUser("User is inactive");
+            }
             List<UserModel> list = new ArrayList<>();;
             ReturnDataClass rsData = new ReturnDataClass();
-            if(passwordEncoder.matches(password, user.getPasswordHash()) && user.getStatus() != TransactionModel.Status.INACTIVE){
+            if(passwordEncoder.matches(password, user.getPasswordHash()) ){
 
 
                 String getToken = jwtUtil.generateAccessToken(user.getId().toString() , user.getRole().toString());

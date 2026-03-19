@@ -1,8 +1,8 @@
-package com.User;
+package com.user;
 
 
 
-import com.User.dto.LoginDTO;
+import com.user.dto.LoginDTO;
 import com.configuration.common.response.ApiResponse;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;

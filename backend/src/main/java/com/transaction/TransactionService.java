@@ -1,7 +1,9 @@
-package com.Transaction;
+package com.transaction;
 
 
-import com.Transaction.expception.TransactionError;
+import com.models.StatusType;
+import com.models.TransactionType;
+import com.transaction.expception.TransactionError;
 import com.configuration.account.Account;
 import com.configuration.account.AccountRepository;
 import com.models.ReturnClass;
@@ -89,7 +91,7 @@ public class TransactionService {
 
                 fromAccount.setBalance(fromBalance.add(amount));
                 accountRepository.save(fromAccount);
-                data.setTransaction_type(TransactionModel.Transaction.DEPOSIT);
+                data.setTransaction_type(TransactionType.DEPOSIT);
 
             }
             else if (type.equals("WITHDRAW")) {
@@ -97,7 +99,7 @@ public class TransactionService {
                 if (fromBalance.compareTo(amount) < 0) {
                     throw new TransactionError.InsufficientBalance("Insufficient balance");
                 }
-                data.setTransaction_type(TransactionModel.Transaction.WITHDRAW);
+                data.setTransaction_type(TransactionType.WITHDRAW);
                 fromAccount.setBalance(fromBalance.subtract(amount));
                 accountRepository.save(fromAccount);
 
@@ -110,7 +112,7 @@ public class TransactionService {
 
                 fromAccount.setBalance(fromBalance.subtract(amount));
                 toAccount.setBalance(toAccount.getBalance().add(amount));
-                data.setTransaction_type(TransactionModel.Transaction.TRANSFER);
+                data.setTransaction_type(TransactionType.TRANSFER);
                 accountRepository.save(fromAccount);
                 accountRepository.save(toAccount);
             }
@@ -148,7 +150,7 @@ public class TransactionService {
                             ? req.getTo_account()
                             : null
             );
-            data.setStatus(TransactionModel.Status.ACTIVE);
+            data.setStatus(StatusType.ACTIVE);
             data.setNote(req.getNote());
             data.setReference_no(refNo);
 

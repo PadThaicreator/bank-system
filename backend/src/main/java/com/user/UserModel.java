@@ -1,7 +1,9 @@
-package com.User;
+package com.user;
 
 
-import com.Transaction.TransactionModel;
+import com.models.StatusType;
+import com.models.UserRole;
+import com.transaction.TransactionModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.management.relation.Role;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -45,10 +48,10 @@ public class UserModel {
         private String phone;
 
         @Enumerated(EnumType.STRING)
-        private Role role;
+        private UserRole role;
 
         @Enumerated(EnumType.STRING)
-        private TransactionModel.Status status;
+        private StatusType status;
 
         @Column(name = "created_at")
         private LocalDateTime createdAt;
@@ -57,9 +60,5 @@ public class UserModel {
         private LocalDateTime updatedAt;
 
 
-    public enum Role {
-        CUSTOMER,
-        ADMIN,
 
-    }
 }

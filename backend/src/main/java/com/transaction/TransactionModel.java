@@ -1,11 +1,12 @@
-package com.Transaction;
+package com.transaction;
 
 
+import com.models.StatusType;
+import com.models.TransactionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,10 +33,10 @@ public class TransactionModel {
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    private Transaction transaction_type;
+    private TransactionType transaction_type;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private StatusType status;
     private String reference_no;
     private String note;
 
@@ -43,17 +44,7 @@ public class TransactionModel {
     private LocalDateTime created_at;
 
 
-    public enum Status {
-        ACTIVE,
-        INACTIVE,
-        SUSPENDED
-    }
 
-    public enum Transaction {
-        WITHDRAW,
-        DEPOSIT,
-        TRANSFER
-    }
 
 
 

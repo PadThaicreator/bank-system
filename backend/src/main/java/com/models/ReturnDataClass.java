@@ -1,6 +1,6 @@
 package com.models;
 
-import com.Transaction.TransactionModel;
+import com.transaction.TransactionModel;
 import lombok.Getter;
 import lombok.Setter;
 
