@@ -1,4 +1,4 @@
-package com.configuration.account;
+package com.account;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,9 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Service;
 
-import com.configuration.account.dto.AccountResponse;
-import com.configuration.account.dto.BalanceResponse;
-import com.configuration.account.dto.CreateAccountRequest;
+import com.account.dto.AccountResponse;
+import com.account.dto.BalanceResponse;
+import com.account.dto.CreateAccountRequest;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
