@@ -1,12 +1,12 @@
 export const menuList: MenuItem[] = [
-    { label: "Home", path: "/home" },
+    { label: "Home", path: "/vite" , canAccess : ["ADMIN","CUSTOMER"] },
     {
       label: "Account",
       path: "/account",
       canAccess : ["ADMIN","CUSTOMER"],
       children: [
         { label: "Open Account", path: "/account/open" , canAccess : ["ADMIN","CUSTOMER"]},
-        { label: "Account List", path: "/account/list" , canAccess : ["ADMIN","CUSTOMER"]},
+        { label: "My Account", path: "/account/list" , canAccess : ["ADMIN","CUSTOMER"]},
       ],
     },
     {
@@ -23,8 +23,8 @@ export const menuList: MenuItem[] = [
       path: "/transaction",
       canAccess : ["ADMIN","CUSTOMER"],
       children: [
-        { label: "Deposit", path: "/transaction/deposit" , canAccess : ["ADMIN"] },
-        { label: "Withdraw", path: "/transaction/withdraw" , canAccess : ["ADMIN"] },
+        { label: "Deposit", path: "/transaction/deposit" , canAccess : ["ADMIN","CUSTOMER"] },
+        { label: "Withdraw", path: "/transaction/withdraw" , canAccess : ["ADMIN","CUSTOMER"] },
         { label: "Transfer", path: "/transaction/transfer" , canAccess : ["ADMIN","CUSTOMER"]},
       ],
     },
