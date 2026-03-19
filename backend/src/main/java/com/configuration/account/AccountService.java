@@ -3,6 +3,7 @@ package com.configuration.account;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.configuration.account.dto.AccountResponse;
+import com.configuration.account.dto.BalanceResponse;
 import com.configuration.account.dto.CreateAccountRequest;
 
 import jakarta.transaction.Transactional;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class AccountService {
     private final AccountRepository accountRepository;
 
+    // ======= POST METHOD ========================================================================
     // ======= Create Account =======
     @Transactional
     public AccountResponse createAccount(UUID userId, CreateAccountRequest request) {
@@ -42,10 +45,11 @@ public class AccountService {
         return AccountResponse.from(saved);
     }
 
-    // ======= Change Balance =======
+    // ======= PATCH METHOD ========================================================================
+    // ------- Change Balance -------
     @Transactional
     public AccountResponse changeBalance(UUID accountId, BigDecimal amount) {
-
+        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
@@ -54,8 +58,47 @@ public class AccountService {
         return AccountResponse.from(saved);
     }
 
-    // ======= PRIVATE HELPER
-    // =======================================================
+    // ------- Delete Account -------
+    @Transactional
+    public AccountResponse deleteAccount(UUID accountId) {
+        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        account.setStatus(AccountStatus.CLOSED);
+        Account saved = accountRepository.save(account);
+        return AccountResponse.from(saved);
+    }
+
+    // ======= GET METHOD ==========================================================================
+
+    public BalanceResponse getAccountBalance(UUID accountId){
+        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        return new BalanceResponse(
+            account.getAccountNumber(),
+            account.getBalance(),
+            account.getUpdatedAt()
+        );
+    }
+
+    public List<AccountResponse> getAllAccounts(){
+        // เดี๋ยวระบบ token มาแล้วจะเช็ค user ว่าเป็น admin ไหม
+        List<Account> accounts = accountRepository.findAll();
+        return accounts.stream()
+            .map(AccountResponse::from)
+            .toList();
+    }
+
+    public AccountResponse getAccountById(UUID accountId){
+        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        return AccountResponse.from(account);
+    }
+
+
+    // ======= PRIVATE HELPER ======================================================================
 
     private String generateAccountNumber(AccountType accountType) {
         // format: BBB-T-XXXXXX
