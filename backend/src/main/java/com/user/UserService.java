@@ -67,7 +67,7 @@ public  class UserService {
             if(user.getStatus().equals(StatusType.INACTIVE)){
                 throw new AuthenError.InactiveUser("User is inactive");
             }
-            List<UserModel> list = new ArrayList<>();;
+            List<UserModel> list = new ArrayList<>();
             ReturnDataClass rsData = new ReturnDataClass();
             if(passwordEncoder.matches(password, user.getPasswordHash()) ){
 
