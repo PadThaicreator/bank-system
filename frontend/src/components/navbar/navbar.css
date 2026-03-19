@@ -77,13 +77,13 @@
   font-weight: 600;
 }
 
-.menu-item:hover .chevron {
-  transform: rotate(180deg);
-}
-
 .chevron {
   transition: transform 0.25s ease;
   opacity: 0.5;
+}
+
+.chevron.rotate {
+  transform: rotate(180deg);
 }
 
 .menu-underline {
@@ -116,7 +116,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  margin-top: 4px;
+  padding-top: 4px;
   overflow: hidden;
 }
 
@@ -203,4 +203,14 @@
 
 .body{
     padding: 1rem;
+}
+
+.exit-icon{
+  padding: 5px;
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.exit-icon:hover {
+  background-color: rgb(255, 190, 190);
 }

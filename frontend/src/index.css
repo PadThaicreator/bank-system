@@ -110,3 +110,5 @@ code {
   background: var(--code-bg);
 } */
 @import "tailwindcss";
+
+@import "./css/button.css";

@@ -1,27 +1,30 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LogOut } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./navbar.css";
+import { menuList, type MenuItem } from "./menuItemList";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
+import { logout } from "../../redux/authSlice";
 
-interface MenuItem {
-  label: string;
-  path: string;
-  children?: MenuItem[];
-}
 
 export default function NavBarComponent() {
   const navigate = useNavigate();
   const location = useLocation();
+  const data = useSelector((state: RootState) => state.auth);
+
+  
+
+
+
 
   const [scrolled, setScrolled] = useState<boolean>(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
+
+
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) navigate("/login");
-  }, [navigate]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -29,7 +32,6 @@ export default function NavBarComponent() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ปิด dropdown เมื่อคลิกข้างนอก
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -44,33 +46,38 @@ export default function NavBarComponent() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const menus: MenuItem[] = [
-    { label: "Home", path: "/home" },
-    {
-      label: "Account",
-      path: "/account",
-      children: [
-        { label: "Open Account", path: "/account/open" },
-        { label: "Account List", path: "/account/list" },
-      ],
-    },
-    {
-      label: "Dashboard",
-      path: "/dashboard",
-      children: [
-        { label: "Overview", path: "/dashboard" },
-        { label: "Analytics", path: "/dashboard/analytics" },
-      ],
-    },
-  ];
+  const menus: MenuItem[] = menuList;
 
   const handleMenuClick = (item: MenuItem): void => {
-    if (item.children) {
-      setOpenMenu(openMenu === item.label ? null : item.label);
-    } else {
+    if (!item.children) {
       navigate(item.path);
     }
   };
+
+  const handleMouseEnter = (item: MenuItem): void => {
+    if (item.children) {
+      setOpenMenu(item.label);
+    }
+  };
+
+  const handleMouseLeave = (): void => {
+    setOpenMenu(null);
+  };
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token || !data.isAuthenticated) navigate("/login");
+  }, [navigate]);
+
+  const dispatch = useDispatch();
+  const handleLogOut = () : void => {
+       dispatch(
+            logout(),
+          );
+
+    navigate("/login");
+  }
 
   return (
     <div>
@@ -78,8 +85,13 @@ export default function NavBarComponent() {
         <div className="navbar-brand">Bank System</div>
 
         <div className="navbar-menu" ref={dropdownRef}>
-          {menus.map((item) => (
-            <div key={item.label} className="menu-wrapper">
+          {menus.map((item) => ( item.canAccess?.includes(data.user?.role || "") &&
+            <div 
+              key={item.label} 
+              className="menu-wrapper"
+              onMouseEnter={() => handleMouseEnter(item)}
+              onMouseLeave={handleMouseLeave}
+            >
               <div
                 className={`menu-item ${
                   location.pathname.startsWith(item.path) ? "active" : ""
@@ -121,10 +133,11 @@ export default function NavBarComponent() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <div>John Doe</div>
+          <div>{data.user?.fullName} {data.token}</div>
           <div className="navbar-user" style={{ marginLeft: "4px" }}>
-            <div className="user-avatar">J</div>
+            <div className="user-avatar">{data.user?.fullName[0]}</div>
           </div>
+          <LogOut color="red" size={28}  className="exit-icon"  onClick={handleLogOut}/>
         </div>
       </nav>
 
