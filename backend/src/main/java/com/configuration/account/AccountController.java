@@ -43,7 +43,7 @@ class AccountController {
 
     //========================================= PATCH METHOD ========================================
 
-    @PatchMapping("/accounts/{accountId}/change-balance")
+    @PatchMapping("/accounts/{accountId}/changeBalance")
     public ResponseEntity<ApiResponse<AccountResponse>> changeBalance(
             @PathVariable UUID accountId,
             @RequestParam BigDecimal amount) {
@@ -51,6 +51,13 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Balance changed successfully", response));
     }
 
+    @PatchMapping("/account/{accountId}/deleteAcount")
+    public ResponseEntity<ApiResponse<AccountResponse>> deleteAccount(
+        @PathVariable UUID accountId
+    ){
+        AccountResponse response = accountService.deleteAccount(accountId);
+        return ResponseEntity.ok(ApiResponse.success("Delete account ${accountId} successfully", response));
+    }
 
     //========================================= GET METHOD ========================================
 
