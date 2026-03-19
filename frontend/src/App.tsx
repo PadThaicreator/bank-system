@@ -1,6 +1,6 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import VitePage from "./pages/vite/page";
-import NavBarComponent from "./components/navbar/navbar";
+import NavBarComponent from "./components/layout/CustomerNavbar";
 import AuthenComponent from "./components/auth";
 import LoginPage from "./pages/auth/loginPage/page";
 
@@ -15,6 +15,14 @@ function App() {
 
       <Routes>
         <Route element={<NavBarComponent />}>
+          <Route path="/vite" element={<VitePage />} />
+          <Route path="/vite" element={<VitePage />} />
+        </Route>
+      </Routes>
+      
+      <Routes>
+        <Route element={<NavBarComponent />}>
+          <Route path="/vite" element={<VitePage />} />
           <Route path="/vite" element={<VitePage />} />
         </Route>
       </Routes>

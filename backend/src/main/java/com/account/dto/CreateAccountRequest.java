@@ -1,8 +1,8 @@
-package com.configuration.account.dto;
+package com.account.dto;
 
 import java.math.BigDecimal;
 
-import com.configuration.account.AccountType;
+import com.account.AccountType;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

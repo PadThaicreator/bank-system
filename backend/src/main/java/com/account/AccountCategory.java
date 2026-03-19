@@ -1,4 +1,4 @@
-package com.configuration.account;
+package com.account;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

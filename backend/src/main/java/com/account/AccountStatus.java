@@ -1,4 +1,4 @@
-package com.configuration.account;
+package com.account;
 
 public enum AccountStatus {
     ACTIVE("active","เปิดใช้งาน"),
