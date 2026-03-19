@@ -20,7 +20,7 @@ export default function NavBarComponent() {
   }, []);
 
   const menus = [
-    { label: "Home", path: "/home", hasDropdown: true },
+    { label: "Home", path: "/home", hasDropdown: false },
     { label: "Account", path: "/account", hasDropdown: true },
     { label: "Dashboard", path: "/dashboard", hasDropdown: true },
   ];

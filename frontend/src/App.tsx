@@ -2,7 +2,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import VitePage from "./pages/vite/page";
 import NavBarComponent from "./components/navbar/navbar";
 import AuthenComponent from "./components/auth";
-import LoginPage from "./pages/auth/LoginPage/page";
+import LoginPage from './pages/auth/LoginPage/page'
 import NotFoundPage from "./pages/not-found/page";
 
 function App() {
