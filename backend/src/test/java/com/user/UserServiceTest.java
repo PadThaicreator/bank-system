@@ -92,6 +92,6 @@ class UserServiceTest {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("password123", "hashedPassword")).thenReturn(true);
 
-        assertThrows(AuthenError.InvalidForm.class, () -> authService.Login(dto));
+        assertThrows(AuthenError.InactiveUser.class, () -> authService.Login(dto));
     }
 }
