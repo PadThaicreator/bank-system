@@ -3,11 +3,12 @@ import VitePage from "./pages/vite/page";
 // import NavBarComponent from "./components/layout/CustomerNavbar";
 import AuthenComponent from "./components/auth";
 import LoginPage from "./pages/auth/LoginPage/page";
+import AccountListPage from "./pages/account/Account/AccountListPage";
 import NotFoundPage from "./pages/not-found/page";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
-import AllNavBar from "./components/navbar/navbar";
+import AllNavBar from "./components/layout/Navbar";
 
 function App() {
   return (
@@ -18,9 +19,9 @@ function App() {
             <Route element={<AuthenComponent />}>
               <Route path="/login" element={<LoginPage />} />
             </Route>
-
+            
             <Route element={<AllNavBar />}>
-              <Route path="/vite" element={<VitePage />} />
+              <Route path="/accountList" element={<AccountListPage />} />
               <Route path="/vite" element={<VitePage />} />
             </Route>
 
