@@ -1,4 +1,4 @@
-.navbarContainer {
+.navbar-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,7 +17,7 @@
 }
 
 /* Brand */
-.navbarBrand {
+.navbar-brand {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -28,7 +28,7 @@
   font-family: 'Georgia', serif;
 }
 
-.brandIcon {
+.brand-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,7 +42,7 @@
 }
 
 /* Menu */
-.navbarMenu {
+.navbar-menu {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -67,7 +67,7 @@
   user-select: none;
 }
 
-.menuItem:hover {
+.menu-item:hover {
   color: #4f46e5;
   background: #f0efff;
 }
@@ -98,11 +98,11 @@
   transition: transform 0.25s ease;
 }
 
-.active .menuUnderline {
+.active .menu-underline {
   transform: translateX(-50%) scaleX(1);
 }
 
-.menuItem:hover .menuUnderline {
+.menu-item:hover .menu-underline {
   transform: translateX(-50%) scaleX(1);
 }
 /* Dropdown */
@@ -138,13 +138,13 @@
   color: #4f46e5;
 }
 /* Right icons */
-.navbarIcons {
+.navbar-icons {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.iconBtn {
+.icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,12 +157,12 @@
   position: relative;
 }
 
-.iconBtn:hover {
+.icon-btn:hover {
   background: #f0efff;
   color: #4f46e5;
 }
 
-.iconBtn .badge {
+.icon-btn .badge {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -174,7 +174,7 @@
 }
 
 /* User */
-.navbarUser {
+.navbar-user {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -184,11 +184,11 @@
   transition: box-shadow 0.2s ease;
 }
 
-.navbarUser:hover {
+.navbar-user:hover {
   box-shadow: 0 0 0 3px #e0deff;
 }
 
-.userAvatar {
+.user-avatar {
   width: 34px;
   height: 34px;
   border-radius: 50%;

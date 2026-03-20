@@ -8,7 +8,7 @@ import NotFoundPage from "./pages/not-found/page";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
-import AllNavBar from "./components/navbar/navbar";
+import AllNavBar from "./components/layout/Navbar";
 
 function App() {
   return (

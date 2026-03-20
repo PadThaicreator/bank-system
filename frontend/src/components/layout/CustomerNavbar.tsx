@@ -27,24 +27,24 @@ export default function NavBarComponent() {
 
   return (
     <div>
-      <nav className={`${styles.navbarContainer} ${scrolled ? styles.scrolled : ""}`}>
+      <nav className={`${styles["navbar-container"]} ${scrolled ? styles.scrolled : ""}`}>
 
         {/* Brand */}
-        <div className={styles.navbarBrand}>Bank System</div>
+        <div className={styles["navbar-brand"]}>Bank System</div>
 
         {/* Menu */}
-        <div className={styles.navbarMenu}>
+        <div className={styles["navbar-menu"]}>
           {menus.map((item) => {
             const isActive = location.pathname.startsWith(item.path);
             return (
               <div
                 key={item.label}
-                className={`${styles.menuItem} ${isActive ? styles.active : ""}`}
+                className={`${styles["menu-item"]} ${isActive ? styles.active : ""}`}
                 onClick={() => navigate(item.path)}
               >
                 <span>{item.label}</span>
                 {item.hasDropdown && <ChevronDown size={14} className={styles.chevron} />}
-                <span className={styles.menuUnderline} />
+                <span className={styles["menu-underline"]} />
               </div>
             );
           })}
@@ -53,8 +53,8 @@ export default function NavBarComponent() {
         {/* Right side */}
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
           <div>John Doe</div>
-          <div className={styles.navbarUser} style={{ marginLeft: "4px" }}>
-            <div className={styles.userAvatar}>J</div>
+          <div className={styles["navbar-user"]} style={{ marginLeft: "4px" }}>
+            <div className={styles["user-avatar"]}>J</div>
           </div>
         </div>
 
