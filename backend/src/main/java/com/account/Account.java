@@ -1,4 +1,4 @@
-package com.configuration.account;
+package com.account;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

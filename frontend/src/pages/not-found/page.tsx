@@ -105,7 +105,7 @@ export default function NotFoundPage() {
 
           <button
             className="nf-btn nf-btn-fill"
-            onClick={() => (window.location.href = "/")}
+            onClick={() => (window.location.href = "/vite")}
           >
             <Home size={14} strokeWidth={2} />
             Home

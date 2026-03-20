@@ -1,4 +1,4 @@
-package com.configuration.account;
+package com.account;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.configuration.account.dto.AccountResponse;
-import com.configuration.account.dto.BalanceResponse;
-import com.configuration.account.dto.CreateAccountRequest;
+import com.account.dto.AccountResponse;
+import com.account.dto.BalanceResponse;
+import com.account.dto.CreateAccountRequest;
 import com.configuration.common.response.ApiResponse;
 
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -51,7 +51,7 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Balance changed successfully", response));
     }
 
-    @PatchMapping("/account/{accountId}/deleteAcount")
+    @PatchMapping("/accounts/{accountId}/deleteAcount")
     public ResponseEntity<ApiResponse<AccountResponse>> deleteAccount(
         @PathVariable UUID accountId
     ){

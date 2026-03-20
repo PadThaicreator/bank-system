@@ -1,13 +1,13 @@
-package com.configuration.account.dto;
+package com.account.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.configuration.account.Account;
-import com.configuration.account.AccountCategory;
-import com.configuration.account.AccountStatus;
-import com.configuration.account.AccountType;
+import com.account.Account;
+import com.account.AccountCategory;
+import com.account.AccountStatus;
+import com.account.AccountType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -86,7 +86,7 @@ export default function NavBarComponent() {
 
         <div className="navbar-menu" ref={dropdownRef}>
           {menus.map((item) => ( item.canAccess?.includes(data.user?.role || "") &&
-            <div 
+            (<div 
               key={item.label} 
               className="menu-wrapper"
               onMouseEnter={() => handleMouseEnter(item)}
@@ -114,7 +114,7 @@ export default function NavBarComponent() {
 
               {item.children && openMenu === item.label && (
                 <div className="dropdown">
-                  {item.children.map((child) => (
+                  {item.children.map((child) => ( child.canAccess?.includes(data.user?.role || "") &&
                     <div
                       key={child.label}
                       className="dropdown-item"
@@ -128,7 +128,7 @@ export default function NavBarComponent() {
                   ))}
                 </div>
               )}
-            </div>
+            </div>)
           ))}
         </div>
 
