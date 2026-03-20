@@ -28,11 +28,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-
+        log.info("🔥 JwtAuthFilter called 1: {}", request.getRequestURI());
         final String authHeader = request.getHeader("Authorization");
 
         // ถ้าไม่มี Bearer token ให้ผ่านไปเลย (public endpoints จะ handle เอง)
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.info("🔥 No Token: {}", request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
@@ -46,6 +47,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (jwtUtil.isTokenValid(token)) {
                     var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+                    log.info("🔥 Have Token: {}", request.getRequestURI() + "  ROLE : "+ role);
                     var authToken = new UsernamePasswordAuthenticationToken(
                             userId, null, authorities
                     );

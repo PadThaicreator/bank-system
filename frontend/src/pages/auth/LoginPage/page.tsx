@@ -12,7 +12,7 @@ export default function LoginPage() {
         user: {
           fullName: "JOHN DOE",
           email: "example@gmail.com",
-          role: "CUSTOMER",
+          role: "ADMIN",
         },
         token: "TOKEN",
       }),

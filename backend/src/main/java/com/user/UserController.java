@@ -7,6 +7,7 @@ import com.configuration.common.response.ApiResponse;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
 
@@ -46,6 +48,19 @@ public class UserController {
 
         return ApiResponse.success("Login Success" , token);
     }
+
+
+    @GetMapping("/getAllUser")
+    public ApiResponse<ReturnDataClass> getAllUser() {
+
+        ReturnClass rs = userService.GetAllUser();
+
+
+
+        return ApiResponse.success(rs.getMSG() , rs.getData());
+    }
+
+
 
 //    .save();
 //    .delete();

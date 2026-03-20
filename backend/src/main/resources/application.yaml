@@ -44,7 +44,7 @@ server:
 # JWT
 jwt:
   secret: ${JWT_SECRET:dev-secret-key-for-local-only-min-32-chars}
-  access-token-expiry: 900000   # 15 นาที
+  access-token-expiry: 604800000   # 15 นาที
   refresh-token-expiry: 604800000 # 7 วัน
 
 # App custom config
