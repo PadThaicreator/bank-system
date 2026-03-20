@@ -1,0 +1,329 @@
+/* ─── NotFoundPage.css ─── */
+/* Theme: Bank System — white bg, purple #6c63ff accent, gray text */
+
+/* ─── CSS Variables ─── */
+:root {
+  --nf-primary:        #6c63ff;
+  --nf-primary-light:  #a78bfa;
+  --nf-primary-bg:     #ede9fe;
+  --nf-bg:             #ffffff;
+  --nf-bg-soft:        #f9f9fb;
+  --nf-bg-card:        #ffffff;
+  --nf-border:         #e5e7eb;
+  --nf-border-purple:  rgba(108, 99, 255, 0.25);
+  --nf-text:           #374151;
+  --nf-text-muted:     #9ca3af;
+  --nf-text-purple:    #6c63ff;
+  --nf-shadow:         rgba(108, 99, 255, 0.12);
+}
+
+/* ─── Container ─── */
+.nf-container {
+  position: relative;
+  min-height: 100vh;
+  background: var(--nf-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+  color: var(--nf-text);
+}
+
+/* Subtle dot pattern */
+.nf-scanlines {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(108, 99, 255, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Soft purple blob — top right only, matching nav accent */
+.nf-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.nf-grid::before {
+  content: '';
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  top: -160px;
+  right: -120px;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.15) 0%, transparent 65%);
+  border-radius: 50%;
+}
+.nf-grid::after {
+  content: '';
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  bottom: -100px;
+  left: -80px;
+  background: radial-gradient(circle, rgba(108, 99, 255, 0.08) 0%, transparent 65%);
+  border-radius: 50%;
+}
+
+/* ─── Status bar — matches the navbar in the screenshot ─── */
+.nf-status-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  height: 60px;
+  border-bottom: 1px solid var(--nf-border);
+  background: var(--nf-bg);
+  z-index: 10;
+}
+
+.nf-status-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* "Bank System" logo style from screenshot */
+.nf-status-left span.nf-status-text {
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--nf-primary);
+  text-transform: none;
+}
+
+.nf-status-text {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--nf-text-muted);
+  text-transform: uppercase;
+}
+
+/* ─── Main content ─── */
+.nf-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 0 24px;
+  text-align: center;
+}
+
+/* ─── 404 code ─── */
+.nf-code-wrapper {
+  line-height: 1;
+  position: relative;
+}
+
+.nf-error-code {
+  font-size: clamp(96px, 20vw, 180px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: transparent;
+  background: linear-gradient(135deg, #6c63ff 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 20px rgba(108, 99, 255, 0.2));
+  display: block;
+  animation: flicker 6s infinite;
+}
+
+.nf-error-code.glitch {
+  animation: glitch 0.15s steps(2) forwards;
+  filter: drop-shadow(0 4px 20px rgba(167, 139, 250, 0.4)) hue-rotate(15deg);
+}
+
+/* ─── Icon wrapper ─── */
+.nf-icon-wrapper {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--nf-primary-bg);
+  border-radius: 50%;
+}
+
+.nf-icon-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(108, 99, 255, 0.2);
+  border-top-color: var(--nf-primary);
+  animation: spin 8s linear infinite;
+}
+
+.nf-compass-icon {
+  /* static — ring spins around it */
+}
+
+/* ─── Text ─── */
+.nf-headline {
+  font-size: clamp(13px, 2.5vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: var(--nf-text-purple);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.nf-subtext {
+  font-size: 14px;
+  color: var(--nf-text-muted);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Card / Terminal ─── */
+.nf-terminal {
+  width: min(440px, 90vw);
+  background: var(--nf-bg-soft);
+  border: 1px solid var(--nf-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(108, 99, 255, 0.08);
+}
+
+.nf-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--nf-border);
+  background: #f3f4f6;
+}
+
+.nf-terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f57;
+  display: inline-block;
+}
+.nf-terminal-dot.yellow { background: #ffcc00; }
+.nf-terminal-dot.green  { background: #6c63ff; }
+
+.nf-terminal-title {
+  font-size: 11px;
+  color: var(--nf-text-muted);
+  letter-spacing: 0.06em;
+  margin-left: 4px;
+}
+
+.nf-terminal-body {
+  padding: 16px 18px;
+  font-size: 12.5px;
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 2;
+  text-align: left;
+  color: var(--nf-text);
+}
+
+.nf-prompt     { color: var(--nf-primary); font-weight: 700; }
+.nf-cmd        { color: #374151; }
+.nf-error-line { color: #dc2626; }
+.nf-hint       { color: var(--nf-text-muted); }
+.nf-cursor {
+  color: var(--nf-primary);
+  animation: blink 1s step-end infinite;
+}
+
+/* ─── Buttons — match Bank System nav style ─── */
+.nf-btn-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nf-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.nf-btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--nf-border);
+  color: var(--nf-text);
+}
+.nf-btn-outline:hover {
+  border-color: var(--nf-primary);
+  color: var(--nf-primary);
+  background: var(--nf-primary-bg);
+}
+
+.nf-btn-fill {
+  background: linear-gradient(135deg, #6c63ff, #a78bfa);
+  border: 1.5px solid transparent;
+  color: #ffffff;
+  box-shadow: 0 3px 12px rgba(108, 99, 255, 0.3);
+}
+.nf-btn-fill:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 5px 18px rgba(108, 99, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ─── Bottom bar ─── */
+.nf-bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 32px;
+  height: 44px;
+  align-items: center;
+  border-top: 1px solid var(--nf-border);
+  background: var(--nf-bg);
+  z-index: 10;
+}
+
+/* ─── Animations ─── */
+@keyframes flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96%  { opacity: 0.88; }
+  97%  { opacity: 1; }
+  98%  { opacity: 0.93; }
+}
+
+@keyframes glitch {
+  0%   { transform: translate(-2px, 0) skewX(-1deg); }
+  50%  { transform: translate(2px,  0) skewX(1deg); }
+  100% { transform: translate(0,    0) skewX(0deg); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
