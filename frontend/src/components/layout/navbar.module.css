@@ -1,4 +1,4 @@
-.navbar-container {
+.navbarContainer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12,12 +12,12 @@
   transition: box-shadow 0.25s ease;
 }
 
-.navbar-container.scrolled {
+.scrolled {
   box-shadow: 0 2px 16px rgba(99, 91, 255, 0.08);
 }
 
 /* Brand */
-.navbar-brand {
+.navbarBrand {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -28,7 +28,7 @@
   font-family: 'Georgia', serif;
 }
 
-.brand-icon {
+.brandIcon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,13 +42,13 @@
 }
 
 /* Menu */
-.navbar-menu {
+.navbarMenu {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.menu-item {
+.menuItem {
   position: relative;
   display: flex;
   align-items: center;
@@ -63,17 +63,17 @@
   user-select: none;
 }
 
-.menu-item:hover {
+.menuItem:hover {
   color: #4f46e5;
   background: #f0efff;
 }
 
-.menu-item.active {
+.active {
   color: #4f46e5;
   font-weight: 600;
 }
 
-.menu-item:hover .chevron {
+.menuItem:hover .chevron {
   transform: rotate(180deg);
 }
 
@@ -82,7 +82,7 @@
   opacity: 0.5;
 }
 
-.menu-underline {
+.menuUnderline {
   position: absolute;
   bottom: -1px;
   left: 50%;
@@ -94,22 +94,22 @@
   transition: transform 0.25s ease;
 }
 
-.menu-item.active .menu-underline {
+.active .menuUnderline {
   transform: translateX(-50%) scaleX(1);
 }
 
-.menu-item:hover .menu-underline {
+.menuItem:hover .menuUnderline {
   transform: translateX(-50%) scaleX(1);
 }
 
 /* Right icons */
-.navbar-icons {
+.navbarIcons {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.icon-btn {
+.iconBtn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -122,12 +122,12 @@
   position: relative;
 }
 
-.icon-btn:hover {
+.iconBtn:hover {
   background: #f0efff;
   color: #4f46e5;
 }
 
-.icon-btn .badge {
+.iconBtn .badge {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -139,7 +139,7 @@
 }
 
 /* User */
-.navbar-user {
+.navbarUser {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -149,11 +149,11 @@
   transition: box-shadow 0.2s ease;
 }
 
-.navbar-user:hover {
+.navbarUser:hover {
   box-shadow: 0 0 0 3px #e0deff;
 }
 
-.user-avatar {
+.userAvatar {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -166,6 +166,6 @@
   justify-content: center;
 }
 
-.body{
+.body {
     padding: 1rem;
 }
