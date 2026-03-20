@@ -8,7 +8,8 @@ import NotFoundPage from "./pages/not-found/page";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
-import AllNavBar from "./components/layout/Navbar";
+import NavBarComponent from "./components/layout/NavbarComponent";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
 
 function App() {
   return (
@@ -16,19 +17,18 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <Routes>
+            
+            {/* Authen Route */}
             <Route element={<AuthenComponent />}>
               <Route path="/login" element={<LoginPage />} />
             </Route>
-            
-            <Route element={<AllNavBar />}>
-              <Route path="/accountList" element={<AccountListPage />} />
-              <Route path="/vite" element={<VitePage />} />
-            </Route>
 
-            {/* <Route element={<AllNavBar />}>
-              <Route path="/vite" element={<VitePage />} />
-              <Route path="/vite" element={<VitePage />} />
-            </Route> */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<NavBarComponent />}>
+                <Route path="/accountList" element={<AccountListPage />} />
+                <Route path="/vite" element={<VitePage />} />
+              </Route>
+            </Route>
 
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

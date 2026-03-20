@@ -65,11 +65,6 @@ export default function NavBarComponent() {
   };
 
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token || !data.isAuthenticated) navigate("/login");
-  }, [data.isAuthenticated, navigate]);
-
   const dispatch = useDispatch();
   const handleLogOut = () : void => {
        dispatch(
