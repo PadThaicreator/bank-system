@@ -1,10 +1,11 @@
 import api from '../lib/axios'
 import type { AccountResponse, BalanceResponse, CreateAccountRequest } from '../types';
 
+
 const BASE = "/api/accounts";
 
 export const accountService = {
-
+    
     // Get /api/accounts
     getAllAccounts: () => api.get<AccountResponse[]>(BASE),
 
@@ -22,4 +23,6 @@ export const accountService = {
 
     // Patch /api/account/{accountId}/deleteAcount
     deleteAccount: (accountId: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/deleteAccount`),
+
+    getUserAccount: (userId: string) => api.get<AccountResponse>(`${BASE}/user/${userId}`)
 }

@@ -6,6 +6,7 @@ import com.account.dto.UserAccountResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface AccountRepository extends JpaRepository<Account, UUID> {
@@ -22,4 +23,6 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
     WHERE a.userId = :userId
     """)
     List<UserAccountResponse> findByUserId(UUID userId);
+
+    Optional<Account> findByAccountNumber(String accountNumber);
 }

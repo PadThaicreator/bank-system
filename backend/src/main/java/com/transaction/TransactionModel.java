@@ -1,6 +1,7 @@
 package com.transaction;
 
 
+import com.account.Account;
 import com.models.StatusType;
 import com.models.TransactionType;
 import jakarta.persistence.*;
@@ -45,6 +46,21 @@ public class TransactionModel {
 
 
     private LocalDateTime created_at;
+
+
+
+//    FK-KEY
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "from_account_id", referencedColumnName = "id")
+//    private Account fromAccount;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "to_account_id", referencedColumnName = "id")
+//    private Account toAccount;
+
+
+
 
 
 

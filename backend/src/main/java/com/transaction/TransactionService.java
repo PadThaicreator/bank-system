@@ -1,6 +1,9 @@
 package com.transaction;
 
 
+import com.account.AccountService;
+import com.account.dto.AccountResponse;
+import com.account.dto.UserAccountResponse;
 import com.models.StatusType;
 import com.models.TransactionType;
 import com.transaction.dto.TransactionDTO;
@@ -16,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,9 +28,11 @@ public class TransactionService {
     private final TransactionRepository transactionRepository ;
     private final AccountRepository accountRepository ;
 
-    public TransactionService(TransactionRepository transactionRepository , AccountRepository accountRepository) {
+
+    public TransactionService(TransactionRepository transactionRepository , AccountRepository accountRepository ) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
+
     }
 
     @Transactional
@@ -63,12 +69,12 @@ public class TransactionService {
             }
             else if (type.equals("TRANSFER")) {
 
-                if (req.getFromAccountId() == null || req.getToAccountId() == null || req.getToAccountId().toString().isEmpty() || req.getFromAccountId().toString().isEmpty() ) {
+                if (req.getFromAccountId() == null || req.getToAccountNumber() == null || req.getToAccountNumber().isEmpty() || req.getFromAccountId().toString().isEmpty() ) {
                     throw new TransactionError.AccountInvalid("Accounts are required");
                 }
-
+                Account toAcc = accountRepository.findByAccountNumber(req.getToAccountNumber()).orElseThrow(() -> new TransactionError.AccountInvalid("Invalid Transfer Account"));
                 fromAccountId = req.getFromAccountId();
-                toAccountId = req.getToAccountId();
+                toAccountId = toAcc.getId();
 
                 fromAccount = accountRepository.findById(fromAccountId)
                         .orElseThrow(() -> new TransactionError.AccountInvalid("From Account not found"));
@@ -147,8 +153,8 @@ public class TransactionService {
             );
 
             data.setToAccountId(
-                    req.getToAccountId() != null
-                            ? req.getToAccountId()
+                    toAccountId != null
+                            ? toAccountId
                             : null
             );
             data.setStatus(StatusType.ACTIVE);
@@ -167,18 +173,58 @@ public class TransactionService {
     }
 
 
-    public ReturnClass getTransactionHistory(UUID id){
+    public ReturnClass getTransactionHistory(UUID accNum){
 
 
         ReturnClass rs = new ReturnClass();
         ReturnDataClass rsData = new ReturnDataClass();
-        List<TransactionDTO> transactionList =  TransactionDTO.fromEntityList(transactionRepository.findByFromAccountId(id));
-        rsData.setTransactionList(transactionList);
+        List<TransactionModel> transactionList =  transactionRepository.findByFromAccountIdOrToAccountId(accNum,accNum);
+
+        List<TransactionDTO> returnList = new ArrayList<>();
+        for(int i = 0 ; i < transactionList.size()  ; i++){
+            TransactionDTO data = new TransactionDTO();
+            data.setAmount(transactionList.get(i).getAmount());
+            data.setNote(transactionList.get(i).getNote());
+            data.setType(transactionList.get(i).getTransaction_type());
+            data.setReferenceNo(transactionList.get(i).getReferenceNo());
+            data.setToAccountId(transactionList.get(i).getToAccountId());
+            data.setFromAccountId(transactionList.get(i).getFromAccountId());
+
+            Account fromAcc = accountRepository.findById(data.getFromAccountId()).orElseThrow(()-> new TransactionError.AccountInvalid("From Account not found") );
+
+            data.setFromAccountNumber(fromAcc.getAccountNumber());
+
+            if(data.getType().equals(TransactionType.TRANSFER)){
+                Account toAcc = accountRepository.findById(data.getToAccountId()).orElseThrow(()-> new TransactionError.AccountInvalid("To Account not found") );
+
+                data.setToAccountNumber(toAcc.getAccountNumber());
+            }
+            returnList.add(data);
+        }
+        rsData.setTransactionList(returnList);
         rs.setSuccessReturn();
         rs.setCODE("200");
-        rs.setMSG(id.toString());
+        rs.setMSG("Get Success");
         rs.setData(rsData);
 
         return  rs;
     }
+
+    public ReturnClass getAllTransaction(){
+
+
+        ReturnClass rs = new ReturnClass();
+        ReturnDataClass rsData = new ReturnDataClass();
+        List<TransactionDTO> transactionList =  TransactionDTO.fromEntityList(transactionRepository.findAll());
+        rsData.setTransactionList(transactionList);
+        rs.setSuccessReturn();
+        rs.setCODE("200");
+        rs.setMSG("GET SUCCESS");
+        rs.setData(rsData);
+
+        return  rs;
+    }
+
+
+
 }

@@ -11,7 +11,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/transactions")
 public class TransactionController {
 
     private final TransactionService transactionService ;
@@ -25,7 +25,7 @@ public class TransactionController {
 
 
 
-    @PostMapping("/transaction")
+    @PostMapping("")
     public ApiResponse<List<TransactionDTO>> postTransaction(@RequestBody TransactionDTO req) {
 
 
@@ -35,9 +35,17 @@ public class TransactionController {
     }
 
 
-    @GetMapping("/getHistory/{id}")
-    public  ApiResponse<List<TransactionDTO>> getHistory(@PathVariable  UUID id){
-        ReturnClass rs =  transactionService.getTransactionHistory(id);
+    @GetMapping("/getHistory/{accNum}")
+    public  ApiResponse<List<TransactionDTO>> getHistory(@PathVariable  UUID accNum){
+        ReturnClass rs =  transactionService.getTransactionHistory(accNum);
+
+        return   ApiResponse.success(rs.getMSG() , rs.getData().getTransactionList());
+    }
+
+
+    @GetMapping("/allTransaction")
+    public  ApiResponse<List<TransactionDTO>> getAllTransaction(){
+        ReturnClass rs =  transactionService.getAllTransaction();
 
         return   ApiResponse.success(rs.getMSG() , rs.getData().getTransactionList());
     }

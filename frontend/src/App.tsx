@@ -10,6 +10,8 @@ import { persistor, store } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import NavBarComponent from "./components/layout/NavbarComponent";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import HistoryTransactionPage from "./pages/transactions/history/page";
+import TransactionPage from "./pages/transactions/transaction/page";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<NavBarComponent />}>
                 <Route path="/admin/accountList" element={<AccountListPage />} />
+                <Route path="/transaction/history" element={<HistoryTransactionPage />} />
+                <Route path="/transaction/service" element={<TransactionPage />} />
                 <Route path="/vite" element={<VitePage />} />
               </Route>
             </Route>

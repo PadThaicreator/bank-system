@@ -4,23 +4,7 @@
  */
 
 export interface paths {
-    "/transaction": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["postTransaction"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/register": {
+    "/users/register": {
         parameters: {
             query?: never;
             header?: never;
@@ -36,7 +20,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/login": {
+    "/users/login": {
         parameters: {
             query?: never;
             header?: never;
@@ -52,7 +36,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/accounts": {
+    "/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["postTransaction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts": {
         parameters: {
             query?: never;
             header?: never;
@@ -68,7 +68,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/accounts/{accountId}/deleteAcount": {
+    "/accounts/{accountId}/deleteAcount": {
         parameters: {
             query?: never;
             header?: never;
@@ -84,7 +84,7 @@ export interface paths {
         patch: operations["deleteAccount"];
         trace?: never;
     };
-    "/api/accounts/{accountId}/changeBalance": {
+    "/accounts/{accountId}/changeBalance": {
         parameters: {
             query?: never;
             header?: never;
@@ -100,7 +100,23 @@ export interface paths {
         patch: operations["changeBalance"];
         trace?: never;
     };
-    "/getHistory/{id}": {
+    "/users/getAllUser": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllUser"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/transactions/getHistory/{accNum}": {
         parameters: {
             query?: never;
             header?: never;
@@ -116,7 +132,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/accounts/{accountid}/getAccountBalance": {
+    "/transactions/allTransaction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllTransaction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{accountid}/getAccountBalance": {
         parameters: {
             query?: never;
             header?: never;
@@ -132,7 +164,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/accounts/{accountId}": {
+    "/accounts/{accountId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -148,51 +180,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/accounts/user/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAccountByUserId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        TransactionDTO: {
-            /** Format: uuid */
-            to_account?: string;
-            /** Format: uuid */
-            from_account?: string;
-            type?: string;
-            amount?: number;
-            note?: string;
-        };
-        ApiResponseReturnDataClass: {
-            success?: boolean;
-            message?: string;
-            data?: components["schemas"]["ReturnDataClass"];
-            error?: components["schemas"]["ErrorDetail"];
-            /** Format: date-time */
-            timestamp?: string;
-        };
-        ErrorDetail: {
-            code?: string;
-            details?: string;
-        };
-        ReturnDataClass: {
-            transactionList?: components["schemas"]["TransactionModel"][];
-        };
-        TransactionModel: {
-            /** Format: uuid */
-            id?: string;
-            /** Format: uuid */
-            fromAccountId?: string;
-            /** Format: uuid */
-            toAccountId?: string;
-            amount?: number;
-            /** @enum {string} */
-            transaction_type?: "WITHDRAW" | "DEPOSIT" | "TRANSFER";
-            /** @enum {string} */
-            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED";
-            reference_no?: string;
-            note?: string;
-            /** Format: date-time */
-            created_at?: string;
-        };
         UserModel: {
             /** Format: uuid */
             id?: string;
@@ -209,16 +216,63 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
+        ApiResponseReturnDataClass: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ReturnDataClass"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        ErrorDetail: {
+            code?: string;
+            details?: string;
+        };
+        ReturnDataClass: {
+            transactionList?: components["schemas"]["TransactionDTO"][];
+            userList?: components["schemas"]["UserModel"][];
+            accountList?: components["schemas"]["UserAccountResponse"][];
+        };
+        TransactionDTO: {
+            /** Format: uuid */
+            to_account_id?: string;
+            /** Format: uuid */
+            from_account_id?: string;
+            /** @enum {string} */
+            type?: "WITHDRAW" | "DEPOSIT" | "TRANSFER";
+            amount?: number;
+            note?: string;
+            reference_no?: string;
+            to_account_number?: string;
+        };
+        UserAccountResponse: {
+            /** Format: uuid */
+            id?: string;
+            accountNumber?: string;
+            balance?: number;
+            /** @enum {string} */
+            status?: "ACTIVE" | "CLOSED" | "FROZEN";
+            /** @enum {string} */
+            accountCategory?: "SAVINGS" | "CURRENT" | "FIXED_DEPOSIT";
+        };
         LoginDTO: {
             email?: string;
             password?: string;
         };
-        ApiResponseMapStringString: {
+        ApiResponseMapStringObject: {
             success?: boolean;
             message?: string;
             data?: {
-                [key: string]: string;
+                [key: string]: Record<string, never>;
             };
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        ApiResponseListTransactionDTO: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["TransactionDTO"][];
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
@@ -254,6 +308,14 @@ export interface components {
             /** Format: date-time */
             timestamp?: string;
         };
+        ApiResponseListUserModel: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["UserModel"][];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
         ApiResponseListAccountResponse: {
             success?: boolean;
             message?: string;
@@ -276,6 +338,14 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
+        ApiResponseListUserAccountResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["UserAccountResponse"][];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -285,30 +355,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    postTransaction: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TransactionDTO"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseReturnDataClass"];
-                };
-            };
-        };
-    };
     Register: {
         parameters: {
             query?: never;
@@ -352,7 +398,31 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseMapStringString"];
+                    "*/*": components["schemas"]["ApiResponseMapStringObject"];
+                };
+            };
+        };
+    };
+    postTransaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TransactionDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
                 };
             };
         };
@@ -449,12 +519,32 @@ export interface operations {
             };
         };
     };
+    getAllUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListUserModel"];
+                };
+            };
+        };
+    };
     getHistory: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                id: string;
+                accNum: string;
             };
             cookie?: never;
         };
@@ -466,7 +556,27 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseReturnDataClass"];
+                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
+                };
+            };
+        };
+    };
+    getAllTransaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
                 };
             };
         };
@@ -511,6 +621,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseAccountResponse"];
+                };
+            };
+        };
+    };
+    getAccountByUserId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListUserAccountResponse"];
                 };
             };
         };

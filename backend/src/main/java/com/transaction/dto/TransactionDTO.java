@@ -25,7 +25,7 @@ public class TransactionDTO {
     private UUID fromAccountId;
 
     @JsonProperty("type")
-    private String type;
+    private TransactionType type;
 
     @JsonProperty("amount")
     private BigDecimal amount;
@@ -36,6 +36,16 @@ public class TransactionDTO {
     @JsonProperty("reference_no")
     private String referenceNo;
 
+    @JsonProperty("to_account_number")
+    private String toAccountNumber;
+
+
+    @JsonProperty("from_account_number")
+    private String fromAccountNumber;
+
+
+
+
 
     public static TransactionDTO fromEntity(TransactionModel t) {
         if (t == null) return null;
@@ -44,7 +54,7 @@ public class TransactionDTO {
                 .referenceNo(t.getReferenceNo())
                 .note(t.getNote())
                 .amount(t.getAmount())
-                .type(t.getTransaction_type() != null ? t.getTransaction_type().name() : null)
+                .type(t.getTransaction_type())
                 .fromAccountId(t.getFromAccountId())
                 .toAccountId(t.getToAccountId())
                 .build();
