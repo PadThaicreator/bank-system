@@ -26,6 +26,7 @@ export const menuList: MenuItem[] = [
         { label: "Deposit", path: "/transaction/deposit" , canAccess : ["ADMIN","CUSTOMER"] },
         { label: "Withdraw", path: "/transaction/withdraw" , canAccess : ["ADMIN","CUSTOMER"] },
         { label: "Transfer", path: "/transaction/transfer" , canAccess : ["ADMIN","CUSTOMER"]},
+        { label: "History", path: "/transaction/history" , canAccess : ["ADMIN","CUSTOMER"]},
       ],
     },
      {
@@ -33,8 +34,8 @@ export const menuList: MenuItem[] = [
       path: "/admin",
       canAccess : ["ADMIN"],
       children: [
-        { label: "User Management", path: "/all/user" , canAccess : ["ADMIN"] },
-        { label: "Account Management", path: "/all/account" , canAccess : ["ADMIN"] },
+        { label: "User Management", path: "/admin/user" , canAccess : ["ADMIN"] },
+        { label: "Account Management", path: "/admin/accountList" , canAccess : ["ADMIN"] },
         
        
       ],

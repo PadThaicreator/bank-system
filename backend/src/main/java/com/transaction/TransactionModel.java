@@ -37,7 +37,10 @@ public class TransactionModel {
 
     @Enumerated(EnumType.STRING)
     private StatusType status;
-    private String reference_no;
+
+    @Column(name = "reference_no")
+    private String referenceNo;
+
     private String note;
 
 

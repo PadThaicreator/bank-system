@@ -1,6 +1,8 @@
 package com.models;
 
-import com.transaction.TransactionModel;
+import com.account.dto.UserAccountResponse;
+
+import com.transaction.dto.TransactionDTO;
 import com.user.UserModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,15 +13,15 @@ import java.util.List;
 @Setter
 public class ReturnDataClass {
 
-    private List<TransactionModel> transactionList;
+    private List<TransactionDTO> transactionList;
     private List<UserModel> userList;
+    private List<UserAccountResponse> accountList;
 
-
-    public List<TransactionModel> getTransactionList() {
+    public List<TransactionDTO> getTransactionList() {
         return transactionList;
     }
 
-    public void setTransactionList(List<TransactionModel> transactionList) {
+    public void setTransactionList(List<TransactionDTO> transactionList) {
         this.transactionList = transactionList;
     }
 
@@ -29,5 +31,13 @@ public class ReturnDataClass {
 
     public void setUserList(List<UserModel> userList) {
         this.userList = userList;
+    }
+
+    public List<UserAccountResponse> getAccountList() {
+        return accountList;
+    }
+
+    public void setAccountList(List<UserAccountResponse> accountList) {
+        this.accountList = accountList;
     }
 }

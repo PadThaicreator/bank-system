@@ -3,6 +3,7 @@ package com.transaction;
 
 import com.models.StatusType;
 import com.models.TransactionType;
+import com.transaction.dto.TransactionDTO;
 import com.transaction.expception.TransactionError;
 import com.account.Account;
 import com.account.AccountRepository;
@@ -34,13 +35,13 @@ public class TransactionService {
         TransactionModel data = new TransactionModel();
 
 
-            if (req.getType() == null || req.getType().isEmpty()) {
+            if (req.getType() == null ) {
 //                System.out.println("==========================================================================================");
 
                 throw new TransactionError.TypeRequired();
             }
 
-            String type = req.getType();
+            String type = req.getType().toString();
             UUID fromAccountId;
             UUID toAccountId = null;
 
@@ -50,11 +51,11 @@ public class TransactionService {
 
             if (type.equals("DEPOSIT") || type.equals("WITHDRAW")) {
 
-                if (req.getFrom_account() == null || req.getFrom_account().toString().isBlank()) {
+                if (req.getFromAccountId() == null || req.getFromAccountId().toString().isBlank()) {
                     throw new TransactionError.AccountInvalid("From Account is required");
                 }
 
-                fromAccountId = req.getFrom_account();
+                fromAccountId = req.getFromAccountId();
 
                 fromAccount = accountRepository.findById(fromAccountId)
                         .orElseThrow(() -> new TransactionError.AccountInvalid("Invalid Account"));
@@ -62,12 +63,12 @@ public class TransactionService {
             }
             else if (type.equals("TRANSFER")) {
 
-                if (req.getFrom_account() == null || req.getTo_account() == null || req.getTo_account().toString().isEmpty() || req.getFrom_account().toString().isEmpty() ) {
+                if (req.getFromAccountId() == null || req.getToAccountId() == null || req.getToAccountId().toString().isEmpty() || req.getFromAccountId().toString().isEmpty() ) {
                     throw new TransactionError.AccountInvalid("Accounts are required");
                 }
 
-                fromAccountId = req.getFrom_account();
-                toAccountId = req.getTo_account();
+                fromAccountId = req.getFromAccountId();
+                toAccountId = req.getToAccountId();
 
                 fromAccount = accountRepository.findById(fromAccountId)
                         .orElseThrow(() -> new TransactionError.AccountInvalid("From Account not found"));
@@ -140,19 +141,19 @@ public class TransactionService {
             data.setAmount(amount);
             data.setCreated_at(LocalDateTime.now());
             data.setFromAccountId(
-                    req.getFrom_account() != null
-                            ? req.getFrom_account()
+                    req.getFromAccountId() != null
+                            ? req.getFromAccountId()
                             : null
             );
 
             data.setToAccountId(
-                    req.getTo_account() != null
-                            ? req.getTo_account()
+                    req.getToAccountId() != null
+                            ? req.getToAccountId()
                             : null
             );
             data.setStatus(StatusType.ACTIVE);
             data.setNote(req.getNote());
-            data.setReference_no(refNo);
+            data.setReferenceNo(refNo);
 
             transactionRepository.save(data);
 
@@ -171,7 +172,7 @@ public class TransactionService {
 
         ReturnClass rs = new ReturnClass();
         ReturnDataClass rsData = new ReturnDataClass();
-        List<TransactionModel> transactionList = transactionRepository.findByFromAccountId(id);
+        List<TransactionDTO> transactionList =  TransactionDTO.fromEntityList(transactionRepository.findByFromAccountId(id));
         rsData.setTransactionList(transactionList);
         rs.setSuccessReturn();
         rs.setCODE("200");

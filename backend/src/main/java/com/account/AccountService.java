@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
+import com.account.dto.UserAccountResponse;
+import com.models.ReturnDataClass;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Service;
@@ -95,6 +97,14 @@ public class AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
         return AccountResponse.from(account);
+    }
+
+    public List<UserAccountResponse> getAccountByUserId(UUID userId){
+        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
+
+        List<UserAccountResponse> accounts = accountRepository.findByUserId(userId);
+
+        return accounts;
     }
 
 

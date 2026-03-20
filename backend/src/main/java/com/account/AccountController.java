@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import com.account.dto.UserAccountResponse;
+import com.models.ReturnDataClass;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -79,4 +81,12 @@ class AccountController {
         AccountResponse response = accountService.getAccountById(accountId);
         return ResponseEntity.ok(ApiResponse.success("Get account successfully", response));
     }
+
+    @GetMapping("/accounts/user/{userId}")
+    public ResponseEntity<ApiResponse<List<UserAccountResponse>>> getAccountByUserId( @PathVariable UUID userId) {
+        List<UserAccountResponse> responses = accountService.getAccountByUserId(userId);
+        return ResponseEntity.ok(ApiResponse.success("Get all user account successfully", responses));
+    }
+
+
 }

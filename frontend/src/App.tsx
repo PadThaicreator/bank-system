@@ -25,7 +25,7 @@ function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route element={<NavBarComponent />}>
-                <Route path="/accountList" element={<AccountListPage />} />
+                <Route path="/admin/accountList" element={<AccountListPage />} />
                 <Route path="/vite" element={<VitePage />} />
               </Route>
             </Route>
