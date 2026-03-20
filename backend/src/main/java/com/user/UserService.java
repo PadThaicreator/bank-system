@@ -87,4 +87,22 @@ public  class UserService {
 
 
     }
+
+    public ReturnClass GetAllUser(){
+        ReturnClass rs = new ReturnClass();
+
+
+
+        List<UserModel> userList = UserRepository.findAll();
+
+        ReturnDataClass rsData = new ReturnDataClass();
+        rsData.setUserList(userList);
+
+        rs.setData(rsData);
+
+        return  rs;
+
+
+
+    }
 }

@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-
+import btnStyle from "../../../css/button.module.css"
 export default function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export default function LoginPage() {
         user: {
           fullName: "JOHN DOE",
           email: "example@gmail.com",
-          role: "CUSTOMER",
+          role: "ADMIN",
         },
         token: "TOKEN",
       }),
@@ -24,6 +24,6 @@ export default function LoginPage() {
   return (
   <div>
     Login Page
-    <button className="btn btn-primary"  onClick={onLogin}>Login</button>
+    <button className={`${btnStyle.btn} ${btnStyle["btn-primary"]}`}  onClick={onLogin}>Login</button>
   </div>);
 }

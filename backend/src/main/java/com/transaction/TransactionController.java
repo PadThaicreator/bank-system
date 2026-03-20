@@ -10,14 +10,15 @@ import java.util.UUID;
 
 
 @RestController
+@RequestMapping("/transaction")
 public class TransactionController {
 
     private final TransactionService transactionService ;
-    private final AccountRepository accountRepository ;
 
-    public TransactionController(TransactionService transactionService  , AccountRepository accountRepository) {
+
+    public TransactionController(TransactionService transactionService  ) {
         this.transactionService = transactionService;
-        this.accountRepository = accountRepository;
+
     }
 
 
