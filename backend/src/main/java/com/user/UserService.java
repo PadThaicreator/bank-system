@@ -67,15 +67,24 @@ public  class UserService {
             if(user.getStatus().equals(StatusType.INACTIVE)){
                 throw new AuthenError.InactiveUser("User is inactive");
             }
-            List<UserModel> list = new ArrayList<>();
-            ReturnDataClass rsData = new ReturnDataClass();
+
+
             if(passwordEncoder.matches(password, user.getPasswordHash()) ){
 
 
                 String getToken = jwtUtil.generateAccessToken(user.getId().toString() , user.getRole().toString());
 
+                UserModel userLogin = new UserModel();
+                userLogin.setRole(user.getRole());
+                userLogin.setEmail(user.getEmail());
+                userLogin.setFullName(user.getFullName());
+                userLogin.setId(user.getId());
+                userLogin.setPhone(user.getPhone());
 
 
+
+
+                rs.setUserLogin(userLogin);
                 rs.setMSG(getToken);
                 rs.setCODE("200");
                 return rs;

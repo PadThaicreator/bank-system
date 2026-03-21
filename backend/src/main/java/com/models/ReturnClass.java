@@ -2,6 +2,7 @@ package com.models;
 
 import com.MainApplication;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.user.UserModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,15 @@ public  class ReturnClass {
 
     private ReturnDataClass data;
 
+    private UserModel userLogin;
+
+    public UserModel getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(UserModel userLogin) {
+        this.userLogin = userLogin;
+    }
 
     public String getCODE() {
         return CODE;

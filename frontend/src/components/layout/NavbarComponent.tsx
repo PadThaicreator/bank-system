@@ -128,7 +128,7 @@ export default function NavBarComponent() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <div>{data.user?.fullName} {data.token}</div>
+          <div>{data.user?.fullName}</div>
           <div className={styles["navbar-user"]} style={{ marginLeft: "4px" }}>
             <div className={styles["user-avatar"]}>{data.user?.fullName?.[0]}</div>
           </div>

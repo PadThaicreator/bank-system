@@ -32,10 +32,10 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/user/getAllUser").hasRole("ADMIN")
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+//              .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/users/getAllUser").hasRole("ADMIN")
+                .requestMatchers("/transactions/allTransaction").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 )
 //                .exceptionHandling(ex -> ex
