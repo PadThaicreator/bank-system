@@ -1,10 +1,11 @@
 import type { AccountResponse } from '../../../types'
 import { useAllAccount } from "../../../hooks/useAllAccount"
 import styles from './AccountListPage.module.css'
+import { useNavigate } from 'react-router-dom'
 
 const AccountListPage = () => {
   const { accounts, loading, error, refetch } = useAllAccount()
-
+  const navigate = useNavigate();
   if (loading) return <div className={styles.loadingContainer}>Loading Data...</div>
   if (error) return (
     <div className={styles.errorContainer}>
@@ -14,6 +15,10 @@ const AccountListPage = () => {
       </button>
     </div>
   )
+
+  const handleAccountRowClick = (accountId: string): void => {
+    navigate(`/admin/accountDetail/${accountId}`)
+  }
 
   return (
     <div className={styles.pageContainer}>
@@ -35,14 +40,14 @@ const AccountListPage = () => {
           </thead>
           <tbody>
             {accounts.map((acc: AccountResponse) => (
-              <tr key={acc.id} className={styles.tableRow}>
+              <tr key={acc.id} className={styles.tableRow} onClick={() => handleAccountRowClick(acc.id!)}>
                 <td className={styles.tableCell}>{acc.accountNumber}</td>
                 <td className={styles.tableCell}>{acc.accountType}</td>
                 <td className={`${styles.tableCell} ${styles.currencyCell}`}>
                   {(acc.balance ?? 0).toLocaleString()} ฿
                 </td>
                 <td className={styles.tableCell}>
-                   <span className={`${styles.statusBadge} ${acc.status === 'ACTIVE' ? styles.statusActive : styles.statusInactive}`}>
+                    <span className={`${styles.statusBadge} ${acc.status === 'ACTIVE' ? styles.statusActive : styles.statusInactive}`}>
                         {acc.status}
                     </span>
                 </td>

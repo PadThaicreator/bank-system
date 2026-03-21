@@ -12,6 +12,7 @@ import NavBarComponent from "./components/layout/NavbarComponent";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import HistoryTransactionPage from "./pages/transactions/history/page";
 import TransactionPage from "./pages/transactions/transaction/page";
+import AccountDetailPage from "./pages/account/Account/AccountDetailPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<NavBarComponent />}>
                 <Route path="/admin/accountList" element={<AccountListPage />} />
+                <Route path="/admin/accountDetail/:accountId" element={<AccountDetailPage />} />
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
                 <Route path="/vite" element={<VitePage />} />
