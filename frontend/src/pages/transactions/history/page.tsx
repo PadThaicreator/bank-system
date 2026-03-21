@@ -173,9 +173,11 @@ export default function HistoryPage() {
                         {tx.note && (
                           <span className={styles.txNote}>{tx.note}</span>
                         )}
-                        {tx.to_account_id && (
+                        {(tx.from_account_number || tx.to_account_number) && (
                           <span className={styles.txDetail}>
-                            To: {tx.to_account_number}
+                            {tx.from_account_number ? `From: ${tx.from_account_number}` : ""}
+                            {tx.from_account_number && tx.to_account_number ? " → " : ""}
+                            {tx.to_account_number ? `To: ${tx.to_account_number}` : ""}
                           </span>
                         )}
                       </div>

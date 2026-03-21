@@ -1,5 +1,5 @@
 export const menuList: MenuItem[] = [
-    { label: "Home", path: "/vite" , canAccess : ["ADMIN","CUSTOMER"] },
+    { label: "Home", path: "/home" , canAccess : ["ADMIN","CUSTOMER"] },
     {
       label: "Account",
       path: "/account",
@@ -19,13 +19,12 @@ export const menuList: MenuItem[] = [
       ],
     },
     {
-      label: "Service",
+      label: "Transaction",
       path: "/transaction",
       canAccess : ["ADMIN","CUSTOMER"],
       children: [
-        { label: "Deposit", path: "/transaction/service" , canAccess : ["ADMIN","CUSTOMER"] },
-        { label: "Withdraw", path: "/transaction/service" , canAccess : ["ADMIN","CUSTOMER"] },
-        { label: "Transfer", path: "/transaction/service" , canAccess : ["ADMIN","CUSTOMER"]},
+        { label: "Service", path: "/transaction/service" , canAccess : ["ADMIN","CUSTOMER"] },
+
         { label: "History", path: "/transaction/history" , canAccess : ["ADMIN","CUSTOMER"]},
       ],
     },

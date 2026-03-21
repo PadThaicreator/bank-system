@@ -244,6 +244,7 @@ export interface components {
             note?: string;
             reference_no?: string;
             to_account_number?: string;
+            from_account_number?: string;
         };
         UserAccountResponse: {
             /** Format: uuid */

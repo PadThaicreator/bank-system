@@ -1,5 +1,5 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import VitePage from "./pages/vite/page";
+import HomePage from "./pages/home/page";
 // import NavBarComponent from "./components/layout/CustomerNavbar";
 import AuthenComponent from "./components/auth";
 import LoginPage from "./pages/auth/LoginPage/page";
@@ -32,7 +32,7 @@ function App() {
                 <Route path="/admin/accountDetail/:accountId" element={<AccountDetailPage />} />
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
-                <Route path="/vite" element={<VitePage />} />
+                <Route path="/home" element={<HomePage />} />
               </Route>
             </Route>
 
