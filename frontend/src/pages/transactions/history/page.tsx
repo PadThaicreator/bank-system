@@ -43,7 +43,7 @@ export default function HistoryPage() {
     error: txError,
   } = useHistoryTransaction(selectedAccount?.id);
 
-  // ── Loading / Error states ────────────────────────────────────
+  
   if (accLoading)
     return (
       <div className={styles.stateWrapper}>
@@ -63,7 +63,7 @@ export default function HistoryPage() {
 
   return (
     <div className={styles.page}>
-      {/* ── Left: Account list ───────────────────────────── */}
+      
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <h2 className={styles.sidebarTitle}>My Account</h2>
@@ -173,11 +173,9 @@ export default function HistoryPage() {
                         {tx.note && (
                           <span className={styles.txNote}>{tx.note}</span>
                         )}
-                        {(tx.from_account_number || tx.to_account_number) && (
+                        {tx.to_account_id && (
                           <span className={styles.txDetail}>
-                            {tx.from_account_number ? `From: ${tx.from_account_number}` : ""}
-                            {tx.from_account_number && tx.to_account_number ? " → " : ""}
-                            {tx.to_account_number ? `To: ${tx.to_account_number}` : ""}
+                            To: {tx.to_account_number}
                           </span>
                         )}
                       </div>
