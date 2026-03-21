@@ -1,6 +1,6 @@
 .pageContainer {
-  padding: 24px;
-  max-width: 720px;
+  padding: 32px 48px;
+  max-width: 780px;
   margin: 0 auto;
 }
 
@@ -9,97 +9,123 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .pageTitle {
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #1a1a2e;
   margin: 0;
 }
 
 .backButton {
-  background: none;
-  border: 1px solid #d1d5db;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
   border-radius: 8px;
-  padding: 6px 14px;
+  padding: 7px 16px;
   font-size: 0.875rem;
-  color: #374151;
+  color: #475569;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.15s;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .backButton:hover {
-  background: #f3f4f6;
+  border-color: #6366f1;
+  color: #6366f1;
+  background: #f5f3ff;
 }
 
 /* Balance Card */
 .balanceCard {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border-radius: 16px;
-  padding: 32px;
-  margin-bottom: 24px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #1e1b4b 100%);
+  border-radius: 20px;
+  padding: 36px 40px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.balanceCard::after {
+  content: '';
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.12);
+  pointer-events: none;
 }
 
 .balanceLabel {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: #94a3b8;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  font-weight: 500;
 }
 
 .balanceAmount {
-  font-size: 2.25rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.02em;
+  line-height: 1;
 }
 
 /* Status Badge */
 .statusBadge {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .status_ACTIVE {
-  background: rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.18);
   color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .status_INACTIVE {
-  background: rgba(156, 163, 175, 0.2);
-  color: #d1d5db;
+  background: rgba(148, 163, 184, 0.18);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
 .status_FROZEN {
-  background: rgba(59, 130, 246, 0.2);
-  color: #93c5fd;
+  background: rgba(99, 102, 241, 0.18);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 .status_CLOSED {
-  background: rgba(239, 68, 68, 0.2);
+  background: rgba(239, 68, 68, 0.18);
   color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 /* Info Card */
 .infoCard {
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 24px;
+  border: 1.5px solid #e8eaf0;
+  border-radius: 20px;
+  padding: 28px 32px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
 }
 
 .sectionTitle {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #1a1a2e;
   margin: 0 0 20px 0;
 }
@@ -107,15 +133,14 @@
 .infoGrid {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .infoRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 0;
-  border-bottom: 1px solid #f3f4f6;
+  padding: 15px 0;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .infoRow:last-child {
@@ -124,22 +149,28 @@
 
 .infoLabel {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: #64748b;
   flex-shrink: 0;
   min-width: 140px;
+  font-weight: 400;
 }
 
 .infoValue {
   font-size: 0.875rem;
-  color: #111827;
-  font-weight: 500;
+  color: #1e293b;
+  font-weight: 600;
   text-align: right;
+}
+
+.dateValue {
+  color: #6366f1;
+  font-weight: 500;
 }
 
 .uuidText {
   font-family: 'Courier New', monospace;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: #94a3b8;
   font-weight: 400;
 }
 
@@ -150,15 +181,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80px 0;
+  padding: 100px 0;
   gap: 16px;
 }
 
 .spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid #e5e7eb;
-  border-top-color: #1a1a2e;
+  border: 3px solid #e2e8f0;
+  border-top-color: #6366f1;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -169,7 +200,7 @@
 
 .loadingText,
 .errorText {
-  color: #6b7280;
+  color: #64748b;
   font-size: 0.9rem;
   margin: 0;
 }
