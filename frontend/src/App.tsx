@@ -2,7 +2,6 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import HomePage from "./pages/home/page";
 import AuthenComponent from "./components/auth";
 import LoginPage from "./pages/auth/LoginPage/page";
-import RegisterPage from "./pages/auth/RegisterPage/page";
 import AccountListPage from "./pages/account/Account/AccountListPage";
 import NotFoundPage from "./pages/not-found/page";
 import { Provider } from "react-redux";
@@ -13,8 +12,6 @@ import ProtectedRoute from "./components/layout/ProtectedRoute";
 import HistoryTransactionPage from "./pages/transactions/history/page";
 import TransactionPage from "./pages/transactions/transaction/page";
 import AccountDetailPage from "./pages/account/Account/AccountDetailPage";
-import ProfilePage from "./pages/profile/ProfilePage/page";
-import OpenAccountPage from "./pages/account/OpenAccountPage/page";
 import AdminRoute from "./middleware/AdminRoute";
 import AccountOpeningPage from "./pages/account/Account/AccountOpeningPage";
 import UserListPage from "./pages/admin/UserMangement/userListPage";
@@ -34,7 +31,6 @@ function App() {
             {/* Authen Route */}
             <Route element={<AuthenComponent />}>
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={["CUSTOMER", "ADMIN"]} />}>
@@ -51,8 +47,6 @@ function App() {
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
                 <Route path="/home" element={<HomePage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/account/open" element={<OpenAccountPage />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
               </Route>
