@@ -43,6 +43,7 @@ class UserServiceTest {
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("password123", "hashedPassword")).thenReturn(true);
         when(jwtUtil.generateAccessToken(anyString(), anyString())).thenReturn("token123");
+        when(jwtUtil.generateRefreshToken(anyString())).thenReturn("refresh123");
 
         // Act
         ReturnClass result = authService.Login(dto);
@@ -50,6 +51,7 @@ class UserServiceTest {
         // Assert
         assertEquals("200", result.getCODE());
         assertEquals("token123", result.getMSG());
+        assertEquals("refresh123", result.getRefreshToken());
     }
 
     @Test

@@ -33,10 +33,10 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//              .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/users/login", "/users/register", "/users/refreshToken").permitAll()
                 .requestMatchers("/users/getAllUser").hasRole("ADMIN")
                 .requestMatchers("/transactions/allTransaction").hasRole("ADMIN")
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
                 )
 //                .exceptionHandling(ex -> ex
 //                        .authenticationEntryPoint((request, response, authException) -> {

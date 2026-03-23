@@ -5,7 +5,7 @@ import type { AccountResponse, BalanceResponse, CreateAccountRequest } from '../
 const BASE = "/api/accounts";
 
 export const accountService = {
-    
+
     // Get /api/accounts
     getAllAccounts: () => api.get<AccountResponse[]>(BASE),
 
@@ -16,7 +16,7 @@ export const accountService = {
     getBalanceById: (accountId: string) => api.get<BalanceResponse>(`${BASE}/${accountId}/getAccountBalance`),
 
     // Post /api/accounts
-    createAccount: (data: CreateAccountRequest) => api.post<AccountResponse>(BASE, data),
+    createAccount: (userId: string, data: CreateAccountRequest) => api.post<AccountResponse>(`${BASE}?userId=${userId}`, data),
 
     // Patch /api/accounts/{accountId}/changeBalance?amount={amount}
     addBalanceToAccount: (accountId: string, amount: number) => api.patch<AccountResponse>(`${BASE}/${accountId}/changeBalance?amount=${amount}`),
