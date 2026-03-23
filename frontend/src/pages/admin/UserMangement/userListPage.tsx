@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import useGetAllUser from "../../../hooks/users/useGetAllUser";
 import styles from "./style.module.css";
 import type { UserDTO } from "../../../types/userType";
+import { useNavigate } from "react-router-dom";
 
 export default function UserManagementPage() {
   const { users, loading, error, getAllUser } = useGetAllUser();
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -82,7 +84,11 @@ export default function UserManagementPage() {
               </thead>
               <tbody>
                 {currentUsers.map((user: UserDTO) => (
-                  <tr key={user.id}>
+                  <tr 
+                    key={user.id}
+                    className={styles.clickableRow}
+                    onClick={() => navigate(`/admin/userDetail/${user.id}`)}
+                  >
                     <td>
                       <div style={{ fontWeight: 500 }}>{user.fullName}</div>
                     </td>
