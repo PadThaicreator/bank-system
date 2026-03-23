@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, useNavigate } from "react-router-dom";
 import HomePage from "./pages/home/page";
 // import NavBarComponent from "./components/layout/CustomerNavbar";
 import AuthenComponent from "./components/auth";
@@ -17,8 +17,13 @@ import AdminRoute from "./middleware/AdminRoute";
 import AccountOpeningPage from "./pages/account/Account/AccountOpeningPage";
 import UserListPage from "./pages/admin/UserMangement/userListPage";
 import UserDetailPage from "./pages/admin/UserMangement/userDetailPage";
+import { useEffect } from "react";
+
+
 
 function App() {
+
+  
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -43,6 +48,7 @@ function App() {
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
                 <Route path="/home" element={<HomePage />} />
+                <Route path="/" element={<HomePage />} />
               </Route>
             </Route>
 
