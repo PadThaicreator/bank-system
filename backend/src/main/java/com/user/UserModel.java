@@ -2,6 +2,7 @@ package com.user;
 
 
 import com.models.StatusType;
+import com.models.UserGender;
 import com.models.UserRole;
 import com.transaction.TransactionModel;
 import jakarta.persistence.*;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.management.relation.Role;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -58,6 +60,15 @@ public class UserModel {
 
         @Column(name = "updated_at")
         private LocalDateTime updatedAt;
+
+
+        @Column(name = "birth_date")
+        private LocalDate birthDay;
+
+
+        @Column(name = "gender")
+        @Enumerated(EnumType.STRING)
+        private UserGender gender;
 
 
 
