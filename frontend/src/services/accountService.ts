@@ -1,5 +1,5 @@
 import api from '../lib/axios'
-import type { AccountResponse, BalanceResponse, CreateAccountRequest } from '../types';
+import type { AccountResponse, BalanceResponse, CreateAccountRequest } from '../types/accountType';
 
 
 const BASE = "/api/accounts";
@@ -23,6 +23,12 @@ export const accountService = {
 
     // Patch /api/account/{accountId}/deleteAcount
     deleteAccount: (accountId: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/deleteAccount`),
+
+    // Patch /api/account/{accountId}/changeAccountStatus
+    changeAccountStatus: (accountId: string, status: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/changeAccountStatus`, {"status": status}),
+
+    // Patch /api/account/{accountId}/changeAccountType
+    changeAccountType: (accountId: string, accountType: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/changeAccountType`, {"accountType": accountType}),
 
     getUserAccount: (userId: string) => api.get<AccountResponse>(`${BASE}/user/${userId}`)
 }

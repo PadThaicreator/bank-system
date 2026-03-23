@@ -14,6 +14,7 @@ import HistoryTransactionPage from "./pages/transactions/history/page";
 import TransactionPage from "./pages/transactions/transaction/page";
 import AccountDetailPage from "./pages/account/Account/AccountDetailPage";
 import AdminRoute from "./middleware/AdminRoute";
+import AccountOpeningPage from "./pages/account/Account/AccountOpeningPage";
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
                   <Route path="/admin/accountList" element={<AccountListPage />} />
                   <Route path="/admin/accountDetail/:accountId" element={<AccountDetailPage />} />
                 </Route>
+                
+                <Route path="/account/open" element={<AccountOpeningPage />} />
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
                 <Route path="/home" element={<HomePage />} />
