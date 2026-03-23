@@ -15,6 +15,7 @@ import TransactionPage from "./pages/transactions/transaction/page";
 import AccountDetailPage from "./pages/account/Account/AccountDetailPage";
 import AdminRoute from "./middleware/AdminRoute";
 import AccountOpeningPage from "./pages/account/Account/AccountOpeningPage";
+import UserManagementPage from "./pages/admin/UserMangement/page";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                 <Route element={<AdminRoute />}>
                   <Route path="/admin/accountList" element={<AccountListPage />} />
                   <Route path="/admin/accountDetail/:accountId" element={<AccountDetailPage />} />
+                  <Route path="/admin/userList" element={<UserManagementPage />} />
                 </Route>
                 
                 <Route path="/account/open" element={<AccountOpeningPage />} />

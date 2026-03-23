@@ -1,20 +1,20 @@
 import api from '../lib/axios'
-import type { UserDTO } from '../types/userType';
+import type { UserDTO, UserModel } from '../types/userType';
 
 
 
 const BASE = "/api/users";
 
-export const accountService = {
+export const userService = {
     
     
-    getAllUser: () => api.get<UserDTO[]>(BASE),
+    getAllUser: () => api.get<UserDTO[]>(`${BASE}/getAllUser`),
 
     
-    login: (accountId: string) => api.get<LoginResponse>(`${BASE}/${accountId}`),
+    login: (data : LoginRequest) => api.post<LoginResponse>(`${BASE}/login` , data),
 
     
-    //register: (accountId: string) => api.get<BalanceResponse>(`${BASE}/${accountId}/getAccountBalance`),
+    register: (data: UserModel) => api.post<UserModel>(`${BASE}/register` , data),
 
    
 }
@@ -31,5 +31,10 @@ interface UserData {
     role : string;
     fullName : string;
     phone : string;
+}
+
+interface LoginRequest {
+    email : string;
+    password : string;
 }
 
