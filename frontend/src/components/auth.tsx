@@ -7,9 +7,9 @@ export default function AuthenComponent(){
 
     return(
         <div>
-            <div>
+            {/* <div>
                 Authen
-            </div>
+            </div> */}
             <div>
                 <Outlet />
             </div>
