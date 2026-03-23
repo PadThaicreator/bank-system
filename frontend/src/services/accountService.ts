@@ -5,7 +5,7 @@ import type { AccountResponse, BalanceResponse, CreateAccountRequest } from '../
 const BASE = "/api/accounts";
 
 export const accountService = {
-    
+
     // Get /api/accounts
     getAllAccounts: () => api.get<AccountResponse[]>(BASE),
 

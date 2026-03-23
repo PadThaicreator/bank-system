@@ -24,6 +24,15 @@ public  class ReturnClass {
     private ReturnDataClass data;
 
     private UserModel userLogin;
+    private String refreshToken;
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
     public UserModel getUserLogin() {
         return userLogin;

@@ -72,8 +72,8 @@ public  class UserService {
 
             if(passwordEncoder.matches(password, user.getPasswordHash()) ){
 
-
                 String getToken = jwtUtil.generateAccessToken(user.getId().toString() , user.getRole().toString());
+                String getRefreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
 
                 UserModel userLogin = new UserModel();
                 userLogin.setRole(user.getRole());
@@ -87,6 +87,7 @@ public  class UserService {
 
                 rs.setUserLogin(userLogin);
                 rs.setMSG(getToken);
+                rs.setRefreshToken(getRefreshToken);
                 rs.setCODE("200");
                 return rs;
             }else{
@@ -96,6 +97,30 @@ public  class UserService {
 
 
 
+    }
+
+    public ReturnClass RefreshToken(String refreshToken) {
+        ReturnClass rs = new ReturnClass();
+        if (refreshToken == null || !jwtUtil.isTokenValid(refreshToken)) {
+            throw new AuthenError.InvalidForm("Invalid or Expired Refresh Token");
+        }
+        
+        String userIdStr = jwtUtil.extractUserId(refreshToken);
+        UUID userId = UUID.fromString(userIdStr);
+        UserModel user = UserRepository.findById(userId)
+                .orElseThrow(() -> new AuthenError.InvalidForm("User not found"));
+                
+        if (user.getStatus().equals(StatusType.INACTIVE)) {
+            throw new AuthenError.InactiveUser("User is inactive");
+        }
+
+        String newToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getRole().toString());
+        String newRefreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
+        
+        rs.setMSG(newToken);
+        rs.setRefreshToken(newRefreshToken);
+        rs.setCODE("200");
+        return rs;
     }
 
     public ReturnClass GetAllUser(){
@@ -129,8 +154,33 @@ public  class UserService {
         rs.setData(rsData);
 
         return  rs;
+    }
 
+    public ReturnClass getUserProfile(UUID userId) {
+        UserModel user = UserRepository.findById(userId)
+                .orElseThrow(() -> new UserError.UserDuplicateError("User not found"));
+                
+        ReturnClass rs = new ReturnClass();
+        rs.setUserLogin(user);
+        rs.setMSG("Success");
+        return rs;
+    }
 
-
+    @Transactional
+    public ReturnClass updateUserProfile(UUID userId, com.user.dto.UpdateProfileDTO data) {
+        UserModel user = UserRepository.findById(userId)
+                .orElseThrow(() -> new UserError.UserDuplicateError("User not found"));
+                
+        user.setFullName(data.getFullName());
+        user.setPhone(data.getPhone());
+        user.setUpdatedAt(LocalDateTime.now());
+        
+        UserRepository.save(user);
+        
+        ReturnClass rs = new ReturnClass();
+        rs.setUserLogin(user);
+        rs.setCODE("200");
+        rs.setMSG("Profile updated successfully");
+        return rs;
     }
 }
