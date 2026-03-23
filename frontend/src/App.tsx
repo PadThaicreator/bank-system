@@ -1,6 +1,5 @@
-import { Routes, Route, BrowserRouter, useNavigate } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import HomePage from "./pages/home/page";
-// import NavBarComponent from "./components/layout/CustomerNavbar";
 import AuthenComponent from "./components/auth";
 import LoginPage from "./pages/auth/LoginPage/page";
 import AccountListPage from "./pages/account/Account/AccountListPage";
@@ -17,7 +16,7 @@ import AdminRoute from "./middleware/AdminRoute";
 import AccountOpeningPage from "./pages/account/Account/AccountOpeningPage";
 import UserListPage from "./pages/admin/UserMangement/userListPage";
 import UserDetailPage from "./pages/admin/UserMangement/userDetailPage";
-import { useEffect } from "react";
+
 
 
 
