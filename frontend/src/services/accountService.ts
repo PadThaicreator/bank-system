@@ -19,6 +19,7 @@ export const accountService = {
     getUserAccount: () => api.get<AccountResponse>(`${BASE}/user`),
 
     // Post /api/accounts
+    createAccount: (data: CreateAccountRequest) => api.post<AccountResponse>(BASE, data),
 
     // Patch /api/accounts/{accountId}/changeBalance?amount={amount}
     addBalanceToAccount: (accountId: string, amount: number) => api.patch<AccountResponse>(`${BASE}/${accountId}/changeBalance?amount=${amount}`),
