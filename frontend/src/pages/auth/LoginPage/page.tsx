@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../../redux/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../../../services/authService";
 import { Lock, Mail, Loader2 } from "lucide-react";
 
@@ -110,6 +110,13 @@ export default function LoginPage() {
               "Sign In"
             )}
           </button>
+          
+          <div className="mt-4 text-center text-sm text-gray-600">
+            Don't have an account?{" "}
+            <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
+              Sign Up
+            </Link>
+          </div>
         </form>
       </div>
     </div>
