@@ -1,4 +1,4 @@
-import type { AccountResponse } from '../../../types'
+import type { AccountResponse } from '../../../types/accountType'
 import { useAllAccount } from "../../../hooks/useAllAccount"
 import styles from './AccountListPage.module.css'
 import { useNavigate } from 'react-router-dom'

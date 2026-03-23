@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import type { AccountResponse } from "../types"
+import type { AccountResponse } from "../types/accountType"
 import { accountService } from "../services/accountService"
 import { useSelector } from "react-redux"
 import type { RootState } from "../redux/store"

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { accountService } from "../services/accountService"
-import type { AccountResponse } from "../types"
+import type { AccountResponse } from "../types/accountType"
 
 export function useAllAccount () {
     const [accounts, setAccounts] = useState<AccountResponse[]>([])

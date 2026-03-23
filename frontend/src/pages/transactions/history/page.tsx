@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserAccount from "../../../hooks/useUserAccount";
 import { useHistoryTransaction } from "../../../hooks/transactions/useGetHistory";
-import type { AccountResponse } from "../../../types";
+import type { AccountResponse } from "../../../types/accountType";
 import styles from "./history.module.css";
 
 

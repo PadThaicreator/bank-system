@@ -1,5 +1,5 @@
 import axios from "axios"
-import type { AxiosResponse /*, InternalAxiosRequestConfig*/ } from "axios"
+import type { AxiosResponse, InternalAxiosRequestConfig } from "axios"
 
 
 const api = axios.create({
@@ -11,16 +11,16 @@ const api = axios.create({
 })
 
 // ── Request interceptor: ใส่ JWT token ทุก request อัตโนมัติ
-// api.interceptors.request.use(
-//     (config: InternalAxiosRequestConfig) => {
-//         const token = localStorage.getItem("token")
-//         if (token) {
-//             config.headers.Authorization = `Bearer ${token}`
-//         }
-//         return config
-//     },
-//     (error) => Promise.reject(error)
-// )
+api.interceptors.request.use(
+    (config: InternalAxiosRequestConfig) => {
+        const token = localStorage.getItem("token")
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`
+        }
+        return config
+    },
+    (error) => Promise.reject(error)
+)
 
 // ── Response interceptor: handle error globally
 api.interceptors.response.use(
