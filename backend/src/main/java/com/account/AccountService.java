@@ -55,7 +55,7 @@ public class AccountService {
     public AccountResponse changeBalance(UUID accountId, BigDecimal amount) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
-        
+
         verifyOwnershipOrAdmin(account.getUserId());
 
         account.setBalance(account.getBalance().add(amount));
@@ -94,7 +94,7 @@ public class AccountService {
     public AccountResponse deleteAccount(UUID accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
-        
+
         verifyOwnershipOrAdmin(account.getUserId());
         account.setStatus(AccountStatus.CLOSED);
         Account saved = accountRepository.save(account);
@@ -107,7 +107,7 @@ public class AccountService {
     public BalanceResponse getAccountBalance(UUID accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
-        
+
         verifyOwnershipOrAdmin(account.getUserId());
         return new BalanceResponse(
                 account.getAccountNumber(),
@@ -117,7 +117,7 @@ public class AccountService {
 
     public List<AccountResponse> getAllAccounts() {
         verifyAdmin();
-        
+
         List<Account> accounts = accountRepository.findAll();
         return accounts.stream()
                 .map(AccountResponse::from)
@@ -127,13 +127,14 @@ public class AccountService {
     public AccountResponse getAccountById(UUID accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
-        
+
         verifyOwnershipOrAdmin(account.getUserId());
         return AccountResponse.from(account);
     }
 
-    public List<UserAccountResponse> getAccountByUserId(UUID userId) {
-        verifyOwnershipOrAdmin(userId);
+    public List<UserAccountResponse> getAccountByUserId() {
+        String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
+        UUID userId = UUID.fromString(userIdStr);
 
         List<UserAccountResponse> accounts = accountRepository.findByUserId(userId);
 
@@ -148,7 +149,7 @@ public class AccountService {
         if (auth == null || auth.getName() == null) {
             throw new RuntimeException("Unauthorized: No authentication found");
         }
-        
+
         String currentUserId = auth.getName();
         boolean isAdmin = auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ADMIN"));
@@ -163,10 +164,10 @@ public class AccountService {
         if (auth == null) {
             throw new RuntimeException("Unauthorized: No authentication found");
         }
-        
+
         boolean isAdmin = auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ADMIN"));
-        
+
         if (!isAdmin) {
             throw new RuntimeException("Unauthorized: Admin access required");
         }

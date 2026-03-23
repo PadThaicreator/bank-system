@@ -99,9 +99,9 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Get account successfully", response));
     }
 
-    @GetMapping("/accounts/user/{userId}")
-    public ResponseEntity<ApiResponse<List<UserAccountResponse>>> getAccountByUserId(@PathVariable UUID userId) {
-        List<UserAccountResponse> responses = accountService.getAccountByUserId(userId);
+    @GetMapping("/accounts/user")
+    public ResponseEntity<ApiResponse<List<UserAccountResponse>>> getAccountByUserId() {
+        List<UserAccountResponse> responses = accountService.getAccountByUserId();
         return ResponseEntity.ok(ApiResponse.success("Get all user account successfully", responses));
     }
 

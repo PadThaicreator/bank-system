@@ -11,16 +11,8 @@ const AccountOpeningPage = () => {
     const [accountType, setAccountType] = useState<string>(accountTypes[0].value)
     const [amount, setAmount] = useState<number>(0)
     
-    // Temporary state for taking token manually
-    const [token, setToken] = useState<string>(localStorage.getItem('token') || '')
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        
-        // Save the manual token into localStorage so axios interceptor can pick it up
-        if (token) {
-            localStorage.setItem('token', token)
-        }
 
         const createAccountPayload: CreateAccountRequest = {
             accountType: accountType as AccountType,
@@ -44,19 +36,6 @@ const AccountOpeningPage = () => {
             {error && <div className={styles.error}>{error}</div>}
 
             <form className={styles.form} onSubmit={handleSubmit}>
-                <div className={styles.formGroup}>
-                    <label className={styles.label} htmlFor="token">Token สำหรับทดสอบ (JWT Token)</label>
-                    <input 
-                        className={styles.input}
-                        id="token"
-                        type="text" 
-                        placeholder="วาง JWT Token ที่นี่เพื่อทดสอบสร้างบัญชี" 
-                        value={token}
-                        onChange={(e) => setToken(e.target.value)} 
-                        required
-                    />
-                </div>
-
                 <div className={styles.formGroup}>
                     <label className={styles.label} htmlFor="accountType">ประเภทบัญชี</label>
                     <select 
@@ -90,7 +69,7 @@ const AccountOpeningPage = () => {
                 <button 
                     className={styles.submitBtn} 
                     type="submit" 
-                    disabled={loading || amount < 1000 || !token}
+                    disabled={loading || amount < 1000}
                 >
                     ยืนยันการเปิดบัญชี
                 </button>
