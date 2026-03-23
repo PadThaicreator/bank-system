@@ -4,6 +4,7 @@ package com.user;
 import com.models.StatusType;
 import com.transaction.TransactionModel;
 import com.user.dto.LoginDTO;
+import com.user.dto.UserDTO;
 import com.user.expception.AuthenError;
 import com.user.expception.UserError;
 import com.configuration.auth.jwt.JwtUtil;
@@ -104,8 +105,24 @@ public  class UserService {
 
         List<UserModel> userList = UserRepository.findAll();
 
+
+        List<UserDTO> userDTOList = userList.stream()
+                .map(user -> {
+                    UserDTO dto = new UserDTO();
+                    dto.setId(user.getId());
+                    dto.setFullName(user.getFullName());
+                    dto.setEmail(user.getEmail());
+                    dto.setRole(user.getRole());
+                    dto.setPhone(user.getPhone());
+                    dto.setStatus(user.getStatus());
+                    dto.setCreatedAt(user.getCreatedAt());
+                    dto.setUpdatedAt(user.getUpdatedAt());
+                    return dto;
+                })
+                .toList();
+
         ReturnDataClass rsData = new ReturnDataClass();
-        rsData.setUserList(userList);
+        rsData.setUserList(userDTOList);
 
         rs.setData(rsData);
 
