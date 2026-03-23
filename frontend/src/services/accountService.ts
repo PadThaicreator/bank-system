@@ -15,6 +15,9 @@ export const accountService = {
     // Get /api/accounts/{accountId}
     getBalanceById: (accountId: string) => api.get<BalanceResponse>(`${BASE}/${accountId}/getAccountBalance`),
 
+    // Get /api/accounts/user
+    getUserAccount: () => api.get<AccountResponse>(`${BASE}/user`),
+
     // Post /api/accounts
     createAccount: (data: CreateAccountRequest) => api.post<AccountResponse>(BASE, data),
 
@@ -30,5 +33,4 @@ export const accountService = {
     // Patch /api/account/{accountId}/changeAccountType
     changeAccountType: (accountId: string, accountType: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/changeAccountType`, {"accountType": accountType}),
 
-    getUserAccount: (userId: string) => api.get<AccountResponse>(`${BASE}/user/${userId}`)
 }
