@@ -20,7 +20,7 @@ export default function LoginPage() {
     );
     localStorage.setItem("token" , "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjNTE3ZDI3Ni04NDE3LTQ4MTYtOWJlYi03OWZhNTY0OGQzNDMiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NzQwMjIwOTIsImV4cCI6MTc3NDYyNjg5Mn0.eYFIKJBHi0qFQQ9MXncPi4V-rvn-cUUr0tzVG7JW6lQ");
 
-    navigate("/vite");
+    navigate("/home");
   };
   return (
   <div>

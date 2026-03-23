@@ -4,6 +4,7 @@ import com.account.dto.UserAccountResponse;
 
 import com.transaction.dto.TransactionDTO;
 import com.user.UserModel;
+import com.user.dto.UserDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public class ReturnDataClass {
 
     private List<TransactionDTO> transactionList;
-    private List<UserModel> userList;
+    private List<UserDTO> userList;
     private List<UserAccountResponse> accountList;
 
     public List<TransactionDTO> getTransactionList() {
@@ -25,11 +26,11 @@ public class ReturnDataClass {
         this.transactionList = transactionList;
     }
 
-    public List<UserModel> getUserList() {
+    public List<UserDTO> getUserList() {
         return userList;
     }
 
-    public void setUserList(List<UserModel> userList) {
+    public void setUserList(List<UserDTO> userList) {
         this.userList = userList;
     }
 

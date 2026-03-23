@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserAccount from "../../../hooks/useUserAccount";
 import { useHistoryTransaction } from "../../../hooks/transactions/useGetHistory";
-import type { AccountResponse } from "../../../types";
+import type { AccountResponse } from "../../../types/accountType";
 import styles from "./history.module.css";
 
 
@@ -43,7 +43,7 @@ export default function HistoryPage() {
     error: txError,
   } = useHistoryTransaction(selectedAccount?.id);
 
-  // ── Loading / Error states ────────────────────────────────────
+  
   if (accLoading)
     return (
       <div className={styles.stateWrapper}>
@@ -63,7 +63,7 @@ export default function HistoryPage() {
 
   return (
     <div className={styles.page}>
-      {/* ── Left: Account list ───────────────────────────── */}
+      
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <h2 className={styles.sidebarTitle}>My Account</h2>

@@ -17,8 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-//@EnableWebSecurity
-//@EnableMethodSecurity
+// @EnableWebSecurity
+// @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -32,17 +32,18 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//              .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/users/getAllUser").hasRole("ADMIN")
-                .requestMatchers("/transactions/allTransaction").hasRole("ADMIN")
-                .anyRequest().permitAll()
-                )
-//                .exceptionHandling(ex -> ex
-//                        .authenticationEntryPoint((request, response, authException) -> {
-//                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                        })
-//                )
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        // .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/users/login", "/users/register").permitAll()
+                        .requestMatchers("/users/getAllUser").hasRole("ADMIN")
+                        .requestMatchers("/transactions/allTransaction").hasRole("ADMIN")
+                        // .anyRequest().permitAll()
+                        .anyRequest().authenticated())
+                // .exceptionHandling(ex -> ex
+                // .authenticationEntryPoint((request, response, authException) -> {
+                // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                // })
+                // )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -59,6 +60,5 @@ public class SecurityConfig {
             throws Exception {
         return config.getAuthenticationManager();
     }
-
 
 }

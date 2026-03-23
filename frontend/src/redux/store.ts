@@ -2,7 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import { persistStore, persistReducer } from "redux-persist";
 
-// 👇 สร้าง storage เอง
+
 const storage = {
   getItem: (key: string) => {
     return Promise.resolve(localStorage.getItem(key));

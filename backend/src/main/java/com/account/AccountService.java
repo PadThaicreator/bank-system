@@ -2,18 +2,19 @@ package com.account;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
 import com.account.dto.UserAccountResponse;
-import com.models.ReturnDataClass;
-import org.springframework.security.core.context.SecurityContextHolder;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.account.dto.AccountResponse;
 import com.account.dto.BalanceResponse;
+import com.account.dto.ChangeAccountTypeRequest;
+import com.account.dto.ChangeStatusRequest;
 import com.account.dto.CreateAccountRequest;
 
 import jakarta.transaction.Transactional;
@@ -24,13 +25,13 @@ import lombok.RequiredArgsConstructor;
 public class AccountService {
     private final AccountRepository accountRepository;
 
-    // ======= POST METHOD ========================================================================
-    // ======= Create Account =======
+    // ======= POST METHOD
+    // ========================================================================
+    // ------- Create Account -------
     @Transactional
-    public AccountResponse createAccount(UUID userId, CreateAccountRequest request) {
-        // String userIdStr =
-        // SecurityContextHolder.getContext().getAuthentication().getName();
-        // UUID userId = UUID.fromString(userIdStr);
+    public AccountResponse createAccount(CreateAccountRequest request) {
+        String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
+        UUID userId = UUID.fromString(userIdStr);
 
         Account account = Account.builder()
                 .userId(userId)
@@ -47,15 +48,43 @@ public class AccountService {
         return AccountResponse.from(saved);
     }
 
-    // ======= PATCH METHOD ========================================================================
+    // ======= PATCH METHOD
+    // ========================================================================
     // ------- Change Balance -------
     @Transactional
     public AccountResponse changeBalance(UUID accountId, BigDecimal amount) {
-        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
+        verifyOwnershipOrAdmin(account.getUserId());
+
         account.setBalance(account.getBalance().add(amount));
+        Account saved = accountRepository.save(account);
+        return AccountResponse.from(saved);
+    }
+
+    // ------- Change Status -------
+    @Transactional
+    public AccountResponse changeAccountStatus(UUID accountId, ChangeStatusRequest request) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        verifyOwnershipOrAdmin(account.getUserId());
+
+        account.setStatus(request.getStatus());
+        Account saved = accountRepository.save(account);
+        return AccountResponse.from(saved);
+    }
+
+    // ------- Change Account Type -------
+    @Transactional
+    public AccountResponse changeAccountType(UUID accountId, ChangeAccountTypeRequest request) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        verifyOwnershipOrAdmin(account.getUserId());
+
+        account.setAccountType(AccountType.valueOf(request.getAccountType()));
         Account saved = accountRepository.save(account);
         return AccountResponse.from(saved);
     }
@@ -63,52 +92,86 @@ public class AccountService {
     // ------- Delete Account -------
     @Transactional
     public AccountResponse deleteAccount(UUID accountId) {
-        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        verifyOwnershipOrAdmin(account.getUserId());
         account.setStatus(AccountStatus.CLOSED);
         Account saved = accountRepository.save(account);
         return AccountResponse.from(saved);
     }
 
-    // ======= GET METHOD ==========================================================================
+    // ======= GET METHOD
+    // ==========================================================================
 
-    public BalanceResponse getAccountBalance(UUID accountId){
-        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
+    public BalanceResponse getAccountBalance(UUID accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        verifyOwnershipOrAdmin(account.getUserId());
         return new BalanceResponse(
-            account.getAccountNumber(),
-            account.getBalance(),
-            account.getUpdatedAt()
-        );
+                account.getAccountNumber(),
+                account.getBalance(),
+                account.getUpdatedAt());
     }
 
-    public List<AccountResponse> getAllAccounts(){
-        // เดี๋ยวระบบ token มาแล้วจะเช็ค user ว่าเป็น admin ไหม
+    public List<AccountResponse> getAllAccounts() {
+        verifyAdmin();
+
         List<Account> accounts = accountRepository.findAll();
         return accounts.stream()
-            .map(AccountResponse::from)
-            .toList();
+                .map(AccountResponse::from)
+                .toList();
     }
 
-    public AccountResponse getAccountById(UUID accountId){
-        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
+    public AccountResponse getAccountById(UUID accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        verifyOwnershipOrAdmin(account.getUserId());
         return AccountResponse.from(account);
     }
 
-    public List<UserAccountResponse> getAccountByUserId(UUID userId){
-        // เดี๋ยวถ้ามี token แล้วจะทำการเช็คว่าเป็น admin หรือเป็นเจ้าของบัญชีไหม
+    public List<UserAccountResponse> getAccountByUserId() {
+        String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
+        UUID userId = UUID.fromString(userIdStr);
 
         List<UserAccountResponse> accounts = accountRepository.findByUserId(userId);
 
         return accounts;
     }
 
+    // ======= PRIVATE HELPER
+    // ======================================================================
 
-    // ======= PRIVATE HELPER ======================================================================
+    private void verifyOwnershipOrAdmin(UUID ownerId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getName() == null) {
+            throw new RuntimeException("Unauthorized: No authentication found");
+        }
+
+        String currentUserId = auth.getName();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ADMIN"));
+
+        if (!isAdmin && !currentUserId.equals(ownerId.toString())) {
+            throw new RuntimeException("Unauthorized: You do not have permission to access this resource");
+        }
+    }
+
+    private void verifyAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            throw new RuntimeException("Unauthorized: No authentication found");
+        }
+
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ADMIN"));
+
+        if (!isAdmin) {
+            throw new RuntimeException("Unauthorized: Admin access required");
+        }
+    }
 
     private String generateAccountNumber(AccountType accountType) {
         // format: BBB-T-XXXXXX

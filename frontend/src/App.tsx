@@ -1,5 +1,5 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import VitePage from "./pages/vite/page";
+import HomePage from "./pages/home/page";
 // import NavBarComponent from "./components/layout/CustomerNavbar";
 import AuthenComponent from "./components/auth";
 import LoginPage from "./pages/auth/LoginPage/page";
@@ -12,6 +12,10 @@ import NavBarComponent from "./components/layout/NavbarComponent";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import HistoryTransactionPage from "./pages/transactions/history/page";
 import TransactionPage from "./pages/transactions/transaction/page";
+import AccountDetailPage from "./pages/account/Account/AccountDetailPage";
+import AdminRoute from "./middleware/AdminRoute";
+import AccountOpeningPage from "./pages/account/Account/AccountOpeningPage";
+import UserManagementPage from "./pages/admin/UserMangement/page";
 
 function App() {
   return (
@@ -25,12 +29,18 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
             </Route>
 
-            <Route element={<ProtectedRoute />}>
+            <Route element={<ProtectedRoute allowedRoles={["CUSTOMER", "ADMIN"]} />}>
               <Route element={<NavBarComponent />}>
-                <Route path="/admin/accountList" element={<AccountListPage />} />
+                <Route element={<AdminRoute />}>
+                  <Route path="/admin/accountList" element={<AccountListPage />} />
+                  <Route path="/admin/accountDetail/:accountId" element={<AccountDetailPage />} />
+                  <Route path="/admin/userList" element={<UserManagementPage />} />
+                </Route>
+                
+                <Route path="/account/open" element={<AccountOpeningPage />} />
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
-                <Route path="/vite" element={<VitePage />} />
+                <Route path="/home" element={<HomePage />} />
               </Route>
             </Route>
 

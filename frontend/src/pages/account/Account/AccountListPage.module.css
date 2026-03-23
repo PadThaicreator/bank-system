@@ -84,6 +84,7 @@
 .tableRow {
   border-bottom: 1px solid #f1f3f5;
   transition: background-color 0.2s;
+  cursor: pointer;
 }
 
 .tableRow:hover {

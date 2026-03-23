@@ -230,7 +230,7 @@ export interface components {
         };
         ReturnDataClass: {
             transactionList?: components["schemas"]["TransactionDTO"][];
-            userList?: components["schemas"]["UserModel"][];
+            userList?: components["schemas"]["UserDTO"][];
             accountList?: components["schemas"]["UserAccountResponse"][];
         };
         TransactionDTO: {
@@ -244,6 +244,7 @@ export interface components {
             note?: string;
             reference_no?: string;
             to_account_number?: string;
+            from_account_number?: string;
         };
         UserAccountResponse: {
             /** Format: uuid */
@@ -254,6 +255,21 @@ export interface components {
             status?: "ACTIVE" | "CLOSED" | "FROZEN";
             /** @enum {string} */
             accountCategory?: "SAVINGS" | "CURRENT" | "FIXED_DEPOSIT";
+        };
+        UserDTO: {
+            /** Format: uuid */
+            id?: string;
+            fullName?: string;
+            email?: string;
+            /** @enum {string} */
+            role?: "CUSTOMER" | "ADMIN";
+            phone?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED";
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
         LoginDTO: {
             email?: string;
@@ -308,10 +324,10 @@ export interface components {
             /** Format: date-time */
             timestamp?: string;
         };
-        ApiResponseListUserModel: {
+        ApiResponseListUserDTO: {
             success?: boolean;
             message?: string;
-            data?: components["schemas"]["UserModel"][];
+            data?: components["schemas"]["UserDTO"][];
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
@@ -534,7 +550,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListUserModel"];
+                    "*/*": components["schemas"]["ApiResponseListUserDTO"];
                 };
             };
         };
