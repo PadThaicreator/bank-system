@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { accountService } from "../services/accountService"
-import type { AccountResponse } from "../types"
+import type { AccountResponse } from "../types/accountType"
 
 export function  useAccount (accountId: string) {
     const [account, setAccount] = useState<AccountResponse>()
@@ -27,7 +27,7 @@ export function  useAccount (accountId: string) {
     } , [])
 
 
-    return { account, loading, error }
+    return { account, loading, error, fetchAccount }
 }
 
 export default useAccount

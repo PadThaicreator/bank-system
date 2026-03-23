@@ -6,6 +6,7 @@ import com.user.dto.LoginDTO;
 import com.configuration.common.response.ApiResponse;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
+import com.user.dto.UserDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +67,7 @@ public class UserController {
 
 
     @GetMapping("/getAllUser")
-    public ApiResponse<List<UserModel>> getAllUser() {
+    public ApiResponse<List<UserDTO>> getAllUser() {
 
         ReturnClass rs = userService.GetAllUser();
 

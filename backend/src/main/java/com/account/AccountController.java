@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.account.dto.UserAccountResponse;
-import com.models.ReturnDataClass;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.account.dto.AccountResponse;
 import com.account.dto.BalanceResponse;
+import com.account.dto.ChangeAccountTypeRequest;
+import com.account.dto.ChangeStatusRequest;
 import com.account.dto.CreateAccountRequest;
 import com.configuration.common.response.ApiResponse;
 
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-
 
 @RestController
 class AccountController {
@@ -32,17 +32,18 @@ class AccountController {
         this.accountService = accountService;
     }
 
-    //========================================= POST METHOD ========================================
+    // ========================================= POST METHOD
+    // ========================================
 
     @PostMapping("/accounts")
     public ResponseEntity<ApiResponse<AccountResponse>> createAccount(
-            @RequestParam UUID userId,
             @RequestBody CreateAccountRequest request) {
-        AccountResponse response = accountService.createAccount(userId, request);
+        AccountResponse response = accountService.createAccount(request);
         return ResponseEntity.ok(ApiResponse.success("Account created successfully", response));
     }
 
-    //========================================= PATCH METHOD ========================================
+    // ========================================= PATCH METHOD
+    // ========================================
 
     @PatchMapping("/accounts/{accountId}/changeBalance")
     public ResponseEntity<ApiResponse<AccountResponse>> changeBalance(
@@ -52,23 +53,39 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Balance changed successfully", response));
     }
 
+    @PatchMapping("/accounts/{accountId}/changeAccountStatus")
+    public ResponseEntity<ApiResponse<AccountResponse>> changeAccountStatus(
+            @PathVariable UUID accountId,
+            @RequestBody ChangeStatusRequest request) {
+        AccountResponse response = accountService.changeAccountStatus(accountId, request);
+        return ResponseEntity.ok(ApiResponse.success("Status changed successfully", response));
+    }
+
+    @PatchMapping("/accounts/{accountId}/changeAccountType")
+    public ResponseEntity<ApiResponse<AccountResponse>> changeAccountType(
+            @PathVariable UUID accountId,
+            @RequestBody ChangeAccountTypeRequest request) {
+        AccountResponse response = accountService.changeAccountType(accountId, request);
+        return ResponseEntity.ok(ApiResponse.success("Account type changed successfully", response));
+    }
+
     @PatchMapping("/accounts/{accountId}/deleteAcount")
     public ResponseEntity<ApiResponse<AccountResponse>> deleteAccount(
-        @PathVariable UUID accountId
-    ){
+            @PathVariable UUID accountId) {
         AccountResponse response = accountService.deleteAccount(accountId);
         return ResponseEntity.ok(ApiResponse.success("Delete account ${accountId} successfully", response));
     }
 
-    //========================================= GET METHOD ========================================
+    // ========================================= GET METHOD
+    // ========================================
 
     @GetMapping("/accounts/{accountid}/getAccountBalance")
     public ResponseEntity<ApiResponse<BalanceResponse>> getAccountBalance(
             @PathVariable UUID accountid) {
-        BalanceResponse response = accountService.getAccountBalance(accountid); 
+        BalanceResponse response = accountService.getAccountBalance(accountid);
         return ResponseEntity.ok(ApiResponse.success("Get account balance successfully", response));
     }
-    
+
     @GetMapping("/accounts")
     public ResponseEntity<ApiResponse<List<AccountResponse>>> getAllAccount() {
         List<AccountResponse> responses = accountService.getAllAccounts();
@@ -77,16 +94,15 @@ class AccountController {
 
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<ApiResponse<AccountResponse>> getAccountFromId(
-            @PathVariable UUID accountId){
+            @PathVariable UUID accountId) {
         AccountResponse response = accountService.getAccountById(accountId);
         return ResponseEntity.ok(ApiResponse.success("Get account successfully", response));
     }
 
-    @GetMapping("/accounts/user/{userId}")
-    public ResponseEntity<ApiResponse<List<UserAccountResponse>>> getAccountByUserId( @PathVariable UUID userId) {
-        List<UserAccountResponse> responses = accountService.getAccountByUserId(userId);
+    @GetMapping("/accounts/user")
+    public ResponseEntity<ApiResponse<List<UserAccountResponse>>> getAccountByUserId() {
+        List<UserAccountResponse> responses = accountService.getAccountByUserId();
         return ResponseEntity.ok(ApiResponse.success("Get all user account successfully", responses));
     }
-
 
 }
