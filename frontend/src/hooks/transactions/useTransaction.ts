@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react"
 import type { TransactionDTO } from "../../types/transactionType"
 import { transactiontService } from "../../services/transactionService"
+import { isAxiosError } from "axios"
 
 
 
@@ -17,9 +18,17 @@ export function useTransaction () {
             const res = await transactiontService.postTransaction(data)
             setTransaction(res.data as TransactionDTO)
             console.log(res);
+            return res.data;
         }
         catch (err) {
-            setError(err instanceof Error ? err.message : String(err))
+            if (isAxiosError(err) && err.response?.data) {
+                const errData = err.response.data;
+                const errorMessage = errData.error?.details || errData.message || err.message;
+                setError(errorMessage);
+            } else {
+                setError(err instanceof Error ? err.message : String(err));
+            }
+            throw err;
         }
         finally{
             setLoading(false)

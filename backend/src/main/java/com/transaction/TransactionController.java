@@ -35,7 +35,7 @@ public class TransactionController {
     }
 
 
-    @GetMapping("/getHistory/{accNum}")
+    @GetMapping("/history/{accNum}")
     public  ApiResponse<List<TransactionDTO>> getHistory(@PathVariable  UUID accNum){
         ReturnClass rs =  transactionService.getTransactionHistory(accNum);
 
@@ -43,9 +43,16 @@ public class TransactionController {
     }
 
 
-    @GetMapping("/allTransaction")
+    @GetMapping("")
     public  ApiResponse<List<TransactionDTO>> getAllTransaction(){
         ReturnClass rs =  transactionService.getAllTransaction();
+
+        return   ApiResponse.success(rs.getMSG() , rs.getData().getTransactionList());
+    }
+
+    @GetMapping("/user")
+    public  ApiResponse<List<TransactionDTO>> getTransactionByUserId(){
+        ReturnClass rs =  transactionService.getTransactionByUserId();
 
         return   ApiResponse.success(rs.getMSG() , rs.getData().getTransactionList());
     }

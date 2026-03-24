@@ -26,11 +26,7 @@ public class TransactionModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "uuid")
     private UUID id;
-    @Column(name = "from_account_id")
-    private UUID fromAccountId;
 
-    @Column(name = "to_account_id")
-    private UUID toAccountId;
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
@@ -44,20 +40,24 @@ public class TransactionModel {
 
     private String note;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    private LocalDateTime created_at;
-
-
+//    @Column(name = "from_account_id")
+//    private UUID fromAccountId;
+//
+//    @Column(name = "to_account_id")
+//    private UUID toAccountId;
 
 //    FK-KEY
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "from_account_id", referencedColumnName = "id")
-//    private Account fromAccount;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "to_account_id", referencedColumnName = "id")
-//    private Account toAccount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_account_id", referencedColumnName = "id")
+    private Account fromAccount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_account_id", referencedColumnName = "id")
+    private Account toAccount;
 
 
 

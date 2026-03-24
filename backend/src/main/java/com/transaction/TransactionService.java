@@ -12,6 +12,8 @@ import com.account.Account;
 import com.account.AccountRepository;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -145,17 +147,13 @@ public class TransactionService {
 
 
             data.setAmount(amount);
-            data.setCreated_at(LocalDateTime.now());
-            data.setFromAccountId(
-                    req.getFromAccountId() != null
-                            ? req.getFromAccountId()
-                            : null
+            data.setCreatedAt(LocalDateTime.now());
+            data.setFromAccount(
+                    fromAccount
             );
 
-            data.setToAccountId(
-                    toAccountId != null
-                            ? toAccountId
-                            : null
+            data.setToAccount(
+                   toAccount
             );
             data.setStatus(StatusType.ACTIVE);
             data.setNote(req.getNote());
@@ -178,27 +176,42 @@ public class TransactionService {
 
         ReturnClass rs = new ReturnClass();
         ReturnDataClass rsData = new ReturnDataClass();
-        List<TransactionModel> transactionList =  transactionRepository.findByFromAccountIdOrToAccountId(accNum,accNum);
+        List<TransactionModel> transactionList =  transactionRepository.findByFromAccountIdOrToAccountIdOrderByCreatedAtDesc(accNum,accNum);
 
         List<TransactionDTO> returnList = new ArrayList<>();
-        for(int i = 0 ; i < transactionList.size()  ; i++){
+
+        for (TransactionModel tx : transactionList) {
+
             TransactionDTO data = new TransactionDTO();
-            data.setAmount(transactionList.get(i).getAmount());
-            data.setNote(transactionList.get(i).getNote());
-            data.setType(transactionList.get(i).getTransaction_type());
-            data.setReferenceNo(transactionList.get(i).getReferenceNo());
-            data.setToAccountId(transactionList.get(i).getToAccountId());
-            data.setFromAccountId(transactionList.get(i).getFromAccountId());
+            data.setAmount(tx.getAmount());
+            data.setNote(tx.getNote());
+            data.setType(tx.getTransaction_type());
+            data.setReferenceNo(tx.getReferenceNo());
+            data.setCreatedAt(tx.getCreatedAt());
 
-            Account fromAcc = accountRepository.findById(data.getFromAccountId()).orElseThrow(()-> new TransactionError.AccountInvalid("From Account not found") );
 
-            data.setFromAccountNumber(fromAcc.getAccountNumber());
+            UUID fromId = tx.getFromAccount() != null
+                    ? tx.getFromAccount().getId()
+                    : null;
 
-            if(data.getType().equals(TransactionType.TRANSFER)){
-                Account toAcc = accountRepository.findById(data.getToAccountId()).orElseThrow(()-> new TransactionError.AccountInvalid("To Account not found") );
+            data.setFromAccountId(fromId);
 
-                data.setToAccountNumber(toAcc.getAccountNumber());
+
+            UUID toId = tx.getToAccount() != null
+                    ? tx.getToAccount().getId()
+                    : null;
+
+            data.setToAccountId(toId);
+
+
+            if (tx.getFromAccount() != null) {
+                data.setFromAccountNumber(tx.getFromAccount().getAccountNumber());
             }
+
+            if (tx.getToAccount() != null) {
+                data.setToAccountNumber(tx.getToAccount().getAccountNumber());
+            }
+
             returnList.add(data);
         }
         rsData.setTransactionList(returnList);
@@ -212,10 +225,26 @@ public class TransactionService {
 
     public ReturnClass getAllTransaction(){
 
+        ReturnClass rs = new ReturnClass();
+        ReturnDataClass rsData = new ReturnDataClass();
+        List<TransactionDTO> transactionList =  TransactionDTO.fromEntityList(transactionRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")));
+        rsData.setTransactionList(transactionList);
+        rs.setSuccessReturn();
+        rs.setCODE("200");
+        rs.setMSG("GET SUCCESS");
+        rs.setData(rsData);
+
+        return  rs;
+    }
+
+
+    public ReturnClass getTransactionByUserId(){
+        String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
+
 
         ReturnClass rs = new ReturnClass();
         ReturnDataClass rsData = new ReturnDataClass();
-        List<TransactionDTO> transactionList =  TransactionDTO.fromEntityList(transactionRepository.findAll());
+        List<TransactionDTO> transactionList =  TransactionDTO.fromEntityList(transactionRepository.findUserTransactionsNative(UUID.fromString(userIdStr)));
         rsData.setTransactionList(transactionList);
         rs.setSuccessReturn();
         rs.setCODE("200");
