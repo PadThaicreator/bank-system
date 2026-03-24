@@ -12,25 +12,25 @@ export const accountService = {
     // Get /api/accounts/{accountId}
     getAccountById: (accountId: string) => api.get<AccountResponse>(`${BASE}/${accountId}`),
 
-    // Get /api/accounts/{accountId}
-    getBalanceById: (accountId: string) => api.get<BalanceResponse>(`${BASE}/${accountId}/getAccountBalance`),
+    // Get /api/accounts/{accountId}/balance
+    getBalanceById: (accountId: string) => api.get<BalanceResponse>(`${BASE}/${accountId}/balance`),
 
     // Get /api/accounts/user
-    getUserAccount: () => api.get<AccountResponse>(`${BASE}/user`),
+    getUserAccount: () => api.get<AccountResponse[]>(`${BASE}/user`),
 
     // Post /api/accounts
     createAccount: (data: CreateAccountRequest) => api.post<AccountResponse>(BASE, data),
 
-    // Patch /api/accounts/{accountId}/changeBalance?amount={amount}
-    addBalanceToAccount: (accountId: string, amount: number) => api.patch<AccountResponse>(`${BASE}/${accountId}/changeBalance?amount=${amount}`),
+    // Patch /api/accounts/{accountId}/balance?amount={amount}
+    addBalanceToAccount: (accountId: string, amount: number) => api.patch<AccountResponse>(`${BASE}/${accountId}/balance?amount=${amount}`),
+    
+    // Patch /api/accounts/{accountId}/status
+    changeAccountStatus: (accountId: string, status: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/status`, {"status": status}),
+    
+    // Patch /api/accounts/{accountId}/type
+    changeAccountType: (accountId: string, accountType: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/type`, {"accountType": accountType}),
 
-    // Patch /api/account/{accountId}/deleteAcount
-    deleteAccount: (accountId: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/deleteAccount`),
-
-    // Patch /api/account/{accountId}/changeAccountStatus
-    changeAccountStatus: (accountId: string, status: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/changeAccountStatus`, {"status": status}),
-
-    // Patch /api/account/{accountId}/changeAccountType
-    changeAccountType: (accountId: string, accountType: string) => api.patch<AccountResponse>(`${BASE}/${accountId}/changeAccountType`, {"accountType": accountType}),
+    // Delete /api/accounts/{accountId}
+    deleteAccount: (accountId: string) => api.delete<AccountResponse>(`${BASE}/${accountId}`),
 
 }

@@ -1,7 +1,5 @@
 package com.transaction;
 
-
-import com.account.Account;
 import com.models.StatusType;
 import com.models.TransactionType;
 import jakarta.persistence.*;
@@ -16,7 +14,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-
 
 @Entity
 @Table(name = "transactions")
@@ -44,27 +41,16 @@ public class TransactionModel {
 
     private String note;
 
-
     private LocalDateTime created_at;
 
+    // FK-KEY
 
-
-//    FK-KEY
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "from_account_id", referencedColumnName = "id")
-//    private Account fromAccount;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "to_account_id", referencedColumnName = "id")
-//    private Account toAccount;
-
-
-
-
-
-
-
-
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "from_account_id", referencedColumnName = "id")
+    // private Account fromAccount;
+    //
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "to_account_id", referencedColumnName = "id")
+    // private Account toAccount;
 
 }

@@ -84,7 +84,8 @@ public class AccountService {
 
         verifyOwnershipOrAdmin(account.getUserId());
 
-        account.setAccountType(AccountType.valueOf(request.getAccountType()));
+        account.setAccountType(request.getAccountType());
+        account.setAccountCategory(request.getAccountType().getCategory());
         Account saved = accountRepository.save(account);
         return AccountResponse.from(saved);
     }

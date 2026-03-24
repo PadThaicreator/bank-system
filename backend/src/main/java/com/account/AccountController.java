@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
@@ -30,6 +31,35 @@ class AccountController {
 
     AccountController(AccountService accountService) {
         this.accountService = accountService;
+    }
+
+    // ========================================= GET METHOD
+    // ========================================
+
+    @GetMapping("/accounts")
+    public ResponseEntity<ApiResponse<List<AccountResponse>>> getAllAccount() {
+        List<AccountResponse> responses = accountService.getAllAccounts();
+        return ResponseEntity.ok(ApiResponse.success("Get all account successfully", responses));
+    }
+
+    @GetMapping("/accounts/{accountId}")
+    public ResponseEntity<ApiResponse<AccountResponse>> getAccountFromId(
+            @PathVariable UUID accountId) {
+        AccountResponse response = accountService.getAccountById(accountId);
+        return ResponseEntity.ok(ApiResponse.success("Get account successfully", response));
+    }
+
+    @GetMapping("/accounts/{accountid}/balance")
+    public ResponseEntity<ApiResponse<BalanceResponse>> getAccountBalance(
+            @PathVariable UUID accountid) {
+        BalanceResponse response = accountService.getAccountBalance(accountid);
+        return ResponseEntity.ok(ApiResponse.success("Get account balance successfully", response));
+    }
+
+    @GetMapping("/accounts/user")
+    public ResponseEntity<ApiResponse<List<UserAccountResponse>>> getAccountByUserId() {
+        List<UserAccountResponse> responses = accountService.getAccountByUserId();
+        return ResponseEntity.ok(ApiResponse.success("Get all user account successfully", responses));
     }
 
     // ========================================= POST METHOD
@@ -45,7 +75,7 @@ class AccountController {
     // ========================================= PATCH METHOD
     // ========================================
 
-    @PatchMapping("/accounts/{accountId}/changeBalance")
+    @PatchMapping("/accounts/{accountId}/balance")
     public ResponseEntity<ApiResponse<AccountResponse>> changeBalance(
             @PathVariable UUID accountId,
             @RequestParam BigDecimal amount) {
@@ -53,7 +83,7 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Balance changed successfully", response));
     }
 
-    @PatchMapping("/accounts/{accountId}/changeAccountStatus")
+    @PatchMapping("/accounts/{accountId}/status")
     public ResponseEntity<ApiResponse<AccountResponse>> changeAccountStatus(
             @PathVariable UUID accountId,
             @RequestBody ChangeStatusRequest request) {
@@ -61,7 +91,7 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Status changed successfully", response));
     }
 
-    @PatchMapping("/accounts/{accountId}/changeAccountType")
+    @PatchMapping("/accounts/{accountId}/type")
     public ResponseEntity<ApiResponse<AccountResponse>> changeAccountType(
             @PathVariable UUID accountId,
             @RequestBody ChangeAccountTypeRequest request) {
@@ -69,40 +99,14 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Account type changed successfully", response));
     }
 
-    @PatchMapping("/accounts/{accountId}/deleteAcount")
+    // ========================================= DELETE METHOD
+    // ========================================
+
+    @DeleteMapping("/accounts/{accountId}")
     public ResponseEntity<ApiResponse<AccountResponse>> deleteAccount(
             @PathVariable UUID accountId) {
         AccountResponse response = accountService.deleteAccount(accountId);
-        return ResponseEntity.ok(ApiResponse.success("Delete account ${accountId} successfully", response));
-    }
-
-    // ========================================= GET METHOD
-    // ========================================
-
-    @GetMapping("/accounts/{accountid}/getAccountBalance")
-    public ResponseEntity<ApiResponse<BalanceResponse>> getAccountBalance(
-            @PathVariable UUID accountid) {
-        BalanceResponse response = accountService.getAccountBalance(accountid);
-        return ResponseEntity.ok(ApiResponse.success("Get account balance successfully", response));
-    }
-
-    @GetMapping("/accounts")
-    public ResponseEntity<ApiResponse<List<AccountResponse>>> getAllAccount() {
-        List<AccountResponse> responses = accountService.getAllAccounts();
-        return ResponseEntity.ok(ApiResponse.success("Get all account successfully", responses));
-    }
-
-    @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<ApiResponse<AccountResponse>> getAccountFromId(
-            @PathVariable UUID accountId) {
-        AccountResponse response = accountService.getAccountById(accountId);
-        return ResponseEntity.ok(ApiResponse.success("Get account successfully", response));
-    }
-
-    @GetMapping("/accounts/user")
-    public ResponseEntity<ApiResponse<List<UserAccountResponse>>> getAccountByUserId() {
-        List<UserAccountResponse> responses = accountService.getAccountByUserId();
-        return ResponseEntity.ok(ApiResponse.success("Get all user account successfully", responses));
+        return ResponseEntity.ok(ApiResponse.success("Delete account " + accountId + " successfully", response));
     }
 
 }

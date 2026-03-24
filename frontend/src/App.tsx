@@ -2,7 +2,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import HomePage from "./pages/home/page";
 import AuthenComponent from "./components/auth";
 import LoginPage from "./pages/auth/LoginPage/page";
-import AccountListPage from "./pages/account/Account/AccountListPage";
+import AccountListPage from "./pages/account/AccountListPage/AccountListPage";
 import NotFoundPage from "./pages/not-found/page";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
@@ -11,13 +11,13 @@ import NavBarComponent from "./components/layout/NavbarComponent";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import HistoryTransactionPage from "./pages/transactions/history/page";
 import TransactionPage from "./pages/transactions/transaction/page";
-import AccountDetailPage from "./pages/account/Account/AccountDetailPage";
+import AccountDetailPage from "./pages/account/AccountDetailPage/AccountDetailPage";
 import AdminRoute from "./middleware/AdminRoute";
-import AccountOpeningPage from "./pages/account/Account/AccountOpeningPage";
+import AccountOpeningPage from "./pages/account/AccountOpeningPage/AccountOpeningPage";
 import UserListPage from "./pages/admin/UserMangement/userListPage";
 import UserDetailPage from "./pages/admin/UserMangement/userDetailPage";
-import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
-import DashboardPage from "./pages/account/DashboardPage/DashboardPage";
+import AdminDashboardPage from "./pages/dashboard/AdminDashboardPage/AdminDashboardPage";
+import DashboardPage from "./pages/dashboard/DashboardPage/DashboardPage";
 
 function App() {
 
@@ -44,6 +44,7 @@ function App() {
                 </Route>
                 
                 <Route path="/account/open" element={<AccountOpeningPage />} />
+                <Route path="/account/list" element={<AccountListPage />} />
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
                 <Route path="/home" element={<HomePage />} />

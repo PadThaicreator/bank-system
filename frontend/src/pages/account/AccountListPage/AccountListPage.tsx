@@ -2,11 +2,23 @@ import type { AccountResponse } from '../../../types/accountType'
 import { useAllAccount } from "../../../hooks/useAllAccount"
 import styles from './AccountListPage.module.css'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../redux/store";
+import useUserAccount from '../../../hooks/useUserAccount';
 
 const AccountListPage = () => {
-  const { accounts, loading, error, refetch } = useAllAccount()
   const navigate = useNavigate();
-  if (loading) return <div className={styles.loadingContainer}>Loading Data...</div>
+  // get user role
+  const authState = useSelector((state: RootState) => state.auth);
+  const userRole = authState.user?.role;
+  // get all account for admin and user account for customer
+  const { accounts:adminAccountList, loading:adminLoading, error:adminError, refetch:adminRefetch } = useAllAccount()
+  const { accounts:userAccountList, loading:userLoading, error:userError, fetchUserAccount } = useUserAccount()
+  // set error and refetch and accounts based on user role
+  let error = userRole === "ADMIN" ? adminError : userError
+  let refetch = userRole === "ADMIN" ? adminRefetch : fetchUserAccount
+  let accounts = userRole === "ADMIN" ? adminAccountList : userAccountList
+  if (adminLoading || userLoading) return <div className={styles.loadingContainer}>Loading Data...</div>
   if (error) return (
     <div className={styles.errorContainer}>
       <p className={styles.errorMessage}>Error: {error}</p>
@@ -39,7 +51,7 @@ const AccountListPage = () => {
             </tr>
           </thead>
           <tbody>
-            {accounts.map((acc: AccountResponse) => (
+            {accounts?.map((acc: AccountResponse) => (
               <tr key={acc.id} className={styles.tableRow} onClick={() => handleAccountRowClick(acc.id!)}>
                 <td className={styles.tableCell}>{acc.accountNumber}</td>
                 <td className={styles.tableCell}>{acc.accountType}</td>

@@ -30,7 +30,7 @@ export function  useUserAccount () {
     } , [])
 
 
-    return { accounts, loading, error }
+    return { accounts, loading, error, fetchUserAccount }
 }
 
 export default useUserAccount
