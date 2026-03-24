@@ -12,7 +12,7 @@ export const transactiontService = {
 
    
 
-    getTransactionHistory:(fromAccId : string) => api.get<TransactionDTO>(`${BASE}/getHistory/${fromAccId}`),
+    getTransactionHistory:(fromAccId : string) => api.get<TransactionDTO>(`${BASE}/history/${fromAccId}`),
 
     postTransaction: (data: TransactionDTO) => api.post<TransactionDTO>(BASE, data),
 
