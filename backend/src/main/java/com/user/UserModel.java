@@ -2,6 +2,7 @@ package com.user;
 
 
 import com.models.StatusType;
+import com.models.UserGender;
 import com.models.UserRole;
 import com.transaction.TransactionModel;
 import jakarta.persistence.*;
@@ -58,6 +59,14 @@ public class UserModel {
 
         @Column(name = "updated_at")
         private LocalDateTime updatedAt;
+
+        @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd")
+        @Column(name = "birth_date")
+        private java.time.LocalDate birthDate;
+
+        @Enumerated(EnumType.STRING)
+        @Column(name = "gender")
+        private UserGender gender;
 
 
 

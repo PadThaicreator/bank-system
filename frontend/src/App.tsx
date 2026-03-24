@@ -18,6 +18,8 @@ import UserListPage from "./pages/admin/UserMangement/userListPage";
 import UserDetailPage from "./pages/admin/UserMangement/userDetailPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import DashboardPage from "./pages/account/DashboardPage/DashboardPage";
+import ProfilePage from "./pages/profile/ProfilePage/page";
+import RegisterPage from "./pages/auth/RegisterPage/page";
 
 function App() {
 
@@ -31,6 +33,7 @@ function App() {
             {/* Authen Route */}
             <Route element={<AuthenComponent />}>
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={["CUSTOMER", "ADMIN"]} />}>
@@ -49,6 +52,7 @@ function App() {
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
               </Route>
             </Route>
 

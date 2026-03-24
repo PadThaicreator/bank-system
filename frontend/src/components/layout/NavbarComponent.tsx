@@ -127,12 +127,19 @@ export default function NavBarComponent() {
           ))}
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <div>{data.user?.fullName}</div>
-          <div className={styles["navbar-user"]} style={{ marginLeft: "4px" }}>
-            <div className={styles["user-avatar"]}>{data.user?.fullName?.[0]}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div 
+            style={{ display: "flex", alignItems: "center", cursor: "pointer", padding: "4px 8px", borderRadius: "8px" }}
+            className="hover:bg-gray-100 transition-colors"
+            onClick={() => navigate("/profile")}
+            title="View Profile"
+          >
+            <div className="font-semibold text-gray-700">{data.user?.fullName}</div>
+            <div className={styles["navbar-user"]} style={{ marginLeft: "8px" }}>
+              <div className={styles["user-avatar"]}>{data.user?.fullName?.[0]}</div>
+            </div>
           </div>
-          <LogOut color="red" size={28}  className={styles["exit-icon"]}  onClick={handleLogOut}/>
+          <LogOut color="red" size={24} className={styles["exit-icon"]} onClick={handleLogOut} />
         </div>
       </nav>
 
