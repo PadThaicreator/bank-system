@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import type { UserDTO } from "../../../types/userType";
 import useGetAllUser from "../../../hooks/users/useGetAllUser";
 import styles from "./style.module.css";
@@ -7,23 +7,27 @@ import styles from "./style.module.css";
 export default function UserDetailPage() {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { users, loading, error, getAllUser } = useGetAllUser();
-  const [formData, setFormData] = useState<UserDTO | null>(null);
+  const [formData, setFormData] = useState<UserDTO | null>(location.state?.user || null);
 
-  // Fetch users if we don't have them
+  // Fetch users if we don't have them in state
   useEffect(() => {
-    getAllUser();
-  }, [getAllUser]);
+    if (!formData) {
+       // Request a large size as a fallback to try to find the user
+       getAllUser(0, 1000);
+    }
+  }, [getAllUser, formData]);
 
-  // Find the specific user from the fetched list
+  // Find the specific user from the fetched list if we fetched them
   useEffect(() => {
-    if (users && users.length > 0 && userId) {
+    if (!formData && users && users.length > 0 && userId) {
       const foundUser = users.find((u) => u.id === userId);
       if (foundUser) {
         setFormData(foundUser);
       }
     }
-  }, [users, userId]);
+  }, [users, userId, formData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

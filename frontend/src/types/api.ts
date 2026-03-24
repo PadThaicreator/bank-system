@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/users/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getProfile"];
+        put: operations["updateProfile"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/register": {
         parameters: {
             query?: never;
@@ -14,6 +30,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["Register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/refreshToken": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RefreshToken"];
         delete?: never;
         options?: never;
         head?: never;
@@ -43,7 +75,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["getAllTransaction"];
         put?: never;
         post: operations["postTransaction"];
         delete?: never;
@@ -132,7 +164,7 @@ export interface paths {
         patch: operations["changeAccountStatus"];
         trace?: never;
     };
-    "/users/getAllUser": {
+    "/users": {
         parameters: {
             query?: never;
             header?: never;
@@ -148,14 +180,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/transactions/getHistory/{accNum}": {
+    "/transactions/user": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["getHistory"];
+        get: operations["getTransactionByUserId"];
         put?: never;
         post?: never;
         delete?: never;
@@ -164,14 +196,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/transactions/allTransaction": {
+    "/transactions/history/{accNum}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["getAllTransaction"];
+        get: operations["getHistory"];
         put?: never;
         post?: never;
         delete?: never;
@@ -232,6 +264,22 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        UpdateProfileDTO: {
+            fullName?: string;
+            phone?: string;
+        };
+        ApiResponseUserModel: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["UserModel"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        ErrorDetail: {
+            code?: string;
+            details?: string;
+        };
         UserModel: {
             /** Format: uuid */
             id?: string;
@@ -260,14 +308,21 @@ export interface components {
             /** Format: date-time */
             timestamp?: string;
         };
-        ErrorDetail: {
-            code?: string;
-            details?: string;
-        };
         ReturnDataClass: {
             transactionList?: components["schemas"]["TransactionDTO"][];
             userList?: components["schemas"]["UserDTO"][];
             accountList?: components["schemas"]["UserAccountResponse"][];
+            content?: Record<string, never>[];
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            /** Format: int32 */
+            currentPage?: number;
+            /** Format: int32 */
+            pageSize?: number;
+            first?: boolean;
+            last?: boolean;
         };
         TransactionDTO: {
             /** Format: uuid */
@@ -281,6 +336,8 @@ export interface components {
             reference_no?: string;
             to_account_number?: string;
             from_account_number?: string;
+            /** Format: date-time */
+            created_at?: string;
         };
         UserAccountResponse: {
             /** Format: uuid */
@@ -311,10 +368,6 @@ export interface components {
             /** @enum {string} */
             gender?: "male" | "female" | "other";
         };
-        LoginDTO: {
-            email?: string;
-            password?: string;
-        };
         ApiResponseMapStringObject: {
             success?: boolean;
             message?: string;
@@ -324,6 +377,10 @@ export interface components {
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
+        };
+        LoginDTO: {
+            email?: string;
+            password?: string;
         };
         ApiResponseListTransactionDTO: {
             success?: boolean;
@@ -371,13 +428,53 @@ export interface components {
             /** @enum {string} */
             status: "ACTIVE" | "CLOSED" | "FROZEN";
         };
-        ApiResponseListUserDTO: {
+        ApiResponseReturnDataClassUserDTO: {
             success?: boolean;
             message?: string;
-            data?: components["schemas"]["UserDTO"][];
+            data?: components["schemas"]["ReturnDataClassUserDTO"];
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
+        };
+        ReturnDataClassUserDTO: {
+            transactionList?: components["schemas"]["TransactionDTO"][];
+            userList?: components["schemas"]["UserDTO"][];
+            accountList?: components["schemas"]["UserAccountResponse"][];
+            content?: components["schemas"]["UserDTO"][];
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            /** Format: int32 */
+            currentPage?: number;
+            /** Format: int32 */
+            pageSize?: number;
+            first?: boolean;
+            last?: boolean;
+        };
+        ApiResponseReturnDataClassTransactionDTO: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ReturnDataClassTransactionDTO"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        ReturnDataClassTransactionDTO: {
+            transactionList?: components["schemas"]["TransactionDTO"][];
+            userList?: components["schemas"]["UserDTO"][];
+            accountList?: components["schemas"]["UserAccountResponse"][];
+            content?: components["schemas"]["TransactionDTO"][];
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            /** Format: int32 */
+            currentPage?: number;
+            /** Format: int32 */
+            pageSize?: number;
+            first?: boolean;
+            last?: boolean;
         };
         ApiResponseListAccountResponse: {
             success?: boolean;
@@ -418,6 +515,50 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    getProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseUserModel"];
+                };
+            };
+        };
+    };
+    updateProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseUserModel"];
+                };
+            };
+        };
+    };
     Register: {
         parameters: {
             query?: never;
@@ -442,6 +583,32 @@ export interface operations {
             };
         };
     };
+    RefreshToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseMapStringObject"];
+                };
+            };
+        };
+    };
     Login: {
         parameters: {
             query?: never;
@@ -462,6 +629,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseMapStringObject"];
+                };
+            };
+        };
+    };
+    getAllTransaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
                 };
             };
         };
@@ -634,6 +821,29 @@ export interface operations {
     };
     getAllUser: {
         parameters: {
+            query: {
+                size: number;
+                page: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassUserDTO"];
+                };
+            };
+        };
+    };
+    getTransactionByUserId: {
+        parameters: {
             query?: never;
             header?: never;
             path?: never;
@@ -647,14 +857,17 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListUserDTO"];
+                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
                 };
             };
         };
     };
     getHistory: {
         parameters: {
-            query?: never;
+            query: {
+                page: number;
+                size: number;
+            };
             header?: never;
             path: {
                 accNum: string;
@@ -669,27 +882,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
-                };
-            };
-        };
-    };
-    getAllTransaction: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassTransactionDTO"];
                 };
             };
         };

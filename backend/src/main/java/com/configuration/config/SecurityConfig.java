@@ -34,8 +34,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/users/login", "/users/register", "/users/refreshToken").permitAll()
-                .requestMatchers("/users/getAllUser").hasRole("ADMIN")
-                .requestMatchers("/transactions/allTransaction").hasRole("ADMIN")
+                .requestMatchers("/users" ,
+                                          "/transactions"
+                                ).hasRole("ADMIN")
+
                 .anyRequest().authenticated()
                 )
 //                .exceptionHandling(ex -> ex

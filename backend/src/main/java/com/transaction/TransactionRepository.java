@@ -2,12 +2,12 @@ package com.transaction;
 
 import com.transaction.dto.TransactionDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,8 +23,11 @@ public interface TransactionRepository extends JpaRepository<TransactionModel, S
     int countTodayByType(@Param("type") String type);
 
 
-    List<TransactionModel> findByFromAccountIdOrToAccountIdOrderByCreatedAtDesc(UUID fromAccountId, UUID toAccountId);
-
+    Page<TransactionModel> findByFromAccountIdOrToAccountId(
+            UUID fromAccountId,
+            UUID toAccountId,
+            Pageable pageable
+    );
 
     @Query(value = """
     SELECT *
@@ -37,6 +40,6 @@ public interface TransactionRepository extends JpaRepository<TransactionModel, S
     )
     ORDER BY t.created_at DESC
     """, nativeQuery = true)
-    List<TransactionModel> findUserTransactionsNative(@Param("userId") UUID userId);
+    Page<TransactionModel> findUserTransactionsNative(@Param("userId") UUID userId , Pageable pageable);
 
 }

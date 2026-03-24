@@ -66,14 +66,16 @@ public class UserController {
     }
 
 
-    @GetMapping("/getAllUser")
-    public ApiResponse<List<UserDTO>> getAllUser() {
+    @GetMapping("")
+    public ApiResponse<ReturnDataClass<UserDTO> > getAllUser(@RequestParam int size ,@RequestParam int page ) {
 
-        ReturnClass rs = userService.GetAllUser();
+        ReturnDataClass<UserDTO> rs = userService.GetAllUser(page,size);
 
 
 
-        return ApiResponse.success(rs.getMSG() , rs.getData().getUserList());
+
+
+        return ApiResponse.success("get All User Success" , rs);
     }
 
 

@@ -3,7 +3,9 @@ package com.user.dto;
 import com.models.StatusType;
 import com.models.UserGender;
 import com.models.UserRole;
+import com.user.UserModel;
 import jakarta.persistence.Column;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +16,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-
+@Builder
 public class UserDTO {
 
     private UUID id;
@@ -27,6 +29,22 @@ public class UserDTO {
     private LocalDateTime updatedAt;
     private LocalDate birthDay;
     private UserGender gender;
+
+
+    public static UserDTO fromEntity(UserModel user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .phone(user.getPhone())
+                .status(user.getStatus())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .birthDay(user.getBirthDay())
+                .gender(user.getGender())
+                .build();
+    }
 
 
 }

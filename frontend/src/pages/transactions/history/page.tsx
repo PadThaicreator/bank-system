@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserAccount from "../../../hooks/useUserAccount";
 import { useHistoryTransaction } from "../../../hooks/transactions/useGetHistory";
@@ -35,12 +35,21 @@ export default function HistoryPage() {
   const { accounts, loading: accLoading, error: accError } = useUserAccount();
   const [selectedAccount, setSelectedAccount] = useState<AccountResponse | null>(null);
 
+  const [page, setPage] = useState(0);
+  const [size] = useState(5);
+
+  useEffect(() => {
+    setPage(0);
+  }, [selectedAccount?.id]);
+
   
   const {
     transaction: transactions,
     loading: txLoading,
     error: txError,
-  } = useHistoryTransaction(selectedAccount?.id);
+    totalPages,
+    currentPage
+  } = useHistoryTransaction(selectedAccount?.id, page, size);
 
   
   if (accLoading)
@@ -158,40 +167,64 @@ export default function HistoryPage() {
             )}
 
             {!txLoading && !txError && transactions && transactions.length > 0 && (
-              <div className={styles.txList}>
-                {transactions.map((tx, i) => {
-                  let isCredit = tx.type === "DEPOSIT";
-                  if (tx.type === "TRANSFER") {
-                    isCredit = tx.to_account_id === selectedAccount?.id || tx.to_account_number === selectedAccount?.accountNumber;
-                  }
-                  
-                  return (
-                  <div
-                    key={tx.reference_no ?? i}
-                    className={styles.txCard}
-                    style={{ animationDelay: `${i * 50}ms` }}
-                  >
-                    <div className={styles.txLeft}>
-                      <TxBadge type={tx.type || "UNKNOWN"} />
-                      <div className={styles.txMeta}>
-                        <span className={styles.txRef}>{tx.reference_no}</span>
-                        {tx.note && (
-                          <span className={styles.txNote}>{tx.note}</span>
-                        )}
-                        {tx.type === "TRANSFER" && (
-                          <span className={styles.txDetail}>
-                            {isCredit 
-                              ? `From: ${tx.from_account_number}` 
-                              : `To: ${tx.to_account_number}`}
-                          </span>
-                        )}
+              <>
+                <div className={styles.txList}>
+                  {transactions.map((tx, i) => {
+                    let isCredit = tx.type === "DEPOSIT";
+                    if (tx.type === "TRANSFER") {
+                      isCredit = tx.to_account_id === selectedAccount?.id || tx.to_account_number === selectedAccount?.accountNumber;
+                    }
+                    
+                    return (
+                    <div
+                      key={tx.reference_no ?? i}
+                      className={styles.txCard}
+                      style={{ animationDelay: `${i * 50}ms` }}
+                    >
+                      <div className={styles.txLeft}>
+                        <TxBadge type={tx.type || "UNKNOWN"} />
+                        <div className={styles.txMeta}>
+                          <span className={styles.txRef}>{tx.reference_no}</span>
+                          {tx.note && (
+                            <span className={styles.txNote}>{tx.note}</span>
+                          )}
+                          {tx.type === "TRANSFER" && (
+                            <span className={styles.txDetail}>
+                              {isCredit 
+                                ? `From: ${tx.from_account_number}` 
+                                : `To: ${tx.to_account_number}`}
+                            </span>
+                          )}
+                        </div>
                       </div>
+                      <Amount amount={tx.amount || 0} isCredit={isCredit} />
                     </div>
-                    <Amount amount={tx.amount || 0} isCredit={isCredit} />
+                    );
+                  })}
+                </div>
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                  <div className={styles.pagination}>
+                    <button 
+                      className={styles.pageBtn} 
+                      disabled={currentPage === 0}
+                      onClick={() => setPage(p => Math.max(0, p - 1))}
+                    >
+                      Previous
+                    </button>
+                    <span className={styles.pageInfo}>
+                      Page {currentPage + 1} of {totalPages}
+                    </span>
+                    <button 
+                      className={styles.pageBtn} 
+                      disabled={currentPage >= totalPages - 1}
+                      onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                    >
+                      Next
+                    </button>
                   </div>
-                  );
-                })}
-              </div>
+                )}
+              </>
             )}
           </>
         )}

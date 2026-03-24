@@ -1,5 +1,5 @@
 import api from '../lib/axios'
-import type { UserDTO, UserModel } from '../types/userType';
+import type { PaginatedUserResponse, UserDTO, UserModel } from '../types/userType';
 
 
 
@@ -8,7 +8,7 @@ const BASE = "/api/users";
 export const userService = {
     
     
-    getAllUser: () => api.get<UserDTO[]>(`${BASE}/getAllUser`),
+    getAllUser: (page : number , size : number) => api.get<PaginatedUserResponse>(`${BASE}?page=${page}&size=${size}`),
 
     
     login: (data : LoginRequest) => api.post<LoginResponse>(`${BASE}/login` , data),

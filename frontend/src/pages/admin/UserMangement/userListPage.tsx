@@ -6,14 +6,17 @@ import type { UserDTO } from "../../../types/userType";
 import { useNavigate } from "react-router-dom";
 
 export default function UserManagementPage() {
-  const { users, loading, error, getAllUser } = useGetAllUser();
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const { users, totalPages, totalElements, loading, error, getAllUser } = useGetAllUser();
   const navigate = useNavigate();
-  const itemsPerPage = 10;
 
   useEffect(() => {
-    getAllUser();
-  }, [getAllUser]);
+    // Backend pagination is 0-indexed
+    getAllUser(currentPage - 1, pageSize);
+
+    console.log(users);
+  }, [getAllUser, currentPage, pageSize]);
 
   if (loading && !users?.length) {
     return <div className={styles.loading}>Loading users...</div>;
@@ -23,14 +26,8 @@ export default function UserManagementPage() {
     return <div className={styles.error}>Error: {error}</div>;
   }
 
-  // Pagination logic
-  const validUsers = users || [];
-  const totalPages = Math.ceil(validUsers.length / itemsPerPage);
-  
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  
-  const currentUsers = validUsers.slice(startIndex, endIndex);
+  // Pagination logic (now handled by backend)
+  const currentUsers = users || [];
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
@@ -60,13 +57,15 @@ export default function UserManagementPage() {
     return <span className={`${styles.badge} ${styles.roleCustomer}`}>Customer</span>;
   };
 
+  
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>User Management</h1>
       </div>
 
-      {!validUsers.length ? (
+      {!currentUsers.length ? (
         <div className={styles.empty}>No users found.</div>
       ) : (
         <>
@@ -89,7 +88,7 @@ export default function UserManagementPage() {
                   <tr 
                     key={user.id}
                     className={styles.clickableRow}
-                    onClick={() => navigate(`/admin/userDetail/${user.id}`)}
+                    onClick={() => navigate(`/admin/userDetail/${user.id}`, { state: { user } })}
                   >
                     <td>
                       <div style={{ fontWeight: 500 }}>{user.fullName}</div>
@@ -107,27 +106,51 @@ export default function UserManagementPage() {
             </table>
           </div>
 
-          {totalPages > 1 && (
-            <div className={styles.pagination}>
-              <button
-                className={styles.pageButton}
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span className={styles.pageInfo}>
-                Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
+            <div style={{ fontSize: "0.875rem", color: "#666" }}>
+              Showing {currentUsers.length} of {totalElements} users
+              <span style={{ marginLeft: "1rem" }}>
+                <label htmlFor="pageSize" style={{ marginRight: "0.5rem" }}>Items per page:</label>
+                <select
+                  id="pageSize"
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  style={{ padding: "0.25rem 0.5rem", borderRadius: "4px", border: "1px solid #ddd" }}
+                >
+                  <option value={2}>2</option>
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                </select>
               </span>
-              <button
-                className={styles.pageButton}
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
             </div>
-          )}
+
+            {totalPages > 0 && (
+              <div className={styles.pagination}>
+                <button
+                  className={styles.pageButton}
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <span className={styles.pageInfo}>
+                  Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+                </span>
+                <button
+                  className={styles.pageButton}
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
         </>
       )}
     </div>

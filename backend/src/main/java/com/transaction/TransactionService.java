@@ -12,6 +12,10 @@ import com.account.Account;
 import com.account.AccountRepository;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
+import com.user.dto.UserDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -171,62 +175,35 @@ public class TransactionService {
     }
 
 
-    public ReturnClass getTransactionHistory(UUID accNum){
+    public ReturnDataClass<TransactionDTO> getTransactionHistory(UUID accNum , int page , int size){
 
+        ReturnDataClass<TransactionDTO> rsData = new ReturnDataClass<>();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        ReturnClass rs = new ReturnClass();
-        ReturnDataClass rsData = new ReturnDataClass();
-        List<TransactionModel> transactionList =  transactionRepository.findByFromAccountIdOrToAccountIdOrderByCreatedAtDesc(accNum,accNum);
+        Page<TransactionModel> transactionList =  transactionRepository.findByFromAccountIdOrToAccountId(accNum,accNum,pageable);
 
-        List<TransactionDTO> returnList = new ArrayList<>();
+        List<TransactionDTO> returnList = transactionList.getContent()
+                .stream()
+                .map(TransactionDTO::fromEntity)
+                .toList();
 
-        for (TransactionModel tx : transactionList) {
+        rsData.setTotalElements(transactionList.getTotalElements());
+        rsData.setTotalPages(transactionList.getTotalPages());
+        rsData.setCurrentPage(transactionList.getNumber());
+        rsData.setPageSize(transactionList.getSize());
+        rsData.setFirst(transactionList.isFirst());
+        rsData.setLast(transactionList.isLast());
 
-            TransactionDTO data = new TransactionDTO();
-            data.setAmount(tx.getAmount());
-            data.setNote(tx.getNote());
-            data.setType(tx.getTransaction_type());
-            data.setReferenceNo(tx.getReferenceNo());
-            data.setCreatedAt(tx.getCreatedAt());
-
-
-            UUID fromId = tx.getFromAccount() != null
-                    ? tx.getFromAccount().getId()
-                    : null;
-
-            data.setFromAccountId(fromId);
-
-
-            UUID toId = tx.getToAccount() != null
-                    ? tx.getToAccount().getId()
-                    : null;
-
-            data.setToAccountId(toId);
-
-
-            if (tx.getFromAccount() != null) {
-                data.setFromAccountNumber(tx.getFromAccount().getAccountNumber());
-            }
-
-            if (tx.getToAccount() != null) {
-                data.setToAccountNumber(tx.getToAccount().getAccountNumber());
-            }
-
-            returnList.add(data);
-        }
         rsData.setTransactionList(returnList);
-        rs.setSuccessReturn();
-        rs.setCODE("200");
-        rs.setMSG("Get Success");
-        rs.setData(rsData);
 
-        return  rs;
+
+        return  rsData;
     }
 
     public ReturnClass getAllTransaction(){
 
         ReturnClass rs = new ReturnClass();
-        ReturnDataClass rsData = new ReturnDataClass();
+        ReturnDataClass<TransactionDTO> rsData = new ReturnDataClass<>();
         List<TransactionDTO> transactionList =  TransactionDTO.fromEntityList(transactionRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")));
         rsData.setTransactionList(transactionList);
         rs.setSuccessReturn();
@@ -238,20 +215,30 @@ public class TransactionService {
     }
 
 
-    public ReturnClass getTransactionByUserId(){
-        String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
+    public ReturnDataClass<TransactionDTO> getTransactionByUserId(int page , int size){
+        UUID userIdStr = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
 
-
+        Pageable pageable = PageRequest.of(page, size);
         ReturnClass rs = new ReturnClass();
-        ReturnDataClass rsData = new ReturnDataClass();
-        List<TransactionDTO> transactionList =  TransactionDTO.fromEntityList(transactionRepository.findUserTransactionsNative(UUID.fromString(userIdStr)));
-        rsData.setTransactionList(transactionList);
-        rs.setSuccessReturn();
-        rs.setCODE("200");
-        rs.setMSG("GET SUCCESS");
-        rs.setData(rsData);
+        ReturnDataClass<TransactionDTO> rsData = new ReturnDataClass<>();
+        Page<TransactionModel> transactionList =  transactionRepository.findUserTransactionsNative(userIdStr , pageable);
 
-        return  rs;
+        List<TransactionDTO> list = transactionList.getContent()
+                .stream()
+                .map(TransactionDTO::fromEntity)
+                .toList();
+        rsData.setTransactionList(list);
+        rsData.setTotalElements(transactionList.getTotalElements());
+        rsData.setTotalPages(transactionList.getTotalPages());
+        rsData.setCurrentPage(transactionList.getNumber());
+        rsData.setPageSize(transactionList.getSize());
+        rsData.setFirst(transactionList.isFirst());
+        rsData.setLast(transactionList.isLast());
+
+
+
+
+        return  rsData;
     }
 
 

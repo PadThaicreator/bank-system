@@ -12,33 +12,20 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ReturnDataClass {
+public class ReturnDataClass<T> {
 
     private List<TransactionDTO> transactionList;
     private List<UserDTO> userList;
     private List<UserAccountResponse> accountList;
 
-    public List<TransactionDTO> getTransactionList() {
-        return transactionList;
-    }
+ 
+    private List<T> content;
 
-    public void setTransactionList(List<TransactionDTO> transactionList) {
-        this.transactionList = transactionList;
-    }
-
-    public List<UserDTO> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<UserDTO> userList) {
-        this.userList = userList;
-    }
-
-    public List<UserAccountResponse> getAccountList() {
-        return accountList;
-    }
-
-    public void setAccountList(List<UserAccountResponse> accountList) {
-        this.accountList = accountList;
-    }
+    // pagination metadata
+    private long totalElements;
+    private int totalPages;
+    private int currentPage;
+    private int pageSize;
+    private boolean first;
+    private boolean last;
 }

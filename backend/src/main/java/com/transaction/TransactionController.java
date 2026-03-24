@@ -36,10 +36,12 @@ public class TransactionController {
 
 
     @GetMapping("/history/{accNum}")
-    public  ApiResponse<List<TransactionDTO>> getHistory(@PathVariable  UUID accNum){
-        ReturnClass rs =  transactionService.getTransactionHistory(accNum);
+    public  ApiResponse<ReturnDataClass<TransactionDTO>> getHistory(@PathVariable  UUID accNum,
+                                                         @RequestParam int page,
+                                                         @RequestParam int size){
+        ReturnDataClass<TransactionDTO> rs =  transactionService.getTransactionHistory(accNum , page,size);
 
-        return   ApiResponse.success(rs.getMSG() , rs.getData().getTransactionList());
+        return   ApiResponse.success("get history success" , rs);
     }
 
 
@@ -51,10 +53,10 @@ public class TransactionController {
     }
 
     @GetMapping("/user")
-    public  ApiResponse<List<TransactionDTO>> getTransactionByUserId(){
-        ReturnClass rs =  transactionService.getTransactionByUserId();
+    public ApiResponse<ReturnDataClass<TransactionDTO>> getTransactionByUserId(@RequestParam int page, @RequestParam int size){
+        ReturnDataClass<TransactionDTO> rs =  transactionService.getTransactionByUserId(page,size);
 
-        return   ApiResponse.success(rs.getMSG() , rs.getData().getTransactionList());
+        return   ApiResponse.success( "Get Transaction Success" , rs);
     }
 
 

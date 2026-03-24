@@ -4,12 +4,17 @@ package com.user;
 import com.models.StatusType;
 import com.transaction.TransactionModel;
 import com.user.dto.LoginDTO;
+import com.user.dto.UpdateProfileDTO;
 import com.user.dto.UserDTO;
 import com.user.expception.AuthenError;
 import com.user.expception.UserError;
 import com.configuration.auth.jwt.JwtUtil;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,37 +128,38 @@ public  class UserService {
         return rs;
     }
 
-    public ReturnClass GetAllUser(){
-        ReturnClass rs = new ReturnClass();
+    public ReturnDataClass<UserDTO> GetAllUser(int page, int size){
 
 
 
-        List<UserModel> userList = UserRepository.findAll();
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdAt").descending()
+        );
 
+        Page<UserModel> userPage = UserRepository.findAll(pageable);
 
-        List<UserDTO> userDTOList = userList.stream()
-                .map(user -> {
-                    UserDTO dto = new UserDTO();
-                    dto.setId(user.getId());
-                    dto.setFullName(user.getFullName());
-                    dto.setEmail(user.getEmail());
-                    dto.setRole(user.getRole());
-                    dto.setPhone(user.getPhone());
-                    dto.setStatus(user.getStatus());
-                    dto.setCreatedAt(user.getCreatedAt());
-                    dto.setUpdatedAt(user.getUpdatedAt());
-                    dto.setBirthDay(user.getBirthDay());
-                    dto.setGender(user.getGender());
-                    return dto;
-                })
-                .toList();
+        List<UserDTO> userDTOList =
+                userPage.getContent()
+                        .stream()
+                        .map(UserDTO::fromEntity)
+                        .toList();
 
-        ReturnDataClass rsData = new ReturnDataClass();
+        ReturnDataClass<UserDTO> rsData = new ReturnDataClass<UserDTO>();
         rsData.setUserList(userDTOList);
 
-        rs.setData(rsData);
 
-        return  rs;
+        rsData.setTotalElements(userPage.getTotalElements());
+        rsData.setTotalPages(userPage.getTotalPages());
+        rsData.setCurrentPage(userPage.getNumber());
+        rsData.setPageSize(userPage.getSize());
+        rsData.setFirst(userPage.isFirst());
+        rsData.setLast(userPage.isLast());
+
+
+
+        return rsData;
     }
 
     public ReturnClass getUserProfile(UUID userId) {
@@ -167,7 +173,7 @@ public  class UserService {
     }
 
     @Transactional
-    public ReturnClass updateUserProfile(UUID userId, com.user.dto.UpdateProfileDTO data) {
+    public ReturnClass updateUserProfile(UUID userId, UpdateProfileDTO data) {
         UserModel user = UserRepository.findById(userId)
                 .orElseThrow(() -> new UserError.UserDuplicateError("User not found"));
                 
@@ -183,4 +189,7 @@ public  class UserService {
         rs.setMSG("Profile updated successfully");
         return rs;
     }
+
+
+
 }
