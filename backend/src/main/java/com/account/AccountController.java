@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.UUID;
 
 import com.account.dto.UserAccountResponse;
+import com.account.dto.AccountWithOwnerResponse;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +47,15 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Get all account successfully", responses));
     }
 
+    @GetMapping("/accounts/admin")
+    public ResponseEntity<ApiResponse<Page<AccountWithOwnerResponse>>> getAllAccountAdmin(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AccountWithOwnerResponse> responses = accountService.getAllAccountsWithOwner(pageable);
+        return ResponseEntity.ok(ApiResponse.success("Get all account successfully", responses));
+    }
+
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<ApiResponse<AccountResponse>> getAccountFromId(
             @PathVariable UUID accountId) {
@@ -57,8 +71,11 @@ class AccountController {
     }
 
     @GetMapping("/accounts/user")
-    public ResponseEntity<ApiResponse<List<UserAccountResponse>>> getAccountByUserId() {
-        List<UserAccountResponse> responses = accountService.getAccountByUserId();
+    public ResponseEntity<ApiResponse<Page<UserAccountResponse>>> getAccountByUserId(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserAccountResponse> responses = accountService.getAccountByUserId(pageable);
         return ResponseEntity.ok(ApiResponse.success("Get all user account successfully", responses));
     }
 

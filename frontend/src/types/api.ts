@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/users/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getProfile"];
+        put: operations["updateProfile"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/register": {
         parameters: {
             query?: never;
@@ -14,6 +30,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["Register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/refreshToken": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RefreshToken"];
         delete?: never;
         options?: never;
         head?: never;
@@ -68,39 +100,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/accounts/{accountId}/deleteAcount": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["deleteAccount"];
-        trace?: never;
-    };
-    "/accounts/{accountId}/changeBalance": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["changeBalance"];
-        trace?: never;
-    };
-    "/accounts/{accountId}/changeAccountType": {
+    "/accounts/{accountId}/type": {
         parameters: {
             query?: never;
             header?: never;
@@ -116,7 +116,7 @@ export interface paths {
         patch: operations["changeAccountType"];
         trace?: never;
     };
-    "/accounts/{accountId}/changeAccountStatus": {
+    "/accounts/{accountId}/status": {
         parameters: {
             query?: never;
             header?: never;
@@ -130,6 +130,22 @@ export interface paths {
         options?: never;
         head?: never;
         patch: operations["changeAccountStatus"];
+        trace?: never;
+    };
+    "/accounts/{accountId}/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["changeBalance"];
         trace?: never;
     };
     "/users/getAllUser": {
@@ -180,7 +196,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/accounts/{accountid}/getAccountBalance": {
+    "/accounts/{accountid}/balance": {
         parameters: {
             query?: never;
             header?: never;
@@ -206,7 +222,7 @@ export interface paths {
         get: operations["getAccountFromId"];
         put?: never;
         post?: never;
-        delete?: never;
+        delete: operations["deleteAccount"];
         options?: never;
         head?: never;
         patch?: never;
@@ -232,6 +248,22 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        UpdateProfileDTO: {
+            fullName?: string;
+            phone?: string;
+        };
+        ApiResponseUserModel: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["UserModel"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        ErrorDetail: {
+            code?: string;
+            details?: string;
+        };
         UserModel: {
             /** Format: uuid */
             id?: string;
@@ -259,10 +291,6 @@ export interface components {
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
-        };
-        ErrorDetail: {
-            code?: string;
-            details?: string;
         };
         ReturnDataClass: {
             transactionList?: components["schemas"]["TransactionDTO"][];
@@ -311,10 +339,6 @@ export interface components {
             /** @enum {string} */
             gender?: "male" | "female" | "other";
         };
-        LoginDTO: {
-            email?: string;
-            password?: string;
-        };
         ApiResponseMapStringObject: {
             success?: boolean;
             message?: string;
@@ -324,6 +348,10 @@ export interface components {
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
+        };
+        LoginDTO: {
+            email?: string;
+            password?: string;
         };
         ApiResponseListTransactionDTO: {
             success?: boolean;
@@ -365,7 +393,8 @@ export interface components {
             timestamp?: string;
         };
         ChangeAccountTypeRequest: {
-            accountType: string;
+            /** @enum {string} */
+            accountType: "SAVINGS" | "CURRENT_PERSONAL" | "CURRENT_CORPORATE" | "FIXED_DEPOSIT_PERSONAL" | "FIXED_DEPOSIT_CORPORATE";
         };
         ChangeStatusRequest: {
             /** @enum {string} */
@@ -418,6 +447,50 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    getProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseUserModel"];
+                };
+            };
+        };
+    };
+    updateProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProfileDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseUserModel"];
+                };
+            };
+        };
+    };
     Register: {
         parameters: {
             query?: never;
@@ -438,6 +511,32 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseReturnDataClass"];
+                };
+            };
+        };
+    };
+    RefreshToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    [key: string]: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseMapStringObject"];
                 };
             };
         };
@@ -534,52 +633,6 @@ export interface operations {
             };
         };
     };
-    deleteAccount: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                accountId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
-                };
-            };
-        };
-    };
-    changeBalance: {
-        parameters: {
-            query: {
-                amount: number;
-            };
-            header?: never;
-            path: {
-                accountId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
-                };
-            };
-        };
-    };
     changeAccountType: {
         parameters: {
             query?: never;
@@ -620,6 +673,30 @@ export interface operations {
                 "application/json": components["schemas"]["ChangeStatusRequest"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
+                };
+            };
+        };
+    };
+    changeBalance: {
+        parameters: {
+            query: {
+                amount: number;
+            };
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
@@ -717,6 +794,28 @@ export interface operations {
         };
     };
     getAccountFromId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
+                };
+            };
+        };
+    };
+    deleteAccount: {
         parameters: {
             query?: never;
             header?: never;

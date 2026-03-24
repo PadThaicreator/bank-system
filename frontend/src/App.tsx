@@ -18,6 +18,7 @@ import UserListPage from "./pages/admin/UserMangement/userListPage";
 import UserDetailPage from "./pages/admin/UserMangement/userDetailPage";
 import AdminDashboardPage from "./pages/dashboard/AdminDashboardPage/AdminDashboardPage";
 import DashboardPage from "./pages/dashboard/DashboardPage/DashboardPage";
+import AdminAccountListPage from "./pages/admin/AccountManagement/AccountListPage";
 
 function App() {
 
@@ -36,7 +37,7 @@ function App() {
             <Route element={<ProtectedRoute allowedRoles={["CUSTOMER", "ADMIN"]} />}>
               <Route element={<NavBarComponent />}>
                 <Route element={<AdminRoute />}>
-                  <Route path="/admin/accountList" element={<AccountListPage />} />
+                  <Route path="/admin/accountList" element={<AdminAccountListPage />} />
                   <Route path="/admin/accountDetail/:accountId" element={<AccountDetailPage />} />
                   <Route path="/admin/userList" element={<UserListPage />} />
                   <Route path="/admin/userDetail/:userId" element={<UserDetailPage />} />

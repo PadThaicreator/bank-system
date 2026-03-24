@@ -4,6 +4,7 @@ import { ArrowRightLeft, Plus, History, ArrowDownLeft, ArrowUpRight } from 'luci
 import type { RootState } from '../../../redux/store';
 import styles from './DashboardPage.module.css';
 import useUserAccount from '../../../hooks/useUserAccount';
+import { useNavigate } from 'react-router-dom';
 
 // --- Types ---
 interface Account {
@@ -68,9 +69,12 @@ const mockTransactions: Transaction[] = [
 ];
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const { accounts: userAccounts, loading: accountLoading, error: accountError, fetchUserAccount } = useUserAccount();
+  const page = 0;
+  const size = 2;
+  const { accounts: userAccounts, loading: accountLoading, error: accountError, fetchUserAccount } = useUserAccount(page, size);
   const [ accounts, setAccounts ] = useState<Account[]>([]);
   const [ transactions, setTransactions ] = useState<Transaction[]>([]);
   const [ loading, setLoading ] = useState(true);
@@ -85,8 +89,8 @@ export default function DashboardPage() {
       const formattedAccounts: Account[] = userAccounts.map(acc => ({
         id: acc.id || '',
         accountNumber: acc.accountNumber || '',
-        accountType: acc.accountType || '',
-        accountCategory: acc.accountType || '',
+        accountType: (acc as any).accountType || acc.accountCategory || '',
+        accountCategory: acc.accountCategory || '',
         balance: acc.balance || 0,
         status: acc.status || ''
       }));
@@ -121,7 +125,7 @@ export default function DashboardPage() {
     return (
       <div className={styles.errorContainer}>
         <p className={styles.errorText}>{accountError}</p>
-        <button onClick={fetchUserAccount}>Retry</button>
+        <button onClick={() => fetchUserAccount()}>Retry</button>
       </div>
     );
   }
@@ -156,7 +160,7 @@ export default function DashboardPage() {
             <div>
               <div className={styles.sectionHeader}>
                 <h3 className={styles.sectionTitle}>Your Accounts</h3>
-                <button className={styles.linkBtn}>View All</button>
+                <button className={styles.linkBtn} onClick={() => navigate("/account/list")}>View All</button>
               </div>
               
               {accounts.length === 0 ? (
@@ -188,7 +192,7 @@ export default function DashboardPage() {
             <div>
               <div className={styles.sectionHeader}>
                 <h3 className={styles.sectionTitle}>Recent Transactions</h3>
-                <button className={styles.linkBtn}>Full History</button>
+                <button className={styles.linkBtn} onClick={() => navigate("/transaction/history")}>Full History</button>
               </div>
               
               <div className={styles.card}>

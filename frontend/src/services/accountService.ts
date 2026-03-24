@@ -1,5 +1,6 @@
 import api from '../lib/axios'
-import type { AccountResponse, BalanceResponse, CreateAccountRequest } from '../types/accountType';
+import type { AccountResponse, BalanceResponse, CreateAccountRequest, UserAccountResponse } from '../types/accountType';
+import type { PageResponse } from '../types/pageType';
 
 
 const BASE = "/api/accounts";
@@ -9,6 +10,10 @@ export const accountService = {
     // Get /api/accounts
     getAllAccounts: () => api.get<AccountResponse[]>(BASE),
 
+    // Get /api/accounts/admin
+    getAccountsPaginated: (page: number, size: number) => 
+        api.get<PageResponse<AccountResponse>>(`${BASE}/admin?page=${page}&size=${size}`),
+
     // Get /api/accounts/{accountId}
     getAccountById: (accountId: string) => api.get<AccountResponse>(`${BASE}/${accountId}`),
 
@@ -16,7 +21,8 @@ export const accountService = {
     getBalanceById: (accountId: string) => api.get<BalanceResponse>(`${BASE}/${accountId}/balance`),
 
     // Get /api/accounts/user
-    getUserAccount: () => api.get<AccountResponse[]>(`${BASE}/user`),
+    getUserAccount: (page: number = 0, size: number = 10) => 
+        api.get<PageResponse<UserAccountResponse>>(`${BASE}/user?page=${page}&size=${size}`),
 
     // Post /api/accounts
     createAccount: (data: CreateAccountRequest) => api.post<AccountResponse>(BASE, data),
