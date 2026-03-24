@@ -12,7 +12,7 @@ export const accountService = {
 
     // Get /api/accounts/admin
     getAccountsPaginated: (page: number, size: number) => 
-        api.get<PageResponse<AccountResponse>>(`${BASE}/admin?page=${page}&size=${size}`),
+        api.get<PageResponse<UserAccountResponse>>(`${BASE}/admin?page=${page}&size=${size}`),
 
     // Get /api/accounts/{accountId}
     getAccountById: (accountId: string) => api.get<AccountResponse>(`${BASE}/${accountId}`),
@@ -22,7 +22,7 @@ export const accountService = {
 
     // Get /api/accounts/user
     getUserAccount: (page: number = 0, size: number = 10) => 
-        api.get<PageResponse<UserAccountResponse>>(`${BASE}/user?page=${page}&size=${size}`),
+        api.get<PageResponse<AccountResponse>>(`${BASE}/user?page=${page}&size=${size}`),
 
     // Post /api/accounts
     createAccount: (data: CreateAccountRequest) => api.post<AccountResponse>(BASE, data),

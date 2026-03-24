@@ -3,8 +3,6 @@ package com.account;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-
-import com.account.dto.UserAccountResponse;
 import com.account.dto.AccountWithOwnerResponse;
 
 import org.springframework.data.domain.Page;
@@ -71,11 +69,11 @@ class AccountController {
     }
 
     @GetMapping("/accounts/user")
-    public ResponseEntity<ApiResponse<Page<UserAccountResponse>>> getAccountByUserId(
+    public ResponseEntity<ApiResponse<Page<AccountResponse>>> getAccountByUserId(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<UserAccountResponse> responses = accountService.getAccountByUserId(pageable);
+        Page<AccountResponse> responses = accountService.getAccountByUserId(pageable);
         return ResponseEntity.ok(ApiResponse.success("Get all user account successfully", responses));
     }
 

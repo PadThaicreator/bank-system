@@ -29,7 +29,7 @@ const AccountListPage = () => {
   )
 
   const handleAccountRowClick = (accountId: string): void => {
-    navigate(`/admin/accountDetail/${accountId}`)
+    navigate(`/account/detail/${accountId}`)
   }
 
   return (

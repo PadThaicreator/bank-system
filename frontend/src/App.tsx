@@ -38,7 +38,6 @@ function App() {
               <Route element={<NavBarComponent />}>
                 <Route element={<AdminRoute />}>
                   <Route path="/admin/accountList" element={<AdminAccountListPage />} />
-                  <Route path="/admin/accountDetail/:accountId" element={<AccountDetailPage />} />
                   <Route path="/admin/userList" element={<UserListPage />} />
                   <Route path="/admin/userDetail/:userId" element={<UserDetailPage />} />
                   <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
@@ -46,6 +45,7 @@ function App() {
                 
                 <Route path="/account/open" element={<AccountOpeningPage />} />
                 <Route path="/account/list" element={<AccountListPage />} />
+                <Route path="/account/detail/:accountId" element={<AccountDetailPage />} />
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
                 <Route path="/home" element={<HomePage />} />

@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
-import com.account.dto.UserAccountResponse;
 import com.user.UserRepository;
 import com.user.UserModel;
 import com.account.dto.AccountWithOwnerResponse;
@@ -149,13 +147,13 @@ public class AccountService {
         return AccountResponse.from(account);
     }
 
-    public Page<UserAccountResponse> getAccountByUserId(Pageable pageable) {
+    public Page<AccountResponse> getAccountByUserId(Pageable pageable) {
         String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
         UUID userId = UUID.fromString(userIdStr);
 
-        Page<UserAccountResponse> accounts = accountRepository.findByUserId(userId, pageable);
+        Page<Account> accounts = accountRepository.findByUserId(userId, pageable);
 
-        return accounts;
+        return accounts.map(AccountResponse::from);
     }
 
     // ======= PRIVATE HELPER
