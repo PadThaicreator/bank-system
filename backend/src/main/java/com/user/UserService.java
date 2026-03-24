@@ -68,10 +68,8 @@ public class UserService {
 
         if (passwordEncoder.matches(password, user.getPasswordHash())) {
 
-            if(passwordEncoder.matches(password, user.getPasswordHash()) ){
-
-                String getToken = jwtUtil.generateAccessToken(user.getId().toString() , user.getRole().toString());
-                String getRefreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
+            String getToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getRole().toString());
+            String getRefreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
 
             UserModel userLogin = new UserModel();
             userLogin.setRole(user.getRole());
@@ -80,17 +78,15 @@ public class UserService {
             userLogin.setId(user.getId());
             userLogin.setPhone(user.getPhone());
 
-                rs.setUserLogin(userLogin);
-                rs.setMSG(getToken);
-                rs.setRefreshToken(getRefreshToken);
-                rs.setCODE("200");
-                return rs;
-            }else{
+            rs.setUserLogin(userLogin);
+            rs.setMSG(getToken);
+            rs.setRefreshToken(getRefreshToken);
+            rs.setCODE("200");
+            return rs;
+        } else {
 
             throw new AuthenError.InvalidForm("Invalid Password");
         }
-
-
 
     }
 
