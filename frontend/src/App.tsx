@@ -50,7 +50,6 @@ function App() {
                 <Route path="/transaction/service" element={<TransactionPage />} />
                 {/* <Route path="/home" element={<HomePage />} />
                 <Route path="/" element={<HomePage />} /> */}
-                <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/home" element={<HomeRedirect />} />
                 <Route path="/" element={<HomeRedirect />} />
