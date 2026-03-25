@@ -100,6 +100,38 @@ export interface paths {
         patch: operations["changeBalance"];
         trace?: never;
     };
+    "/accounts/{accountId}/changeAccountType": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["changeAccountType"];
+        trace?: never;
+    };
+    "/accounts/{accountId}/changeAccountStatus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["changeAccountStatus"];
+        trace?: never;
+    };
     "/users/getAllUser": {
         parameters: {
             query?: never;
@@ -180,7 +212,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/accounts/user/{userId}": {
+    "/accounts/user": {
         parameters: {
             query?: never;
             header?: never;
@@ -215,6 +247,10 @@ export interface components {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+            /** Format: date */
+            birthDay?: string;
+            /** @enum {string} */
+            gender?: "male" | "female" | "other";
         };
         ApiResponseReturnDataClass: {
             success?: boolean;
@@ -270,6 +306,10 @@ export interface components {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+            /** Format: date */
+            birthDay?: string;
+            /** @enum {string} */
+            gender?: "male" | "female" | "other";
         };
         LoginDTO: {
             email?: string;
@@ -323,6 +363,13 @@ export interface components {
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
+        };
+        ChangeAccountTypeRequest: {
+            accountType: string;
+        };
+        ChangeStatusRequest: {
+            /** @enum {string} */
+            status: "ACTIVE" | "CLOSED" | "FROZEN";
         };
         ApiResponseListUserDTO: {
             success?: boolean;
@@ -465,9 +512,7 @@ export interface operations {
     };
     createAccount: {
         parameters: {
-            query: {
-                userId: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -523,6 +568,58 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
+                };
+            };
+        };
+    };
+    changeAccountType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeAccountTypeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
+                };
+            };
+        };
+    };
+    changeAccountStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeStatusRequest"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
@@ -645,9 +742,7 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                userId: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;

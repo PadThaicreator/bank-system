@@ -92,6 +92,32 @@ export default function UserDetailPage() {
           </div>
 
           <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Birth Date</label>
+            <input
+              type="date"
+              name="birthDay"
+              value={(formData as any)?.birthDay || ""}
+              onChange={handleChange}
+              className={styles.formInput}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>Gender</label>
+            <select
+              name="gender"
+              value={(formData as any)?.gender || ""}
+              onChange={handleChange}
+              className={styles.formInput}
+            >
+              <option value="" disabled>Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
             <label className={styles.formLabel}>Role</label>
             <select
               name="role"

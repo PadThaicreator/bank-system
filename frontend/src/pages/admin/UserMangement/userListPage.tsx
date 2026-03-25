@@ -77,6 +77,8 @@ export default function UserManagementPage() {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Phone</th>
+                  {/* <th>Birth Date</th>
+                  <th>Gender</th> */}
                   <th>Role</th>
                   <th>Status</th>
                   <th>Created At</th>
@@ -94,6 +96,8 @@ export default function UserManagementPage() {
                     </td>
                     <td>{user.email}</td>
                     <td>{user.phone || "-"}</td>
+                    {/* <td>{user.birthDay ? new Date(user.birthDay).toLocaleDateString() : "-"}</td>
+                    <td style={{ textTransform: 'capitalize' }}>{user.gender ? user.gender.toLowerCase() : "-"}</td> */}
                     <td>{getRoleBadge(user.role)}</td>
                     <td>{getStatusBadge(user.status)}</td>
                     <td>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}</td>

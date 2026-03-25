@@ -19,8 +19,7 @@ function TxBadge({ type }: { type: string }) {
   );
 }
 
-function Amount({ amount, type }: { amount: number; type: string }) {
-  const isCredit = type === "DEPOSIT";
+function Amount({ amount, isCredit }: { amount: number; isCredit: boolean }) {
   return (
     <span className={isCredit ? styles.amountCredit : styles.amountDebit}>
       {isCredit ? "+" : "-"}
@@ -160,7 +159,13 @@ export default function HistoryPage() {
 
             {!txLoading && !txError && transactions && transactions.length > 0 && (
               <div className={styles.txList}>
-                {transactions.map((tx, i) => (
+                {transactions.map((tx, i) => {
+                  let isCredit = tx.type === "DEPOSIT";
+                  if (tx.type === "TRANSFER") {
+                    isCredit = tx.to_account_id === selectedAccount?.id || tx.to_account_number === selectedAccount?.accountNumber;
+                  }
+                  
+                  return (
                   <div
                     key={tx.reference_no ?? i}
                     className={styles.txCard}
@@ -173,16 +178,19 @@ export default function HistoryPage() {
                         {tx.note && (
                           <span className={styles.txNote}>{tx.note}</span>
                         )}
-                        {tx.to_account_id && (
+                        {tx.type === "TRANSFER" && (
                           <span className={styles.txDetail}>
-                            To: {tx.to_account_number}
+                            {isCredit 
+                              ? `From: ${tx.from_account_number}` 
+                              : `To: ${tx.to_account_number}`}
                           </span>
                         )}
                       </div>
                     </div>
-                    <Amount amount={tx.amount || 0} type={tx.type || "UNKNOWN"} />
+                    <Amount amount={tx.amount || 0} isCredit={isCredit} />
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </>

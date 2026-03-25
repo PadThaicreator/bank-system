@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.management.relation.Role;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -66,6 +67,15 @@ public class UserModel {
 
         @Enumerated(EnumType.STRING)
         @Column(name = "gender")
+        private UserGender gender;
+
+
+        @Column(name = "birth_date")
+        private LocalDate birthDay;
+
+
+        @Column(name = "gender")
+        @Enumerated(EnumType.STRING)
         private UserGender gender;
 
 

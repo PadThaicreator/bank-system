@@ -130,6 +130,8 @@ public class UserService {
                     dto.setStatus(user.getStatus());
                     dto.setCreatedAt(user.getCreatedAt());
                     dto.setUpdatedAt(user.getUpdatedAt());
+                    dto.setBirthDay(user.getBirthDay());
+                    dto.setGender(user.getGender());
                     return dto;
                 })
                 .toList();
