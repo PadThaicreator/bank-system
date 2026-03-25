@@ -100,7 +100,39 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/accounts/{accountId}/type": {
+    "/accounts/{accountId}/deleteAcount": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["deleteAccount"];
+        trace?: never;
+    };
+    "/accounts/{accountId}/changeBalance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["changeBalance"];
+        trace?: never;
+    };
+    "/accounts/{accountId}/changeAccountType": {
         parameters: {
             query?: never;
             header?: never;
@@ -116,7 +148,7 @@ export interface paths {
         patch: operations["changeAccountType"];
         trace?: never;
     };
-    "/accounts/{accountId}/status": {
+    "/accounts/{accountId}/changeAccountStatus": {
         parameters: {
             query?: never;
             header?: never;
@@ -180,7 +212,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/accounts/{accountid}/balance": {
+    "/accounts/{accountid}/getAccountBalance": {
         parameters: {
             query?: never;
             header?: never;
@@ -206,7 +238,7 @@ export interface paths {
         get: operations["getAccountFromId"];
         put?: never;
         post?: never;
-        delete: operations["deleteAccount"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -390,8 +422,7 @@ export interface components {
             timestamp?: string;
         };
         ChangeAccountTypeRequest: {
-            /** @enum {string} */
-            accountType: "SAVINGS" | "CURRENT_PERSONAL" | "CURRENT_CORPORATE" | "FIXED_DEPOSIT_PERSONAL" | "FIXED_DEPOSIT_CORPORATE";
+            accountType: string;
         };
         ChangeStatusRequest: {
             /** @enum {string} */
@@ -690,6 +721,52 @@ export interface operations {
             };
         };
     };
+    deleteAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
+                };
+            };
+        };
+    };
+    changeBalance: {
+        parameters: {
+            query: {
+                amount: number;
+            };
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
+                };
+            };
+        };
+    };
     changeAccountType: {
         parameters: {
             query?: never;
@@ -730,30 +807,6 @@ export interface operations {
                 "application/json": components["schemas"]["ChangeStatusRequest"];
             };
         };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
-                };
-            };
-        };
-    };
-    changeBalance: {
-        parameters: {
-            query: {
-                amount: number;
-            };
-            header?: never;
-            path: {
-                accountId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
@@ -857,28 +910,6 @@ export interface operations {
         };
     };
     getAccountFromId: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                accountId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
-                };
-            };
-        };
-    };
-    deleteAccount: {
         parameters: {
             query?: never;
             header?: never;

@@ -1,5 +1,7 @@
 package com.transaction;
 
+
+import com.account.Account;
 import com.models.StatusType;
 import com.models.TransactionType;
 import jakarta.persistence.*;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+
 
 @Entity
 @Table(name = "transactions")

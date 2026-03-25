@@ -1,17 +1,28 @@
 package com.account;
 
+import java.util.List;
 
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.account.dto.UserAccountResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public interface AccountRepository extends JpaRepository<Account, UUID> {
 
-    Page<Account> findByUserId(UUID userId, Pageable pageable);
+   @Query("""
+     SELECT new com.account.dto.UserAccountResponse(
+      a.id,
+      a.accountNumber,
+      a.balance,
+      a.status,
+      a.accountCategory
+    )
+    FROM Account a
+    WHERE a.userId = :userId
+    """)
+    List<UserAccountResponse> findByUserId(UUID userId);
 
     Optional<Account> findByAccountNumber(String accountNumber);
 }

@@ -4,12 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import com.user.UserRepository;
-import com.user.UserModel;
-import com.account.dto.AccountWithOwnerResponse;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.account.dto.UserAccountResponse;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
 
     // ======= POST METHOD
     // ========================================================================
@@ -88,8 +84,7 @@ public class AccountService {
 
         verifyOwnershipOrAdmin(account.getUserId());
 
-        account.setAccountType(request.getAccountType());
-        account.setAccountCategory(request.getAccountType().getCategory());
+        account.setAccountType(AccountType.valueOf(request.getAccountType()));
         Account saved = accountRepository.save(account);
         return AccountResponse.from(saved);
     }
@@ -129,16 +124,6 @@ public class AccountService {
                 .toList();
     }
 
-    public Page<AccountWithOwnerResponse> getAllAccountsWithOwner(Pageable pageable) {
-        verifyAdmin();
-
-        Page<Account> accounts = accountRepository.findAll(pageable);
-        return accounts.map(account -> {
-            UserModel user = userRepository.findById(account.getUserId()).orElse(null);
-            return AccountWithOwnerResponse.from(account, user);
-        });
-    }
-
     public AccountResponse getAccountById(UUID accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
@@ -147,13 +132,13 @@ public class AccountService {
         return AccountResponse.from(account);
     }
 
-    public Page<AccountResponse> getAccountByUserId(Pageable pageable) {
+    public List<UserAccountResponse> getAccountByUserId() {
         String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
         UUID userId = UUID.fromString(userIdStr);
 
-        Page<Account> accounts = accountRepository.findByUserId(userId, pageable);
+        List<UserAccountResponse> accounts = accountRepository.findByUserId(userId);
 
-        return accounts.map(AccountResponse::from);
+        return accounts;
     }
 
     // ======= PRIVATE HELPER

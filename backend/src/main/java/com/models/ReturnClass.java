@@ -1,5 +1,6 @@
 package com.models;
 
+import com.MainApplication;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.user.UserModel;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ReturnClass {
+public  class ReturnClass {
 
     @JsonProperty("MSG")
     private String MSG;
@@ -57,6 +58,7 @@ public class ReturnClass {
         this.MSG = MSG;
     }
 
+
     public void setSuccessReturn() {
         this.Success = true;
         this.Error = false;
@@ -70,6 +72,7 @@ public class ReturnClass {
         this.timestamp = LocalDateTime.now();
 
     }
+
 
     public ReturnDataClass getData() {
         return data;

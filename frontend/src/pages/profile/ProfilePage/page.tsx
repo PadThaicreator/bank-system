@@ -13,8 +13,6 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState<UpdateProfileRequest>({
     fullName: user?.fullName || "",
     phone: (user as any)?.phone || "", 
-    birthDate: user?.birthDate || "",
-    gender: user?.gender || "",
   });
   
   const [loading, setLoading] = useState(false);
@@ -30,12 +28,7 @@ export default function ProfilePage() {
     try {
       const res: any = await authService.getProfile();
       if (res.success && res.data) {
-        setFormData({ 
-          fullName: res.data.fullName, 
-          phone: res.data.phone,
-          birthDate: res.data.birthDate || "",
-          gender: res.data.gender || ""
-        });
+        setFormData({ fullName: res.data.fullName, phone: res.data.phone });
         dispatch(loginSuccess({ user: res.data, token: token as string }));
       }
     } catch (err) {
@@ -108,33 +101,6 @@ export default function ProfilePage() {
                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
              />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Date of Birth</label>
-            <input
-              type="date"
-              required
-              value={formData.birthDate || ""}
-              onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
-            <select
-              required
-              value={formData.gender || ""}
-              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none bg-white"
-            >
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
           </div>
         </div>
 

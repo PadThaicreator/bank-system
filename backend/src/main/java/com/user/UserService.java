@@ -1,6 +1,8 @@
 package com.user;
 
+
 import com.models.StatusType;
+import com.transaction.TransactionModel;
 import com.user.dto.LoginDTO;
 import com.user.dto.UpdateProfileDTO;
 import com.user.dto.UserDTO;
@@ -21,19 +23,19 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class UserService {
-    private final UserRepository UserRepository;
+public  class UserService {
+    private final UserRepository  UserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository UserRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public UserService(UserRepository UserRepository, PasswordEncoder passwordEncoder , JwtUtil jwtUtil ) {
         this.UserRepository = UserRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
 
     @Transactional
-    public ReturnClass RegisterUser(UserModel data) {
+    public  ReturnClass RegisterUser(UserModel data){
         ReturnClass rs = new ReturnClass();
         String password = data.getPasswordHash();
         data.setPasswordHash(passwordEncoder.encode(password));
@@ -59,39 +61,46 @@ public class UserService {
 
     }
 
-    public ReturnClass Login(LoginDTO data) {
+
+    public ReturnClass Login(LoginDTO data){
         ReturnClass rs = new ReturnClass();
         String password = data.getPassword();
         String email = data.getEmail();
 
-        UserModel user = UserRepository.findByEmail(email)
-                .orElseThrow(() -> new AuthenError.InvalidForm("Invalid Email"));
 
-        if (user.getStatus().equals(StatusType.INACTIVE)) {
-            throw new AuthenError.InactiveUser("User is inactive");
-        }
+            UserModel user = UserRepository.findByEmail(email).orElseThrow(() -> new AuthenError.InvalidForm("Invalid Email"));
 
-        if (passwordEncoder.matches(password, user.getPasswordHash())) {
+            if(user.getStatus().equals(StatusType.INACTIVE)){
+                throw new AuthenError.InactiveUser("User is inactive");
+            }
 
-            String getToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getRole().toString());
-            String getRefreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
 
-            UserModel userLogin = new UserModel();
-            userLogin.setRole(user.getRole());
-            userLogin.setEmail(user.getEmail());
-            userLogin.setFullName(user.getFullName());
-            userLogin.setId(user.getId());
-            userLogin.setPhone(user.getPhone());
+            if(passwordEncoder.matches(password, user.getPasswordHash()) ){
 
-            rs.setUserLogin(userLogin);
-            rs.setMSG(getToken);
-            rs.setRefreshToken(getRefreshToken);
-            rs.setCODE("200");
-            return rs;
-        } else {
+                String getToken = jwtUtil.generateAccessToken(user.getId().toString() , user.getRole().toString());
+                String getRefreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
 
-            throw new AuthenError.InvalidForm("Invalid Password");
-        }
+                UserModel userLogin = new UserModel();
+                userLogin.setRole(user.getRole());
+                userLogin.setEmail(user.getEmail());
+                userLogin.setFullName(user.getFullName());
+                userLogin.setId(user.getId());
+                userLogin.setPhone(user.getPhone());
+
+
+
+
+                rs.setUserLogin(userLogin);
+                rs.setMSG(getToken);
+                rs.setRefreshToken(getRefreshToken);
+                rs.setCODE("200");
+                return rs;
+            }else{
+
+                throw new AuthenError.InvalidForm("Invalid Password");
+            }
+
+
 
     }
 
@@ -100,19 +109,19 @@ public class UserService {
         if (refreshToken == null || !jwtUtil.isTokenValid(refreshToken)) {
             throw new AuthenError.InvalidForm("Invalid or Expired Refresh Token");
         }
-
+        
         String userIdStr = jwtUtil.extractUserId(refreshToken);
         UUID userId = UUID.fromString(userIdStr);
         UserModel user = UserRepository.findById(userId)
                 .orElseThrow(() -> new AuthenError.InvalidForm("User not found"));
-
+                
         if (user.getStatus().equals(StatusType.INACTIVE)) {
             throw new AuthenError.InactiveUser("User is inactive");
         }
 
         String newToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getRole().toString());
         String newRefreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
-
+        
         rs.setMSG(newToken);
         rs.setRefreshToken(newRefreshToken);
         rs.setCODE("200");
@@ -156,7 +165,7 @@ public class UserService {
     public ReturnClass getUserProfile(UUID userId) {
         UserModel user = UserRepository.findById(userId)
                 .orElseThrow(() -> new UserError.UserDuplicateError("User not found"));
-
+                
         ReturnClass rs = new ReturnClass();
         rs.setUserLogin(user);
         rs.setMSG("Success");
@@ -167,21 +176,13 @@ public class UserService {
     public ReturnClass updateUserProfile(UUID userId, UpdateProfileDTO data) {
         UserModel user = UserRepository.findById(userId)
                 .orElseThrow(() -> new UserError.UserDuplicateError("User not found"));
-
+                
         user.setFullName(data.getFullName());
         user.setPhone(data.getPhone());
-        user.setBirthDate(data.getBirthDate());
-        if (data.getGender() != null && !data.getGender().isEmpty()) {
-            try {
-                user.setGender(com.models.UserGender.valueOf(data.getGender().toLowerCase()));
-            } catch (IllegalArgumentException e) {
-                throw new com.user.expception.UserError.UserDuplicateError("Invalid gender format");
-            }
-        }
         user.setUpdatedAt(LocalDateTime.now());
-
+        
         UserRepository.save(user);
-
+        
         ReturnClass rs = new ReturnClass();
         rs.setUserLogin(user);
         rs.setCODE("200");

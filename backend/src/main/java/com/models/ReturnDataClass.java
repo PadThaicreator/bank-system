@@ -3,6 +3,7 @@ package com.models;
 import com.account.dto.UserAccountResponse;
 
 import com.transaction.dto.TransactionDTO;
+import com.user.UserModel;
 import com.user.dto.UserDTO;
 import lombok.Getter;
 import lombok.Setter;

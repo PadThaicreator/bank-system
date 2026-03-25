@@ -10,8 +10,6 @@ export interface User {
     email: string;
     role: string;
     userId: string;
-    birthDate?: string;
-    gender?: string;
 }
 
 export interface LoginResponse {
@@ -29,15 +27,11 @@ export interface RegisterRequest {
     passwordHash: string;
     phone: string;
     role: "CUSTOMER" | "ADMIN";
-    birthDate: string;
-    gender: string;
 }
 
 export interface UpdateProfileRequest {
     fullName: string;
     phone: string;
-    birthDate?: string;
-    gender?: string;
 }
 
 const BASE = "/api/users";

@@ -2,7 +2,11 @@ package com.user;
 
 import com.models.StatusType;
 import com.models.UserRole;
+import com.transaction.TransactionModel;
 
+import com.user.UserModel;
+import com.user.UserRepository;
+import com.user.UserService;
 import com.user.dto.LoginDTO;
 import com.user.expception.AuthenError;
 import com.configuration.auth.jwt.JwtUtil;

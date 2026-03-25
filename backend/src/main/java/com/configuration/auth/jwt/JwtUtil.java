@@ -4,6 +4,7 @@ import com.configuration.config.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +44,7 @@ public class JwtUtil {
     }
 
     // ดึง userId จาก token
-    public String extractUserId(String token) {
+    public  String extractUserId(String token) {
         return extractClaims(token).getSubject();
     }
 

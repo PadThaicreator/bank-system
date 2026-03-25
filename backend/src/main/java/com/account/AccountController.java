@@ -3,11 +3,8 @@ package com.account;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import com.account.dto.AccountWithOwnerResponse;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import com.account.dto.UserAccountResponse;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
@@ -34,47 +30,6 @@ class AccountController {
 
     AccountController(AccountService accountService) {
         this.accountService = accountService;
-    }
-
-    // ========================================= GET METHOD
-    // ========================================
-
-    @GetMapping("/accounts")
-    public ResponseEntity<ApiResponse<List<AccountResponse>>> getAllAccount() {
-        List<AccountResponse> responses = accountService.getAllAccounts();
-        return ResponseEntity.ok(ApiResponse.success("Get all account successfully", responses));
-    }
-
-    @GetMapping("/accounts/admin")
-    public ResponseEntity<ApiResponse<Page<AccountWithOwnerResponse>>> getAllAccountAdmin(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<AccountWithOwnerResponse> responses = accountService.getAllAccountsWithOwner(pageable);
-        return ResponseEntity.ok(ApiResponse.success("Get all account successfully", responses));
-    }
-
-    @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<ApiResponse<AccountResponse>> getAccountFromId(
-            @PathVariable UUID accountId) {
-        AccountResponse response = accountService.getAccountById(accountId);
-        return ResponseEntity.ok(ApiResponse.success("Get account successfully", response));
-    }
-
-    @GetMapping("/accounts/{accountid}/balance")
-    public ResponseEntity<ApiResponse<BalanceResponse>> getAccountBalance(
-            @PathVariable UUID accountid) {
-        BalanceResponse response = accountService.getAccountBalance(accountid);
-        return ResponseEntity.ok(ApiResponse.success("Get account balance successfully", response));
-    }
-
-    @GetMapping("/accounts/user")
-    public ResponseEntity<ApiResponse<Page<AccountResponse>>> getAccountByUserId(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<AccountResponse> responses = accountService.getAccountByUserId(pageable);
-        return ResponseEntity.ok(ApiResponse.success("Get all user account successfully", responses));
     }
 
     // ========================================= POST METHOD
@@ -90,7 +45,7 @@ class AccountController {
     // ========================================= PATCH METHOD
     // ========================================
 
-    @PatchMapping("/accounts/{accountId}/balance")
+    @PatchMapping("/accounts/{accountId}/changeBalance")
     public ResponseEntity<ApiResponse<AccountResponse>> changeBalance(
             @PathVariable UUID accountId,
             @RequestParam BigDecimal amount) {
@@ -98,7 +53,7 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Balance changed successfully", response));
     }
 
-    @PatchMapping("/accounts/{accountId}/status")
+    @PatchMapping("/accounts/{accountId}/changeAccountStatus")
     public ResponseEntity<ApiResponse<AccountResponse>> changeAccountStatus(
             @PathVariable UUID accountId,
             @RequestBody ChangeStatusRequest request) {
@@ -106,7 +61,7 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Status changed successfully", response));
     }
 
-    @PatchMapping("/accounts/{accountId}/type")
+    @PatchMapping("/accounts/{accountId}/changeAccountType")
     public ResponseEntity<ApiResponse<AccountResponse>> changeAccountType(
             @PathVariable UUID accountId,
             @RequestBody ChangeAccountTypeRequest request) {
@@ -114,14 +69,40 @@ class AccountController {
         return ResponseEntity.ok(ApiResponse.success("Account type changed successfully", response));
     }
 
-    // ========================================= DELETE METHOD
-    // ========================================
-
-    @DeleteMapping("/accounts/{accountId}")
+    @PatchMapping("/accounts/{accountId}/deleteAcount")
     public ResponseEntity<ApiResponse<AccountResponse>> deleteAccount(
             @PathVariable UUID accountId) {
         AccountResponse response = accountService.deleteAccount(accountId);
-        return ResponseEntity.ok(ApiResponse.success("Delete account " + accountId + " successfully", response));
+        return ResponseEntity.ok(ApiResponse.success("Delete account ${accountId} successfully", response));
+    }
+
+    // ========================================= GET METHOD
+    // ========================================
+
+    @GetMapping("/accounts/{accountid}/getAccountBalance")
+    public ResponseEntity<ApiResponse<BalanceResponse>> getAccountBalance(
+            @PathVariable UUID accountid) {
+        BalanceResponse response = accountService.getAccountBalance(accountid);
+        return ResponseEntity.ok(ApiResponse.success("Get account balance successfully", response));
+    }
+
+    @GetMapping("/accounts")
+    public ResponseEntity<ApiResponse<List<AccountResponse>>> getAllAccount() {
+        List<AccountResponse> responses = accountService.getAllAccounts();
+        return ResponseEntity.ok(ApiResponse.success("Get all account successfully", responses));
+    }
+
+    @GetMapping("/accounts/{accountId}")
+    public ResponseEntity<ApiResponse<AccountResponse>> getAccountFromId(
+            @PathVariable UUID accountId) {
+        AccountResponse response = accountService.getAccountById(accountId);
+        return ResponseEntity.ok(ApiResponse.success("Get account successfully", response));
+    }
+
+    @GetMapping("/accounts/user")
+    public ResponseEntity<ApiResponse<List<UserAccountResponse>>> getAccountByUserId() {
+        List<UserAccountResponse> responses = accountService.getAccountByUserId();
+        return ResponseEntity.ok(ApiResponse.success("Get all user account successfully", responses));
     }
 
 }

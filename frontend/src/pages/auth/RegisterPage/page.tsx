@@ -12,8 +12,6 @@ export default function RegisterPage() {
     passwordHash: "",
     phone: "",
     role: "CUSTOMER", // default role
-    birthDate: "",
-    gender: "",
   });
   
   const [error, setError] = useState("");
@@ -109,33 +107,6 @@ export default function RegisterPage() {
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 focus:bg-white text-gray-900 transition-all outline-none"
                 placeholder="08X-XXX-XXXX"
               />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Date of Birth</label>
-              <input
-                type="date"
-                required
-                value={formData.birthDate}
-                onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white text-gray-900 transition-all outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
-              <select
-                required
-                value={formData.gender}
-                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white text-gray-900 transition-all outline-none appearance-none"
-              >
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
             </div>
           </div>
 
