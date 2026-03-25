@@ -197,9 +197,9 @@ public  class UserService {
                 .orElseThrow(() -> new UserError.UserDuplicateError("User not found"));
 
 
-        UserModel findByEmail = UserRepository.findByEmail(data.getEmail()).orElseThrow(() -> new AuthenError.InvalidForm("User Not Found"));
+        UserModel findByEmail = UserRepository.findByEmail(data.getEmail()).orElse(null);
 
-        if(findByEmail.getEmail().equals(data.getEmail()) && !findByEmail.getId().equals(data.getId())){
+        if(findByEmail != null && findByEmail.getEmail().equals(data.getEmail()) && !findByEmail.getId().equals(data.getId())){
             throw new AuthenError.InvalidForm("Duplicate Email");
         }
         user.setFullName(data.getFullName());
