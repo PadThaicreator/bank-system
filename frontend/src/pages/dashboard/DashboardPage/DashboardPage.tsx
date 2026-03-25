@@ -257,21 +257,21 @@ export default function DashboardPage() {
           <div className={styles.quickActions}>
             <h3 className={styles.sectionTitle}>Quick Actions</h3>
             <div className={`${styles.card} ${styles.actionList}`}>
-              <button className={styles.actionItem}>
+              <button className={styles.actionItem} onClick={() => navigate(`/transaction/service`)}>
                 <div className={`${styles.actionIcon} ${styles.actionIconBlue}`}>
                   <ArrowRightLeft size={20} />
                 </div>
                 <span className={styles.actionText}>Transfer Money</span>
               </button>
               
-              <button className={styles.actionItem}>
+              <button className={styles.actionItem} onClick={() => navigate(`/account/open`)}>
                 <div className={`${styles.actionIcon} ${styles.actionIconIndigo}`}>
                   <Plus size={20} />
                 </div>
                 <span className={styles.actionText}>Open New Account</span>
               </button>
               
-              <button className={styles.actionItem}>
+              <button className={styles.actionItem} onClick={() => navigate(`/transaction/history`)}>
                 <div className={`${styles.actionIcon} ${styles.actionIconGray}`}>
                   <History size={20} />
                 </div>

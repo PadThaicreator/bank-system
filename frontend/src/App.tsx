@@ -1,5 +1,4 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import HomePage from "./pages/home/page";
 import AuthenComponent from "./components/auth";
 import LoginPage from "./pages/auth/LoginPage/page";
 import AccountListPage from "./pages/account/AccountListPage/AccountListPage";
@@ -16,9 +15,8 @@ import AdminRoute from "./middleware/AdminRoute";
 import AccountOpeningPage from "./pages/account/AccountOpeningPage/AccountOpeningPage";
 import UserListPage from "./pages/admin/UserMangement/userListPage";
 import UserDetailPage from "./pages/admin/UserMangement/userDetailPage";
-import AdminDashboardPage from "./pages/dashboard/AdminDashboardPage/AdminDashboardPage";
-import DashboardPage from "./pages/dashboard/DashboardPage/DashboardPage";
 import AdminAccountListPage from "./pages/admin/AccountManagement/AccountListPage";
+import HomeRedirect from "./components/layout/HomeRedirect";
 
 function App() {
 
@@ -40,7 +38,6 @@ function App() {
                   <Route path="/admin/accountList" element={<AdminAccountListPage />} />
                   <Route path="/admin/userList" element={<UserListPage />} />
                   <Route path="/admin/userDetail/:userId" element={<UserDetailPage />} />
-                  <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
                 </Route>
                 
                 <Route path="/account/open" element={<AccountOpeningPage />} />
@@ -48,9 +45,8 @@ function App() {
                 <Route path="/account/detail/:accountId" element={<AccountDetailPage />} />
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/" element={<HomePage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/home" element={<HomeRedirect />} />
+                <Route path="/" element={<HomeRedirect />} />
               </Route>
             </Route>
 
