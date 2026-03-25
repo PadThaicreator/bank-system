@@ -844,7 +844,10 @@ export interface operations {
     };
     getTransactionByUserId: {
         parameters: {
-            query?: never;
+            query: {
+                page: number;
+                size: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -857,7 +860,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassTransactionDTO"];
                 };
             };
         };
