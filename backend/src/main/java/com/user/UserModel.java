@@ -61,14 +61,21 @@ public class UserModel {
         @Column(name = "updated_at")
         private LocalDateTime updatedAt;
 
-
+        @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd")
         @Column(name = "birth_date")
-        private LocalDate birthDay;
+        private java.time.LocalDate birthDate;
 
-
-        @Column(name = "gender")
         @Enumerated(EnumType.STRING)
+        @Column(name = "gender")
         private UserGender gender;
+
+//        @Column(name = "birth_date")
+//        private LocalDate birthDay;
+//
+//
+//        @Column(name = "gender")
+//        @Enumerated(EnumType.STRING)
+//        private UserGender gender;
 
 
 

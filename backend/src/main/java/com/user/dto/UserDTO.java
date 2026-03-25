@@ -41,7 +41,7 @@ public class UserDTO {
                 .status(user.getStatus())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
-                .birthDay(user.getBirthDay())
+                .birthDay(user.getBirthDate())
                 .gender(user.getGender())
                 .build();
     }
