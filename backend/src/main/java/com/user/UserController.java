@@ -1,44 +1,35 @@
 package com.user;
 
-
-
 import com.user.dto.LoginDTO;
 import com.configuration.common.response.ApiResponse;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
 import com.user.dto.UserDTO;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
+    private final UserService userService;
 
-
-    private final UserService  userService;
-
-
-    public UserController(UserService userService ) {
+    public UserController(UserService userService) {
         this.userService = userService;
 
     }
 
-
     @PostMapping("/register")
     public ApiResponse<ReturnDataClass> Register(@Valid @RequestBody UserModel data) {
 
-         ReturnClass rs = userService.RegisterUser(data);
+        ReturnClass rs = userService.RegisterUser(data);
 
-        return ApiResponse.success(rs.getMSG() ,  null);
+        return ApiResponse.success(rs.getMSG(), null);
     }
-
 
     @PostMapping("/login")
     public ApiResponse<Map<String, Object>> Login(@Valid @RequestBody LoginDTO data) {
@@ -50,7 +41,7 @@ public class UserController {
         res.put("refreshToken", rs.getRefreshToken());
         res.put("user", rs.getUserLogin());
 
-        return ApiResponse.success("Login Success" , res);
+        return ApiResponse.success("Login Success", res);
     }
 
     @PostMapping("/refreshToken")
@@ -78,8 +69,6 @@ public class UserController {
         return ApiResponse.success("get All User Success" , rs);
     }
 
-
-
     @GetMapping("/me")
     public ApiResponse<UserModel> getProfile(java.security.Principal principal) {
         java.util.UUID userId = java.util.UUID.fromString(principal.getName());
@@ -88,14 +77,14 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public ApiResponse<UserModel> updateProfile(java.security.Principal principal, @Valid @RequestBody com.user.dto.UpdateProfileDTO data) {
+    public ApiResponse<UserModel> updateProfile(java.security.Principal principal,
+            @Valid @RequestBody com.user.dto.UpdateProfileDTO data) {
         java.util.UUID userId = java.util.UUID.fromString(principal.getName());
         ReturnClass rs = userService.updateUserProfile(userId, data);
         return ApiResponse.success(rs.getMSG(), rs.getUserLogin());
     }
 
-//    .save();
-//    .delete();
-
+    // .save();
+    // .delete();
 
 }

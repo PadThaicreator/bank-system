@@ -1,10 +1,8 @@
 package com.user;
 
-
 import com.models.StatusType;
 import com.models.UserGender;
 import com.models.UserRole;
-import com.transaction.TransactionModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.management.relation.Role;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -32,21 +29,21 @@ public class UserModel {
         @Column(columnDefinition = "uuid")
         private UUID id;
 
-        @Column(name = "full_name", nullable=false)
+        @Column(name = "full_name", nullable = false)
         @NotBlank(message = "Username is required")
         private String fullName;
 
-        @Column(nullable=false , unique = true)
+        @Column(nullable = false, unique = true)
         @Email(message = "Invalid email format")
         @NotBlank(message = "Email is required")
         private String email;
 
-        @Column(name = "password_hash", nullable=false)
+        @Column(name = "password_hash", nullable = false)
         @NotBlank(message = "Password is required")
         @Size(min = 6, message = "Password must be at least 6 characters")
         private String passwordHash;
 
-        @Column(nullable=false)
+        @Column(nullable = false)
         private String phone;
 
         @Enumerated(EnumType.STRING)
@@ -61,15 +58,20 @@ public class UserModel {
         @Column(name = "updated_at")
         private LocalDateTime updatedAt;
 
-
+        @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd")
         @Column(name = "birth_date")
-        private LocalDate birthDay;
+        private java.time.LocalDate birthDate;
 
-
-        @Column(name = "gender")
         @Enumerated(EnumType.STRING)
+        @Column(name = "gender")
         private UserGender gender;
 
 
+        // @Column(name = "birth_date")
+        // private LocalDate birthDay;
+
+        // @Column(name = "gender")
+        // @Enumerated(EnumType.STRING)
+        // private UserGender gender;
 
 }

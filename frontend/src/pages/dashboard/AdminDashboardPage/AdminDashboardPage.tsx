@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Users, CreditCard, Activity, AlertTriangle, ShieldCheck, Search, Eye, Ban } from 'lucide-react';
-import type { RootState } from '../../redux/store';
+import { Users, CreditCard, Activity, AlertTriangle, Search, Eye, Ban } from 'lucide-react';
 import styles from './AdminDashboardPage.module.css';
 
 interface AdminStats {
@@ -60,8 +58,6 @@ const mockRecentUsers: User[] = [
 ];
 
 export default function AdminDashboardPage() {
-  const adminUser = useSelector((state: RootState) => state.auth.user);
-  
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,30 +95,6 @@ export default function AdminDashboardPage() {
 
   return (
     <div className={styles.container}>
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        <div className={styles.brand}>
-          <ShieldCheck className={styles.brandIcon} />
-          <span className={styles.brandText}>BANK ADMIN</span>
-        </div>
-        
-        <nav className={styles.nav}>
-          <a href="#" className={`${styles.navItem} ${styles.navItemActive}`}>
-            <Activity className={styles.navIcon} /> Overview
-          </a>
-          <a href="#" className={styles.navItem}>
-            <Users className={styles.navIcon} /> Users Management
-          </a>
-          <a href="#" className={styles.navItem}>
-            <CreditCard className={styles.navIcon} /> Accounts
-          </a>
-        </nav>
-
-        <div className={styles.userInfo}>
-          <p className={styles.userName}>{adminUser?.fullName || "Administrator"}</p>
-          <p className={styles.userEmail}>{adminUser?.email || "admin@example.com"}</p>
-        </div>
-      </aside>
 
       {/* Main Content */}
       <main className={styles.main}>
