@@ -8,7 +8,7 @@ const BASE = "/api/users";
 export const userService = {
     
     
-    getAllUser: (page : number , size : number) => api.get<PaginatedUserResponse>(`${BASE}?page=${page}&size=${size}`),
+    getAllUser: (page : number , size : number) => api.get<PaginatedUserResponse>(`${BASE}?page=${page}&size=${size}` ),
 
     
     login: (data : LoginRequest) => api.post<LoginResponse>(`${BASE}/login` , data),
