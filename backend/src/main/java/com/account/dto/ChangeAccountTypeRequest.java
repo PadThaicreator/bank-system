@@ -1,5 +1,7 @@
 package com.account.dto;
 
+import com.account.AccountType;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
@@ -8,5 +10,5 @@ import lombok.Getter;
 @Getter
 public class ChangeAccountTypeRequest {
     @NotNull(message = "Account type is required")
-    private String accountType;
+    private AccountType accountType;
 }

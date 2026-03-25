@@ -14,7 +14,7 @@ export const menuList: MenuItem[] = [
       path: "/dashboard",
       canAccess : ["ADMIN"],
       children: [
-        { label: "Overview", path: "/dashboard" , canAccess : ["ADMIN"]},
+        // { label: "Overview", path: "/dashboard" , canAccess : ["ADMIN"]},
         { label: "Analytics", path: "/dashboard/analytics" , canAccess : ["ADMIN"]},
       ],
     },

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { CreditCard, ArrowRightLeft, Plus, History, Wallet, Activity, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { ArrowRightLeft, Plus, History, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import type { RootState } from '../../../redux/store';
 import styles from './DashboardPage.module.css';
+import useUserAccount from '../../../hooks/useUserAccount';
+import { useNavigate } from 'react-router-dom';
 
 // --- Types ---
 interface Account {
@@ -23,24 +25,24 @@ interface Transaction {
 }
 
 // --- Mock Data ---
-const mockAccounts: Account[] = [
-  {
-    id: "uuid-1",
-    accountNumber: "001120240101-0042",
-    accountType: "SAVINGS",
-    accountCategory: "SAVINGS",
-    balance: 15000.00,
-    status: "ACTIVE"
-  },
-  {
-    id: "uuid-2",
-    accountNumber: "001120240101-0043",
-    accountType: "CURRENT",
-    accountCategory: "CURRENT",
-    balance: 2450.50,
-    status: "ACTIVE"
-  }
-];
+// const mockAccounts: Account[] = [
+//   {
+//     id: "uuid-1",
+//     accountNumber: "001120240101-0042",
+//     accountType: "SAVINGS",
+//     accountCategory: "SAVINGS",
+//     balance: 15000.00,
+//     status: "ACTIVE"
+//   },
+//   {
+//     id: "uuid-2",
+//     accountNumber: "001120240101-0043",
+//     accountType: "CURRENT",
+//     accountCategory: "CURRENT",
+//     balance: 2450.50,
+//     status: "ACTIVE"
+//   }
+// ];
 
 const mockTransactions: Transaction[] = [
   {
@@ -67,20 +69,36 @@ const mockTransactions: Transaction[] = [
 ];
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const page = 0;
+  const size = 2;
+  const { accounts: userAccounts, loading: accountLoading, error: accountError, fetchUserAccount } = useUserAccount(page, size);
+  const [ accounts, setAccounts ] = useState<Account[]>([]);
+  const [ transactions, setTransactions ] = useState<Transaction[]>([]);
+  const [ loading, setLoading ] = useState(true);
 
   useEffect(() => {
     // Simulate API call
     setTimeout(() => {
-      setAccounts(mockAccounts);
+      if (!userAccounts) return;
+      
+      // ต้องทำการ Mapping เพื่อแปลงจาก AccountResponse (ที่บางฟิลด์เป็น optional)
+      // ให้กลายเป็น Account (ที่ทุกฟิลด์ required)
+      const formattedAccounts: Account[] = userAccounts.map(acc => ({
+        id: acc.id || '',
+        accountNumber: acc.accountNumber || '',
+        accountType: (acc as any).accountType || acc.accountCategory || '',
+        accountCategory: acc.accountCategory || '',
+        balance: acc.balance || 0,
+        status: acc.status || ''
+      }));
+      setAccounts(formattedAccounts);
       setTransactions(mockTransactions);
       setLoading(false);
     }, 800);
-  }, []);
+  }, [userAccounts]);
 
   const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0);
 
@@ -95,7 +113,7 @@ export default function DashboardPage() {
     });
   };
 
-  if (loading) {
+  if (loading || accountLoading) {
     return (
       <div className={styles.loaderContainer}>
         <div className={styles.loader}></div>
@@ -103,33 +121,17 @@ export default function DashboardPage() {
     );
   }
 
+  if (accountError) {
+    return (
+      <div className={styles.errorContainer}>
+        <p className={styles.errorText}>{accountError}</p>
+        <button onClick={() => fetchUserAccount()}>Retry</button>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
-      {/* Sidebar */}
-      <aside className={styles.sidebar}>
-        <div className={styles.brand}>
-          <Wallet className={styles.brandIcon} />
-          <span className={styles.brandText}>BankSystem</span>
-        </div>
-        
-        <nav className={styles.nav}>
-          <a href="#" className={`${styles.navItem} ${styles.navItemActive}`}>
-            <Activity className={styles.navIcon} /> Dashboard
-          </a>
-          <a href="#" className={styles.navItem}>
-            <CreditCard className={styles.navIcon} /> Accounts
-          </a>
-          <a href="#" className={styles.navItem}>
-            <History className={styles.navIcon} /> Transactions
-          </a>
-        </nav>
-
-        <div className={styles.userInfo}>
-          <p className={styles.userName}>{user?.fullName || "Customer User"}</p>
-          <p className={styles.userEmail}>{user?.email || "customer@example.com"}</p>
-        </div>
-      </aside>
-
       {/* Main Content */}
       <main className={styles.main}>
         <header className={styles.header}>
@@ -158,7 +160,7 @@ export default function DashboardPage() {
             <div>
               <div className={styles.sectionHeader}>
                 <h3 className={styles.sectionTitle}>Your Accounts</h3>
-                <button className={styles.linkBtn}>View All</button>
+                <button className={styles.linkBtn} onClick={() => navigate("/account/list")}>View All</button>
               </div>
               
               {accounts.length === 0 ? (
@@ -190,7 +192,7 @@ export default function DashboardPage() {
             <div>
               <div className={styles.sectionHeader}>
                 <h3 className={styles.sectionTitle}>Recent Transactions</h3>
-                <button className={styles.linkBtn}>Full History</button>
+                <button className={styles.linkBtn} onClick={() => navigate("/transaction/history")}>Full History</button>
               </div>
               
               <div className={styles.card}>
@@ -255,21 +257,21 @@ export default function DashboardPage() {
           <div className={styles.quickActions}>
             <h3 className={styles.sectionTitle}>Quick Actions</h3>
             <div className={`${styles.card} ${styles.actionList}`}>
-              <button className={styles.actionItem}>
+              <button className={styles.actionItem} onClick={() => navigate(`/transaction/service`)}>
                 <div className={`${styles.actionIcon} ${styles.actionIconBlue}`}>
                   <ArrowRightLeft size={20} />
                 </div>
                 <span className={styles.actionText}>Transfer Money</span>
               </button>
               
-              <button className={styles.actionItem}>
+              <button className={styles.actionItem} onClick={() => navigate(`/account/open`)}>
                 <div className={`${styles.actionIcon} ${styles.actionIconIndigo}`}>
                   <Plus size={20} />
                 </div>
                 <span className={styles.actionText}>Open New Account</span>
               </button>
               
-              <button className={styles.actionItem}>
+              <button className={styles.actionItem} onClick={() => navigate(`/transaction/history`)}>
                 <div className={`${styles.actionIcon} ${styles.actionIconGray}`}>
                   <History size={20} />
                 </div>
@@ -278,10 +280,10 @@ export default function DashboardPage() {
             </div>
             
             <div className={styles.promoBox}>
-              <h4 className={styles.promoTitle}>Need a higher limit?</h4>
-              <p className={styles.promoText}>Upgrade your account tier to enjoy higher transfer limits and premium features.</p>
+              <h4 className={styles.promoTitle}>Haloooooooooooooooo</h4>
+              <p className={styles.promoText}>Halooooooooooooooooooooooooooooooooooooooooooo.</p>
               <button className={styles.promoBtn}>
-                Explore Tiers
+                Halooooo
               </button>
             </div>
           </div>
