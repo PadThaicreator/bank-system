@@ -1,5 +1,5 @@
 import api from '../lib/axios'
-import type { PaginatedUserResponse, UserModel } from '../types/userType';
+import type { PaginatedUserResponse, UserDTO, UserModel } from '../types/userType';
 
 
 
