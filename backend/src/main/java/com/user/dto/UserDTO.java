@@ -5,15 +5,14 @@ import com.models.UserGender;
 import com.models.UserRole;
 import com.user.UserModel;
 import jakarta.persistence.Column;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Builder

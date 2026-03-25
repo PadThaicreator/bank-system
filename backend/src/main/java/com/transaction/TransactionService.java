@@ -33,11 +33,13 @@ import java.util.UUID;
 public class TransactionService {
     private final TransactionRepository transactionRepository ;
     private final AccountRepository accountRepository ;
+    private final AccountService    accountService;
 
 
-    public TransactionService(TransactionRepository transactionRepository , AccountRepository accountRepository ) {
+    public TransactionService(TransactionRepository transactionRepository , AccountRepository accountRepository , AccountService    accountService) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
+        this.accountService = accountService;
 
     }
 
@@ -101,9 +103,10 @@ public class TransactionService {
             BigDecimal fromBalance = fromAccount.getBalance();
 
             if (type.equals("DEPOSIT")) {
+//                fromAccount.setBalance(fromBalance.add(amount));
+//                accountRepository.save(fromAccount);
 
-                fromAccount.setBalance(fromBalance.add(amount));
-                accountRepository.save(fromAccount);
+                accountService.changeBalance(fromAccount.getId(),amount);
                 data.setTransaction_type(TransactionType.DEPOSIT);
 
             }
@@ -113,8 +116,9 @@ public class TransactionService {
                     throw new TransactionError.InsufficientBalance("Insufficient balance");
                 }
                 data.setTransaction_type(TransactionType.WITHDRAW);
-                fromAccount.setBalance(fromBalance.subtract(amount));
-                accountRepository.save(fromAccount);
+//                fromAccount.setBalance(fromBalance.subtract(amount));
+//                accountRepository.save(fromAccount);
+                accountService.changeBalance(fromAccount.getId(),amount.negate());
 
             }
             else if (type.equals("TRANSFER")) {
@@ -123,11 +127,13 @@ public class TransactionService {
                     throw new TransactionError.InsufficientBalance("Insufficient balance");
                 }
 
-                fromAccount.setBalance(fromBalance.subtract(amount));
-                toAccount.setBalance(toAccount.getBalance().add(amount));
+//                fromAccount.setBalance(fromBalance.subtract(amount));
+//                toAccount.setBalance(toAccount.getBalance().add(amount));
                 data.setTransaction_type(TransactionType.TRANSFER);
-                accountRepository.save(fromAccount);
-                accountRepository.save(toAccount);
+                accountService.changeBalance(fromAccount.getId(),amount.negate());
+                accountService.changeBalance(toAccount.getId(),amount);
+//                accountRepository.save(fromAccount);
+//                accountRepository.save(toAccount);
             }
 
 

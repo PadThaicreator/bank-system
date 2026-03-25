@@ -1,5 +1,5 @@
 import api from '../lib/axios'
-import type { PaginatedUserResponse, UserModel } from '../types/userType';
+import type { PaginatedUserResponse, UserDTO, UserModel } from '../types/userType';
 
 
 
@@ -16,7 +16,7 @@ export const userService = {
     
     register: (data: UserModel) => api.post<UserModel>(`${BASE}/register` , data),
 
-   
+    editUser : (data : UserDTO) => api.put<UserDTO>(`${BASE}` , data),
 }
 
 

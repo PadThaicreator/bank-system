@@ -94,6 +94,15 @@ public class UserController {
         return ApiResponse.success(rs.getMSG(), rs.getUserLogin());
     }
 
+
+    @PutMapping("")
+    public ApiResponse<UserModel> editUser(@Valid @RequestBody UserDTO data) {
+
+        ReturnClass rs = userService.editUser(data);
+
+        return ApiResponse.success(rs.getMSG(), null);
+    }
+
 //    .save();
 //    .delete();
 

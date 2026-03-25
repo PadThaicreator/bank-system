@@ -191,5 +191,35 @@ public  class UserService {
     }
 
 
+    @Transactional
+    public ReturnClass editUser(UserDTO data) {
+        UserModel user = UserRepository.findById(data.getId())
+                .orElseThrow(() -> new UserError.UserDuplicateError("User not found"));
+
+
+        UserModel findByEmail = UserRepository.findByEmail(data.getEmail()).orElseThrow(() -> new AuthenError.InvalidForm("User Not Found"));
+
+        if(findByEmail.getEmail().equals(data.getEmail()) && !findByEmail.getId().equals(data.getId())){
+            throw new AuthenError.InvalidForm("Duplicate Email");
+        }
+        user.setFullName(data.getFullName());
+        user.setPhone(data.getPhone());
+        user.setUpdatedAt(LocalDateTime.now());
+        user.setEmail(data.getEmail());
+        user.setGender(data.getGender());
+        user.setBirthDate(data.getBirthDay());
+        user.setRole(data.getRole());
+        user.setStatus(data.getStatus());
+
+        UserRepository.save(user);
+
+        ReturnClass rs = new ReturnClass();
+        rs.setUserLogin(user);
+        rs.setCODE("200");
+        rs.setMSG("Edit User Success");
+        return rs;
+    }
+
+
 
 }
