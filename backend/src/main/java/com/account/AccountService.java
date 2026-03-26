@@ -7,13 +7,8 @@ import java.util.UUID;
 
 import com.account.dto.UserAccountResponse;
 
-import com.request.RequestRepository;
 import com.request.RequestService;
 import com.request.RequestType;
-import com.transaction.TransactionModel;
-import com.transaction.TransactionRepository;
-import com.transaction.TransactionService;
-import com.transaction.dto.TransactionDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
-    private final RequestService requestService;
+
 
 
     // ======= POST METHOD
@@ -56,7 +51,7 @@ public class AccountService {
 
 
         Account saved = accountRepository.save(account);
-        requestService.createRequest(saved.getId(), RequestType.OPEN_ACCOUNT.toString(), RequestType.OPEN_ACCOUNT);
+//        requestService.createRequest(saved.getId(), RequestType.OPEN_ACCOUNT.toString(), RequestType.OPEN_ACCOUNT);
 
         return AccountResponse.from(saved);
     }
@@ -84,9 +79,9 @@ public class AccountService {
 
         verifyOwnershipOrAdmin(account.getUserId());
 
-//        account.setStatus(request.getStatus());
+        account.setStatus(request.getStatus());
         Account saved = accountRepository.save(account);
-        requestService.createRequest(saved.getId(), request.getStatus().toString(), RequestType.CHANGE_ACCOUNT_STATUS);
+//        requestService.createRequest(saved.getId(), request.getStatus().toString(), RequestType.CHANGE_ACCOUNT_STATUS);
 
         return AccountResponse.from(saved);
     }
@@ -99,9 +94,9 @@ public class AccountService {
 
         verifyOwnershipOrAdmin(account.getUserId());
 
-//        account.setAccountType(AccountType.valueOf(request.getAccountType()));
+        account.setAccountType(AccountType.valueOf(request.getAccountType()));
         Account saved = accountRepository.save(account);
-        requestService.createRequest(saved.getId(), request.getAccountType(), RequestType.CHANEG_ACCOUNT_TYPE);
+//        requestService.createRequest(saved.getId(), request.getAccountType(), RequestType.CHANGE_ACCOUNT_TYPE);
 
         return AccountResponse.from(saved);
     }

@@ -2,6 +2,8 @@ package com.request.dto;
 
 
 import com.account.Account;
+import com.account.AccountType;
+import com.account.dto.AccountResponse;
 import com.models.StatusType;
 import com.models.TransactionType;
 import com.request.RequestModel;
@@ -40,6 +42,9 @@ public class RequestDTO {
     private Account account;
 
     private UserModel approveBy;
+
+    private AccountResponse accountRequest;
+
 
 
 

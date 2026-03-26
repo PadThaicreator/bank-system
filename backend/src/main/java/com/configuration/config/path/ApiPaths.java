@@ -14,14 +14,14 @@ public class ApiPaths {
     public static final String[] PUBLIC_POST_PATHS = {
 
             "/transactions",
-
+            "/requests",
 
     };
 
     public static final String[] ADMIN_PATHS = {
             "/users",
             "/transactions",
-            "/requests",
+
             "/requests/{id}"
     };
 

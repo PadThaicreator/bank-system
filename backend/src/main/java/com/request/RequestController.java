@@ -39,7 +39,7 @@ public class RequestController {
     public ApiResponse<List<TransactionDTO>> postRequest(@RequestBody RequestDTO req) {
 
 
-        ReturnClass rs = requestService.createRequest(req.getId() , req.getData() , req.getRequestType() );
+        ReturnClass rs = requestService.createRequest( req.getAccountRequest() , req.getRequestType() );
 
         return ApiResponse.success(rs.getMSG() , null);
     }
