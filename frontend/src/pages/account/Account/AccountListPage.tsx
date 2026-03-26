@@ -1,5 +1,4 @@
 import type { AccountResponse } from '../../../types/accountType'
-import { useAllAccount } from "../../../hooks/useAllAccount"
 import styles from './AccountListPage.module.css'
 import { useNavigate } from 'react-router-dom'
 import useUserAccount from '../../../hooks/useUserAccount'
@@ -40,7 +39,7 @@ const AccountListPage = () => {
             </tr>
           </thead>
           <tbody>
-            {accounts.map((acc: AccountResponse) => (
+            {accounts?.map((acc: AccountResponse) => (
               <tr key={acc.id} className={styles.tableRow} onClick={() => handleAccountRowClick(acc.id!)}>
                 <td className={styles.tableCell}>{acc.accountNumber}</td>
                 <td className={styles.tableCell}>{acc.accountType}</td>
