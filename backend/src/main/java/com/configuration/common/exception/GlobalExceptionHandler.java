@@ -1,5 +1,6 @@
 package com.configuration.common.exception;
 
+import com.request.expception.RequestError;
 import com.transaction.expception.TransactionError;
 import com.user.expception.AuthenError;
 import com.user.expception.UserError;
@@ -82,6 +83,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(
                 ApiResponse.error(
                         "User Controller error",
+                        new ApiResponse.ErrorDetail(ex.getCode(), ex.getMessage())
+                )
+        );
+    }
+
+
+    @ExceptionHandler(RequestError.class)
+    public ResponseEntity<ApiResponse<Void>> handleRequestError(UserError ex) {
+
+        return ResponseEntity.badRequest().body(
+                ApiResponse.error(
+                        "Request Error",
                         new ApiResponse.ErrorDetail(ex.getCode(), ex.getMessage())
                 )
         );

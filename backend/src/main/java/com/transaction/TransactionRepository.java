@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface TransactionRepository extends JpaRepository<TransactionModel, String> {
+public interface TransactionRepository extends JpaRepository<TransactionModel, UUID> {
 
     @Query(value = """
             SELECT COUNT(*)

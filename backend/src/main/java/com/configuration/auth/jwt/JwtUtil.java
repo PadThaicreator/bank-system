@@ -1,6 +1,7 @@
 package com.configuration.auth.jwt;
 
 import com.configuration.config.JwtConfig;
+import com.models.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -23,7 +24,7 @@ public class JwtUtil {
     }
 
     // สร้าง Access Token
-    public String generateAccessToken(String userId, String role) {
+    public String generateAccessToken(String userId, UserRole role) {
         return Jwts.builder()
                 .subject(userId)
                 .claim("role", role)

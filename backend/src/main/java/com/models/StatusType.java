@@ -3,7 +3,12 @@ package com.models;
 public enum StatusType {
     ACTIVE,
     INACTIVE,
-    SUSPENDED
+    SUSPENDED,
+    PENDING,
+    APPROVED,
+    CANCELLED,
+    REJECTED
+
 }
 
 

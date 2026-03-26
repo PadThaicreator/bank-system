@@ -2,17 +2,18 @@ import type { AccountResponse } from '../../../types/accountType'
 import { useAllAccount } from "../../../hooks/useAllAccount"
 import styles from './AccountListPage.module.css'
 import { useNavigate } from 'react-router-dom'
+import useUserAccount from '../../../hooks/useUserAccount'
 
 const AccountListPage = () => {
-  const { accounts, loading, error, refetch } = useAllAccount()
+  const { accounts, loading, error } = useUserAccount()
   const navigate = useNavigate();
   if (loading) return <div className={styles.loadingContainer}>Loading Data...</div>
   if (error) return (
     <div className={styles.errorContainer}>
       <p className={styles.errorMessage}>Error: {error}</p>
-      <button onClick={refetch} className={styles.retryButton}>
+      {/* <button onClick={refetch} className={styles.retryButton}>
         ลองใหม่
-      </button>
+      </button> */}
     </div>
   )
 

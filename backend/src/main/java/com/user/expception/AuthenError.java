@@ -29,6 +29,14 @@ public class AuthenError extends RuntimeException  {
     }
 
 
+    public static class InValidUserRole extends AuthenError {
+        public InValidUserRole(String MSG) {
+
+            super("USER_ROLE_ERROR", MSG);
+        }
+    }
+
+
 
 
 

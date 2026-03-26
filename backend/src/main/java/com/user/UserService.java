@@ -77,7 +77,7 @@ public  class UserService {
 
             if(passwordEncoder.matches(password, user.getPasswordHash()) ){
 
-                String getToken = jwtUtil.generateAccessToken(user.getId().toString() , user.getRole().toString());
+                String getToken = jwtUtil.generateAccessToken(user.getId().toString() , user.getRole());
                 String getRefreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
 
                 UserModel userLogin = new UserModel();
@@ -119,7 +119,7 @@ public  class UserService {
             throw new AuthenError.InactiveUser("User is inactive");
         }
 
-        String newToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getRole().toString());
+        String newToken = jwtUtil.generateAccessToken(user.getId().toString(), user.getRole());
         String newRefreshToken = jwtUtil.generateRefreshToken(user.getId().toString());
         
         rs.setMSG(newToken);

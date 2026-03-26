@@ -42,7 +42,7 @@ class UserServiceTest {
 
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("password123", "hashedPassword")).thenReturn(true);
-        when(jwtUtil.generateAccessToken(anyString(), anyString())).thenReturn("token123");
+        when(jwtUtil.generateAccessToken(anyString(), any(UserRole.class))).thenReturn("token123");
         when(jwtUtil.generateRefreshToken(anyString())).thenReturn("refresh123");
 
         // Act

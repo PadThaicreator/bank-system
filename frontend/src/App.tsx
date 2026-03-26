@@ -45,6 +45,7 @@ function App() {
                 </Route>
                 
                 <Route path="/account/open" element={<AccountOpeningPage />} />
+                <Route path="/account/list" element={<AccountListPage />} />
                 <Route path="/transaction/history" element={<HistoryTransactionPage />} />
                 <Route path="/transaction/service" element={<TransactionPage />} />
                 <Route path="/home" element={<HomePage />} />

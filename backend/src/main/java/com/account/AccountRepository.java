@@ -20,7 +20,7 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
       a.accountCategory
     )
     FROM Account a
-    WHERE a.userId = :userId
+    WHERE a.userId = :userId and a.status = 'ACTIVE'
     """)
     List<UserAccountResponse> findByUserId(UUID userId);
 
