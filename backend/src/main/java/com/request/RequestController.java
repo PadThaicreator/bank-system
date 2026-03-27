@@ -36,7 +36,7 @@ public class RequestController {
 
 
     @PostMapping("")
-    public ApiResponse<List<TransactionDTO>> postRequest(@RequestBody RequestDTO req) {
+    public ApiResponse<RequestDTO> postRequest(@RequestBody RequestDTO req) {
 
 
         ReturnClass rs = requestService.createRequest( req.getAccountRequest() , req.getRequestType() );

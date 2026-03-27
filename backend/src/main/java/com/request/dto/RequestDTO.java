@@ -58,7 +58,8 @@ public class RequestDTO {
                 .data(t.getData())
                 .requestType(t.getRequestType())
                 .approvedAt(t.getApprovedAt())
-                .approveBy(t.getApproveBy());
+                .approveBy(t.getApproveBy())
+                .status(t.getStatus());
 
 
         return builder.build();

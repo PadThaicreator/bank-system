@@ -1,0 +1,257 @@
+/* RequestList.module.css */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+/* ─── Page ─────────────────────────────────────────────── */
+.page {
+  font-family: 'DM Sans', sans-serif;
+  background: #f8fafb;
+  min-height: 100vh;
+  padding: 40px 48px;
+  color: #1a1d23;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1a1d23;
+  margin-bottom: 28px;
+  letter-spacing: -0.3px;
+}
+
+/* ─── States ────────────────────────────────────────────── */
+.loading,
+.error {
+  padding: 16px 20px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.loading {
+  background: #f0f9f4;
+  color: #2e7d52;
+  border: 1px solid #c3e6d2;
+}
+
+.error {
+  background: #fff5f5;
+  color: #c0392b;
+  border: 1px solid #f5c6cb;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 0;
+  color: #9aa5b4;
+  font-size: 0.9rem;
+}
+
+/* ─── Table Wrapper ─────────────────────────────────────── */
+.tableWrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+/* ─── Table ─────────────────────────────────────────────── */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead tr {
+  background: #eef6f1;
+}
+
+.table thead th {
+  padding: 14px 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5a7a68;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  border-top: 1px solid #f0f3f5;
+  transition: background 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background: #f9fbfa;
+}
+
+.table tbody td {
+  padding: 16px 20px;
+  font-size: 0.875rem;
+  color: #2d3748;
+  vertical-align: middle;
+}
+
+/* mono for account numbers / dates */
+.mono {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  color: #4a5568;
+}
+
+/* ─── Badges ─────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Request Type */
+.typeChangeAccountType {
+  background: #e8f0fe;
+  color: #3b5bdb;
+}
+
+.typeChangeAccountStatus {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.typeOpenAccount {
+  background: #e6f4ea;
+  color: #2e7d52;
+}
+
+.typeDefault {
+  background: #f1f3f5;
+  color: #495057;
+}
+
+/* Status */
+.statusPending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.statusApproved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.statusRejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.statusDefault {
+  background: #e9ecef;
+  color: #495057;
+}
+
+/* ─── Detail sub-rows ────────────────────────────────────── */
+.detailBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detailItem {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.detailItem span {
+  font-weight: 500;
+  color: #2d3748;
+}
+
+/* ─── Pagination ─────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: 1px solid #f0f3f5;
+  font-size: 0.83rem;
+  color: #718096;
+}
+
+.paginationInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.itemsSelect {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #dde2e7;
+  font-size: 0.83rem;
+  color: #2d3748;
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.itemsSelect:focus {
+  border-color: #3b82f6;
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pageBtn {
+  padding: 6px 14px;
+  border: 1px solid #dde2e7;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 0.83rem;
+  color: #4a5568;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pageBtn:hover:not(:disabled) {
+  background: #f0f9f4;
+  border-color: #a8d5bc;
+  color: #2e7d52;
+}
+
+.pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  font-size: 0.83rem;
+  color: #718096;
+}
+
+.pageInfo strong {
+  color: #1a1d23;
+}
+
+.action {
+    display: flex;
+    gap: 5px;
+}
+.check {
+    color: green;
+    background-color: #d4edda;
+    border-radius: 50%;
+    padding: 3px;
+}
+
+.close {
+    color: red;
+    background-color: #f8d7da;
+    border-radius: 50%;
+    padding: 3px;
+}

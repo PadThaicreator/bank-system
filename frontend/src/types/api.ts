@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllUser"];
+        put: operations["editUser"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/me": {
         parameters: {
             query?: never;
@@ -13,6 +29,22 @@ export interface paths {
         };
         get: operations["getProfile"];
         put: operations["updateProfile"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["approveRequest"];
         post?: never;
         delete?: never;
         options?: never;
@@ -78,6 +110,22 @@ export interface paths {
         get: operations["getAllTransaction"];
         put?: never;
         post: operations["postTransaction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllRequest"];
+        put?: never;
+        post: operations["postRequest"];
         delete?: never;
         options?: never;
         head?: never;
@@ -164,22 +212,6 @@ export interface paths {
         patch: operations["changeAccountStatus"];
         trace?: never;
     };
-    "/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAllUser"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/transactions/user": {
         parameters: {
             query?: never;
@@ -264,9 +296,24 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        UpdateProfileDTO: {
+        UserDTO: {
+            /** Format: uuid */
+            id?: string;
             fullName?: string;
+            email?: string;
+            /** @enum {string} */
+            role?: "CUSTOMER" | "ADMIN";
             phone?: string;
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING" | "APPROVED" | "CANCELLED" | "REJECTED";
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+            /** Format: date */
+            birthDay?: string;
+            /** @enum {string} */
+            gender?: "male" | "female" | "other";
         };
         ApiResponseUserModel: {
             success?: boolean;
@@ -290,23 +337,40 @@ export interface components {
             /** @enum {string} */
             role?: "CUSTOMER" | "ADMIN";
             /** @enum {string} */
-            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED";
+            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING" | "APPROVED" | "CANCELLED" | "REJECTED";
             /** Format: date-time */
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
             /** Format: date */
-            birthDay?: string;
+            birthDate?: string;
             /** @enum {string} */
             gender?: "male" | "female" | "other";
         };
-        ApiResponseReturnDataClass: {
+        UpdateProfileDTO: {
+            fullName?: string;
+            phone?: string;
+        };
+        ApiResponseReturnClass: {
             success?: boolean;
             message?: string;
-            data?: components["schemas"]["ReturnDataClass"];
+            data?: components["schemas"]["ReturnClass"];
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
+        };
+        ReturnClass: {
+            /** Format: date-time */
+            timestamp?: string;
+            data?: components["schemas"]["ReturnDataClass"];
+            userLogin?: components["schemas"]["UserModel"];
+            refreshToken?: string;
+            error?: boolean;
+            code?: string;
+            msg?: string;
+            success?: boolean;
+            MSG?: string;
+            Code?: string;
         };
         ReturnDataClass: {
             transactionList?: components["schemas"]["TransactionDTO"][];
@@ -345,28 +409,17 @@ export interface components {
             accountNumber?: string;
             balance?: number;
             /** @enum {string} */
-            status?: "ACTIVE" | "CLOSED" | "FROZEN";
+            status?: "ACTIVE" | "CLOSED" | "FROZEN" | "PENDING" | "REJECTED_REQUEST";
             /** @enum {string} */
             accountCategory?: "SAVINGS" | "CURRENT" | "FIXED_DEPOSIT";
         };
-        UserDTO: {
-            /** Format: uuid */
-            id?: string;
-            fullName?: string;
-            email?: string;
-            /** @enum {string} */
-            role?: "CUSTOMER" | "ADMIN";
-            phone?: string;
-            /** @enum {string} */
-            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED";
+        ApiResponseReturnDataClass: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ReturnDataClass"];
+            error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-            /** Format: date */
-            birthDay?: string;
-            /** @enum {string} */
-            gender?: "male" | "female" | "other";
+            timestamp?: string;
         };
         ApiResponseMapStringObject: {
             success?: boolean;
@@ -390,10 +443,23 @@ export interface components {
             /** Format: date-time */
             timestamp?: string;
         };
-        CreateAccountRequest: {
+        Account: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            userId?: string;
+            accountNumber?: string;
+            balance?: number;
             /** @enum {string} */
-            accountType: "SAVINGS" | "CURRENT_PERSONAL" | "CURRENT_CORPORATE" | "FIXED_DEPOSIT_PERSONAL" | "FIXED_DEPOSIT_CORPORATE";
-            initialDeposit?: number;
+            status?: "ACTIVE" | "CLOSED" | "FROZEN" | "PENDING" | "REJECTED_REQUEST";
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+            /** @enum {string} */
+            accountType?: "SAVINGS" | "CURRENT_PERSONAL" | "CURRENT_CORPORATE" | "FIXED_DEPOSIT_PERSONAL" | "FIXED_DEPOSIT_CORPORATE";
+            /** @enum {string} */
+            accountCategory?: "SAVINGS" | "CURRENT" | "FIXED_DEPOSIT";
         };
         AccountResponse: {
             /** Format: uuid */
@@ -407,11 +473,32 @@ export interface components {
             accountCategory?: "SAVINGS" | "CURRENT" | "FIXED_DEPOSIT";
             balance?: number;
             /** @enum {string} */
-            status?: "ACTIVE" | "CLOSED" | "FROZEN";
+            status?: "ACTIVE" | "CLOSED" | "FROZEN" | "PENDING" | "REJECTED_REQUEST";
             /** Format: date-time */
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
+        };
+        RequestDTO: {
+            /** Format: uuid */
+            id?: string;
+            /** @enum {string} */
+            requestType?: "OPEN_ACCOUNT" | "CHANGE_ACCOUNT_STATUS" | "CHANGE_ACCOUNT_TYPE";
+            /** @enum {string} */
+            status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING" | "APPROVED" | "CANCELLED" | "REJECTED";
+            data?: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            approvedAt?: string;
+            account?: components["schemas"]["Account"];
+            approveBy?: components["schemas"]["UserModel"];
+            accountRequest?: components["schemas"]["AccountResponse"];
+        };
+        CreateAccountRequest: {
+            /** @enum {string} */
+            accountType: "SAVINGS" | "CURRENT_PERSONAL" | "CURRENT_CORPORATE" | "FIXED_DEPOSIT_PERSONAL" | "FIXED_DEPOSIT_CORPORATE";
+            initialDeposit?: number;
         };
         ApiResponseAccountResponse: {
             success?: boolean;
@@ -426,7 +513,7 @@ export interface components {
         };
         ChangeStatusRequest: {
             /** @enum {string} */
-            status: "ACTIVE" | "CLOSED" | "FROZEN";
+            status: "ACTIVE" | "CLOSED" | "FROZEN" | "PENDING" | "REJECTED_REQUEST";
         };
         ApiResponseReturnDataClassUserDTO: {
             success?: boolean;
@@ -465,6 +552,30 @@ export interface components {
             userList?: components["schemas"]["UserDTO"][];
             accountList?: components["schemas"]["UserAccountResponse"][];
             content?: components["schemas"]["TransactionDTO"][];
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            /** Format: int32 */
+            currentPage?: number;
+            /** Format: int32 */
+            pageSize?: number;
+            first?: boolean;
+            last?: boolean;
+        };
+        ApiResponseReturnDataClassRequestDTO: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ReturnDataClassRequestDTO"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        ReturnDataClassRequestDTO: {
+            transactionList?: components["schemas"]["TransactionDTO"][];
+            userList?: components["schemas"]["UserDTO"][];
+            accountList?: components["schemas"]["UserAccountResponse"][];
+            content?: components["schemas"]["RequestDTO"][];
             /** Format: int64 */
             totalElements?: number;
             /** Format: int32 */
@@ -515,6 +626,53 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    getAllUser: {
+        parameters: {
+            query: {
+                size: number;
+                page: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassUserDTO"];
+                };
+            };
+        };
+    };
+    editUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseUserModel"];
+                };
+            };
+        };
+    };
     getProfile: {
         parameters: {
             query?: never;
@@ -555,6 +713,30 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseUserModel"];
+                };
+            };
+        };
+    };
+    approveRequest: {
+        parameters: {
+            query: {
+                isApprove: boolean;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnClass"];
                 };
             };
         };
@@ -663,6 +845,53 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["TransactionDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
+                };
+            };
+        };
+    };
+    getAllRequest: {
+        parameters: {
+            query: {
+                page: number;
+                size: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassRequestDTO"];
+                };
+            };
+        };
+    };
+    postRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestDTO"];
             };
         };
         responses: {
@@ -815,29 +1044,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseAccountResponse"];
-                };
-            };
-        };
-    };
-    getAllUser: {
-        parameters: {
-            query: {
-                size: number;
-                page: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseReturnDataClassUserDTO"];
                 };
             };
         };

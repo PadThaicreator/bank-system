@@ -19,6 +19,7 @@ import UserDetailPage from "./pages/admin/UserMangement/userDetailPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import DashboardPage from "./pages/account/DashboardPage/DashboardPage";
 import ProfilePage from "./pages/profile/ProfilePage/page";
+import RequestListPage from "./pages/admin/RequestMangement/requestListPage";
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
                   <Route path="/admin/userList" element={<UserListPage />} />
                   <Route path="/admin/userDetail/:userId" element={<UserDetailPage />} />
                   <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+                  <Route path="/admin/requestList" element={<RequestListPage />} />
                 </Route>
                 
                 <Route path="/account/open" element={<AccountOpeningPage />} />

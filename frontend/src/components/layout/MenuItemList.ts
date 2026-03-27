@@ -35,6 +35,7 @@ export const menuList: MenuItem[] = [
       children: [
         { label: "User Management", path: "/admin/userList" , canAccess : ["ADMIN"] },
         { label: "Account Management", path: "/admin/accountList" , canAccess : ["ADMIN"] },
+        { label: "Request Management", path: "/admin/requestList" , canAccess : ["ADMIN"] },
         
        
       ],
