@@ -26,8 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
-
-
+    private final RequestService requestService;
 
     // ======= POST METHOD
     // ========================================================================
@@ -35,8 +34,9 @@ public class AccountService {
     @Transactional
     public AccountResponse createAccount(CreateAccountRequest request) {
         String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
+        String userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ? "ADMIN" : "USER";
         UUID userId = UUID.fromString(userIdStr);
-
         Account account = Account.builder()
                 .userId(userId)
                 .accountNumber(generateAccountNumber(request.getAccountType()))
@@ -48,10 +48,10 @@ public class AccountService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-
-
         Account saved = accountRepository.save(account);
-//        requestService.createRequest(saved.getId(), RequestType.OPEN_ACCOUNT.toString(), RequestType.OPEN_ACCOUNT);
+        requestService.createRequest(
+                saved.getId(),
+                RequestType.OPEN_ACCOUNT.toString());
 
         return AccountResponse.from(saved);
     }
@@ -81,7 +81,8 @@ public class AccountService {
 
         account.setStatus(request.getStatus());
         Account saved = accountRepository.save(account);
-//        requestService.createRequest(saved.getId(), request.getStatus().toString(), RequestType.CHANGE_ACCOUNT_STATUS);
+        // requestService.createRequest(saved.getId(), request.getStatus().toString(),
+        // RequestType.CHANGE_ACCOUNT_STATUS);
 
         return AccountResponse.from(saved);
     }
@@ -96,7 +97,8 @@ public class AccountService {
 
         account.setAccountType(AccountType.valueOf(request.getAccountType()));
         Account saved = accountRepository.save(account);
-//        requestService.createRequest(saved.getId(), request.getAccountType(), RequestType.CHANGE_ACCOUNT_TYPE);
+        // requestService.createRequest(saved.getId(), request.getAccountType(),
+        // RequestType.CHANGE_ACCOUNT_TYPE);
 
         return AccountResponse.from(saved);
     }
@@ -153,9 +155,6 @@ public class AccountService {
         return accounts;
     }
 
-
-
-
     // ======= PRIVATE HELPER
     // ======================================================================
 
@@ -200,8 +199,5 @@ public class AccountService {
 
         return branchNumber + typeNumber + random;
     }
-
-
-
 
 }
