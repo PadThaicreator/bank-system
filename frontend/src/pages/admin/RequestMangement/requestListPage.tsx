@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react"
 import useGetAllRequest from "../../../hooks/requests/useGetRequest"
 import styles from "./RequestList.module.css"
-import { Check, X } from "lucide-react";
+import { Check, List, X } from "lucide-react";
 import { requestService } from "../../../services/requestService";
+import type { RequestDTO } from "../../../types/requestType";
+import RequestDetailModal from "./modal/RequestDetailModal";
 
 // ─── Helper: Request Type Badge ────────────────────────────
 function RequestTypeBadge({ type }: { type: string }) {
   const map: Record<string, { label: string; cls: string }> = {
-    CHANGE_ACCOUNT_TYPE:   { label: "Change Account Type",   cls: styles.typeChangeAccountType },
+    CHANGE_ACCOUNT_TYPE: { label: "Change Account Type", cls: styles.typeChangeAccountType },
     CHANGE_ACCOUNT_STATUS: { label: "Change Account Status", cls: styles.typeChangeAccountStatus },
-    OPEN_ACCOUNT:          { label: "Open Account",          cls: styles.typeOpenAccount },
+    OPEN_ACCOUNT: { label: "Open Account", cls: styles.typeOpenAccount },
   }
   const entry = map[type] ?? { label: type, cls: styles.typeDefault }
   return <span className={`${styles.badge} ${entry.cls}`}>{entry.label}</span>
@@ -18,7 +20,7 @@ function RequestTypeBadge({ type }: { type: string }) {
 // ─── Helper: Status Badge ──────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    PENDING:  styles.statusPending,
+    PENDING: styles.statusPending,
     APPROVED: styles.statusApproved,
     REJECTED: styles.statusRejected,
   }
@@ -56,37 +58,40 @@ export default function RequestListPage() {
   const [itemsPerPage, setItemsPerPage] = useState(10)
 
   useEffect(() => {
-    fetchAllRequest( 0, itemsPerPage )
+    fetchAllRequest(0, itemsPerPage)
   }, [itemsPerPage])
 
   const handlePrev = () => {
-    if (currentPage > 0) fetchAllRequest( currentPage - 1, itemsPerPage )
+    if (currentPage > 0) fetchAllRequest(currentPage - 1, itemsPerPage)
   }
 
   const handleNext = () => {
-    if (currentPage < totalPages - 1) fetchAllRequest(  currentPage + 1,  itemsPerPage )
+    if (currentPage < totalPages - 1) fetchAllRequest(currentPage + 1, itemsPerPage)
   }
 
   const from = totalElements === 0 ? 0 : currentPage * itemsPerPage + 1
-  const to   = Math.min((currentPage + 1) * itemsPerPage, totalElements ?? 0)
+  const to = Math.min((currentPage + 1) * itemsPerPage, totalElements ?? 0)
 
 
-  const handleApprove = async (reqId : string) => {
-    await requestService.approveRequest(reqId , true)
-    fetchAllRequest(currentPage , itemsPerPage)
+  const handleApprove = async (reqId: string) => {
+    await requestService.approveRequest(reqId, true)
+    fetchAllRequest(currentPage, itemsPerPage)
   }
 
-  const handleReject = async (reqId : string) => {
-    await requestService.approveRequest(reqId , false)
-    fetchAllRequest(currentPage , itemsPerPage)
+  const handleReject = async (reqId: string) => {
+    await requestService.approveRequest(reqId, false)
+    fetchAllRequest(currentPage, itemsPerPage)
   }
+
+  const [selected, setSelected] = useState<RequestDTO>()
+
 
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>Request Management</h1>
 
       {loading && <p className={styles.loading}>Loading…</p>}
-      {error   && <p className={styles.error}>Error: {error}</p>}
+      {error && <p className={styles.error}>Error: {error}</p>}
 
       {!loading && !error && (
         <div className={styles.tableWrapper}>
@@ -165,14 +170,16 @@ export default function RequestListPage() {
                     {/* Dates */}
                     <td className={styles.mono}>{formatDate(request.createdAt)}</td>
                     <td className={styles.mono}>{formatDate(request.approvedAt)}</td>
-                     <td className={styles.mono}>{request.approveBy?.fullName ?? "-"}</td>
+                    <td className={styles.mono}>{request.approveBy?.fullName ?? "-"}</td>
                     <td className={`${styles.mono} ${styles.action}`}>
-                        { request.status === "PENDING" && (
-                            <>
-                                <Check className={styles.check} onClick={() => request.id && handleApprove(request.id)} />
-                                <X className={styles.close} onClick={() => request.id && handleReject(request.id)} />
-                            </>
-                        )}
+                      {request.status === "PENDING" && (
+                        <>
+                          <Check className={styles.check} onClick={() => request.id && handleApprove(request.id)} />
+                          <X className={styles.close} onClick={() => request.id && handleReject(request.id)} />
+                        </>
+
+                      )}
+                      <List onClick={() => setSelected(request)} style={{ cursor: "pointer" }} />
                     </td>
                   </tr>
                 ))
@@ -222,6 +229,22 @@ export default function RequestListPage() {
             </div>
           </div>
         </div>
+      )}
+
+
+      {selected && (
+        <RequestDetailModal
+          request={selected}
+          onClose={() => setSelected(undefined)}
+          onApprove={(r) => {
+            if (r.id) handleApprove(String(r.id));
+            setSelected(undefined);
+          }}
+          onReject={(r) => {
+            if (r.id) handleReject(String(r.id));
+            setSelected(undefined);
+          }}
+        />
       )}
     </div>
   )

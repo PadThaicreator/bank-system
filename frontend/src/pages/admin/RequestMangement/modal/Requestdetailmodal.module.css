@@ -1,0 +1,263 @@
+/* RequestDetailModal.module.css */
+
+/* ─── Overlay ───────────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 35, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 24px;
+
+  animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── Modal Card ─────────────────────────────────────────── */
+.modal {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  font-family: 'DM Sans', sans-serif;
+
+  animation: slideUp 0.2s cubic-bezier(0.34, 1.26, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid #f0f3f5;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1d23;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f1f3f5;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.closeBtn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ─── Body ───────────────────────────────────────────────── */
+.body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── Section ────────────────────────────────────────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionLabel {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #5a7a68;
+  margin-bottom: 10px;
+}
+
+/* ─── Grid of fields ─────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.gridFull {
+  grid-column: 1 / -1;
+}
+
+/* ─── Field ──────────────────────────────────────────────── */
+.field {
+  background: #f8fafb;
+  border: 1px solid #edf0f3;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldLabel {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #9aa5b4;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.fieldValue {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1a1d23;
+}
+
+.fieldValueMono {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  color: #2d3748;
+}
+
+/* ─── Divider ────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: #f0f3f5;
+  margin: 0;
+  border: none;
+}
+
+/* ─── Change arrow row ───────────────────────────────────── */
+.changeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.changeRow .field {
+  flex: 1;
+}
+
+.arrow {
+  font-size: 1rem;
+  color: #9aa5b4;
+  flex-shrink: 0;
+}
+
+/* ─── Badges (re-used from RequestList theme) ────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.typeChangeAccountType   { background: #e8f0fe; color: #3b5bdb; }
+.typeChangeAccountStatus { background: #fff3cd; color: #856404; }
+.typeOpenAccount         { background: #e6f4ea; color: #2e7d52; }
+.typeDefault             { background: #f1f3f5; color: #495057; }
+
+.statusPending  { background: #fff3cd; color: #856404; }
+.statusApproved { background: #d4edda; color: #155724; }
+.statusRejected { background: #f8d7da; color: #721c24; }
+.statusDefault  { background: #e9ecef; color: #495057; }
+
+/* ─── Footer ─────────────────────────────────────────────── */
+.footer {
+  padding: 16px 28px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btnClose {
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  border: 1px solid #dde2e7;
+  background: #fff;
+  color: #4a5568;
+}
+
+.btnClose:hover {
+  background: #f8fafb;
+  border-color: #c5ccd4;
+}
+
+.btnApprove {
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+  background: #2e7d52;
+  color: #fff;
+}
+
+.btnApprove:hover {
+  background: #256643;
+}
+
+.btnReject {
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+  background: #dc2626;
+  color: #fff;
+}
+
+.btnReject:hover {
+  background: #b91c1c;
+}

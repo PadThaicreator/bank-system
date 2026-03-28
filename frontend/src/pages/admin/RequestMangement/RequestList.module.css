@@ -243,6 +243,7 @@
     gap: 5px;
 }
 .check {
+  cursor: pointer;
     color: green;
     background-color: #d4edda;
     border-radius: 50%;
@@ -250,6 +251,7 @@
 }
 
 .close {
+    cursor: pointer;
     color: red;
     background-color: #f8d7da;
     border-radius: 50%;
