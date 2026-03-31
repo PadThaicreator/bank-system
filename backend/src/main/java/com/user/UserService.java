@@ -221,5 +221,23 @@ public  class UserService {
     }
 
 
+    @Transactional
+    public ReturnClass resetPassword(String email , String oldPassword ,String newPassword){
+        ReturnClass rs = new ReturnClass();
+        UserModel findByEmail = UserRepository.findByEmail(email).orElseThrow(() ->new AuthenError.InvalidForm("User Not Found"));
+
+        if(passwordEncoder.matches(oldPassword, findByEmail.getPasswordHash())){
+            findByEmail.setPasswordHash(passwordEncoder.encode(newPassword));
+        }else{
+            throw new AuthenError.InvalidForm("Invalid Password of Email");
+        }
+
+        rs.setMSG("Change Password Success");
+        rs.setCODE("200");
+
+        return rs;
+    }
+
+
 
 }

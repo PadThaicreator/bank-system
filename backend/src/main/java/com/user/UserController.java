@@ -2,6 +2,7 @@ package com.user;
 
 
 
+import com.user.dto.ChangePasswordDTO;
 import com.user.dto.LoginDTO;
 import com.configuration.common.response.ApiResponse;
 import com.models.ReturnClass;
@@ -99,6 +100,14 @@ public class UserController {
     public ApiResponse<UserModel> editUser(@Valid @RequestBody UserDTO data) {
 
         ReturnClass rs = userService.editUser(data);
+
+        return ApiResponse.success(rs.getMSG(), null);
+    }
+
+    @PutMapping("/password")
+    public ApiResponse<UserModel> changePassword(@Valid @RequestBody ChangePasswordDTO data) {
+
+        ReturnClass rs = userService.resetPassword(data.getEmail(),data.getOldPassword() , data.getNewPassword());
 
         return ApiResponse.success(rs.getMSG(), null);
     }
