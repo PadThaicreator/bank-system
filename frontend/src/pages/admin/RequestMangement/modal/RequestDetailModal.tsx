@@ -100,6 +100,13 @@ export default function RequestDetailModal({ request, onClose, onApprove, onReje
 
     const isPending = request.status?.toUpperCase() === "PENDING"
 
+    let parsedData: any = {}
+    try {
+        parsedData = request.data ? JSON.parse(request.data) : {}
+    } catch {
+        parsedData = { raw: request.data }
+    }
+
     return (
         <div className={styles.overlay} onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
             <div className={styles.modal} role="dialog" aria-modal="true" aria-label="Request Detail">
@@ -120,17 +127,18 @@ export default function RequestDetailModal({ request, onClose, onApprove, onReje
                 <div className={styles.body}>
 
                     {/* Account Info */}
-                    <div className={styles.section}>
-                        <p className={styles.sectionLabel}>Account Information</p>
-                        <div className={styles.grid}>
-                            <Field label="Account Number" value={request.account?.accountNumber} mono full />
-                            <Field label="Account Type" value={request.account?.accountType} />
-                            <Field label="Account Status" value={request.account?.status} />
-                            {request.requestType === "OPEN_ACCOUNT" && (
-                                <Field label="Balance" value={`฿ ${formatBalance(request.account?.balance)}`} mono />
-                            )}
+                    {request.requestType !== "OPEN_ACCOUNT" && (
+                        <div className={styles.section}>
+                            <p className={styles.sectionLabel}>Account Information</p>
+                            <div className={styles.grid}>
+                                <Field label="Account Number" value={request.account?.accountNumber} mono full />
+                                <Field label="Account Type" value={request.account?.accountType} />
+                                <Field label="Account Status" value={request.account?.status} />
+                                {/* <Field label="Balance" value={`฿ ${formatBalance(request.account?.balance)}`} mono /> */}
+
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <hr className={styles.divider} />
 
@@ -142,7 +150,7 @@ export default function RequestDetailModal({ request, onClose, onApprove, onReje
                             <div className={styles.changeRow}>
                                 <Field label="From Type" value={request.account?.accountType} />
                                 <span className={styles.arrow}>→</span>
-                                <Field label="To Type" value={request.data} />
+                                <Field label="To Type" value={parsedData?.accountType || request.data} />
                             </div>
                         )}
 
@@ -150,14 +158,14 @@ export default function RequestDetailModal({ request, onClose, onApprove, onReje
                             <div className={styles.changeRow}>
                                 <Field label="From Status" value={request.account?.status} />
                                 <span className={styles.arrow}>→</span>
-                                <Field label="To Status" value={request.data} />
+                                <Field label="To Status" value={parsedData?.status || request.data} />
                             </div>
                         )}
 
                         {request.requestType === "OPEN_ACCOUNT" && (
                             <div className={styles.grid}>
-                                <Field label="Requested Type" value={request.account?.accountType} />
-                                <Field label="Initial Balance" value={`฿ ${formatBalance(request.account?.balance)}`} mono />
+                                <Field label="Requested Type" value={parsedData?.accountType || request.account?.accountType} />
+                                <Field label="Initial Balance" value={`฿ ${formatBalance(parsedData?.initialDeposit ?? request.account?.balance)}`} mono />
                             </div>
                         )}
 
@@ -174,6 +182,9 @@ export default function RequestDetailModal({ request, onClose, onApprove, onReje
                         <div className={styles.grid}>
                             <Field label="Created At" value={formatDate(request.createdAt)} mono />
                             <Field label="Approved At" value={formatDate(request.approvedAt)} mono />
+                        </div>
+                        <div className={styles.grid}>
+                            <Field label="Approved By" value={request.approveBy?.fullName} mono />
                         </div>
                     </div>
 

@@ -43,7 +43,7 @@ public class AccountService {
                 .accountType(request.getAccountType())
                 .accountCategory(request.getAccountType().getCategory())
                 .balance(request.getInitialDeposit())
-                .status(AccountStatus.PENDING)
+                .status(AccountStatus.ACTIVE)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

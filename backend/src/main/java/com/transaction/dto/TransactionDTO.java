@@ -60,25 +60,27 @@ public class TransactionDTO {
                 .type(t.getTransaction_type())
                 .createdAt(t.getCreatedAt());
 
+
         switch (t.getTransaction_type()) {
 
             case TRANSFER -> {
-                if (t.getFromAccount() != null)
+                if (t.getFromAccount() != null) {
                     builder.fromAccountId(t.getFromAccount().getId());
-
-                if (t.getToAccount() != null)
+                    builder.toAccountNumber(t.getFromAccount().getAccountNumber());
+                }
+                if (t.getToAccount() != null) {
                     builder.toAccountId(t.getToAccount().getId());
+                    builder.toAccountNumber(t.getToAccount().getAccountNumber());
+                }
             }
 
-            case WITHDRAW -> {
-                if (t.getFromAccount() != null)
+            case WITHDRAW, DEPOSIT -> {
+                if (t.getFromAccount() != null) {
                     builder.fromAccountId(t.getFromAccount().getId());
+                    builder.fromAccountNumber(t.getFromAccount().getAccountNumber());
+                }
             }
 
-            case DEPOSIT -> {
-                if (t.getToAccount() != null)
-                    builder.toAccountId(t.getToAccount().getId());
-            }
         }
 
         return builder.build();

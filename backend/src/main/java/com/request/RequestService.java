@@ -18,6 +18,7 @@ import com.user.UserModel;
 import com.user.UserRepository;
 import com.user.expception.AuthenError;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,6 +45,9 @@ public class RequestService {
     private  final  TransactionRepository transactionRepository;
     private final TransactionService transactionService;
     private final AccountService accountService ;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
 
@@ -74,19 +79,13 @@ public class RequestService {
     public  ReturnClass createRequest(AccountResponse acc , RequestType reqType){
         ReturnClass rs = new ReturnClass();
 
-
-
         UserRole role = checkRole();
-//        System.out.println("========================"+role.toString()+"===============");
-
-//        Account acc = accountRepository.findById(id).orElseThrow( () -> new TransactionError.AccountInvalid("Account not found") );
 
         RequestModel req = new RequestModel();
         req.setCreatedAt(LocalDateTime.now());
-//        req.setData("OPEN ACCOUNT BY ADMIN");
 
         req.setRequestType(reqType);
-            req.setStatus(StatusType.PENDING);
+        req.setStatus(StatusType.PENDING);
             if(reqType.equals(RequestType.OPEN_ACCOUNT)){
 
 
@@ -94,19 +93,22 @@ public class RequestService {
                 car.setAccountType(acc.getAccountType());
                 car.setInitialDeposit(acc.getBalance());
 
-                AccountResponse saved = accountService.createAccount(car);
-                Account rqAcc = accountRepository.findById(saved.getId()).orElseThrow( () -> new TransactionError.AccountInvalid("Account not found") );
-                req.setAccount(rqAcc);
-//                req.setId(saved.getId());
-                req.setData("OPEN ACCOUNT");
+//                AccountResponse saved = accountService.createAccount(car);
+//                Account rqAcc = accountRepository.findById(saved.getId()).orElseThrow( () -> new TransactionError.AccountInvalid("Account not found") );
+//                req.setAccount(rqAcc);
+                req.setData(objectMapper.writeValueAsString(car));
             }
             else if (reqType.equals(RequestType.CHANGE_ACCOUNT_TYPE)){
-                req.setData(acc.getAccountType().toString());
+
+
+//                req.setData(acc.getAccountType().toString());
                 Account rqAcc = accountRepository.findById(acc.getId()).orElseThrow( () -> new TransactionError.AccountInvalid("Account not found") );
+                req.setData(objectMapper.writeValueAsString(acc));
                 req.setAccount(rqAcc);
             }
             else if (reqType.equals(RequestType.CHANGE_ACCOUNT_STATUS)){
-                req.setData(acc.getStatus().toString());
+//                req.setData(acc.getStatus().toString());
+                req.setData(objectMapper.writeValueAsString(acc));
                 Account rqAcc = accountRepository.findById(acc.getId()).orElseThrow( () -> new TransactionError.AccountInvalid("Account not found") );
                 req.setAccount(rqAcc);
             }
@@ -119,7 +121,7 @@ public class RequestService {
 
 
         if(role.equals(UserRole.ADMIN)){
-            System.out.println("================="+request.getId()+"===================");
+            System.out.println("=================ADMIN REQUEST===================");
             approveRequest(request.getId(),true);
         }
 
@@ -129,9 +131,11 @@ public class RequestService {
     @Transactional
     public  ReturnClass approveRequest(UUID id , boolean isApprove){
         ReturnClass rs = new ReturnClass();
-        RequestModel rq = requestRepository.findById(id).orElseThrow( () -> new RequestError.RequestInvalid("Account not found") );
-        Account acc = accountRepository.findById(rq.getAccount().getId()).orElseThrow(() -> new TransactionError.AccountInvalid("Account not found") );
-
+        RequestModel rq = requestRepository.findById(id).orElseThrow( () -> new RequestError.RequestInvalid("Request not found") );
+        Account acc = new Account();
+        if(!rq.getRequestType().equals(RequestType.OPEN_ACCOUNT)){
+            acc = accountRepository.findById(rq.getAccount().getId()).orElseThrow(() -> new TransactionError.AccountInvalid("Account not found") );
+        }
         UserModel apv_by = userRepository.findById(UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(() -> new TransactionError.AccountInvalid("Account not found") );
 
         rq.setApprovedAt(LocalDateTime.now());
@@ -140,10 +144,10 @@ public class RequestService {
         if(!isApprove){
             rq.setStatus(StatusType.REJECTED);
 
-            if(rq.getRequestType().equals(RequestType.OPEN_ACCOUNT)){
-                acc.setStatus(AccountStatus.REJECTED_REQUEST);
-                accountRepository.save(acc);
-            }
+//            if(rq.getRequestType().equals(RequestType.OPEN_ACCOUNT)){
+//                acc.setStatus(AccountStatus.REJECTED_REQUEST);
+//                accountRepository.save(acc);
+//            }
 
             requestRepository.save(rq);
             rs.setMSG("Rejected Success");
@@ -152,31 +156,42 @@ public class RequestService {
 
         if(rq.getRequestType().equals(RequestType.OPEN_ACCOUNT)){
 
-            acc.setStatus(AccountStatus.ACTIVE);
+//            acc.setStatus(AccountStatus.ACTIVE);
+            CreateAccountRequest payload;
+            payload = objectMapper.readValue(rq.getData(), CreateAccountRequest.class);
 
+            AccountResponse accRes = accountService.createAccount(payload);
 
             TransactionDTO tx = new TransactionDTO();
             tx.setType(TransactionType.DEPOSIT);
-            tx.setAmount(acc.getBalance());
-            tx.setFromAccountId(acc.getId());
+            tx.setAmount(accRes.getBalance());
+            tx.setFromAccountId(accRes.getId());
             tx.setNote("OPEN ACCOUNT");
 
-            accountService.changeBalance(acc.getId(), acc.getBalance().negate());
+
+            accountService.changeBalance(accRes.getId(), accRes.getBalance().negate());
             transactionService.createTransaction(tx);
 
 
         }else if (rq.getRequestType().equals(RequestType.CHANGE_ACCOUNT_TYPE)){
 
-            ChangeAccountTypeRequest cat = new ChangeAccountTypeRequest();
-            cat.setAccountType(rq.getData());
-            accountService.changeAccountType(acc.getId() , cat);
+//            ChangeAccountTypeRequest cat = new ChangeAccountTypeRequest();
+//            cat.setAccountType(rq.getData());
+            ChangeAccountTypeRequest payload;
+            payload = objectMapper.readValue(rq.getData(), ChangeAccountTypeRequest.class);
+            accountService.changeAccountType(acc.getId() , payload);
 
 
         }else if (rq.getRequestType().equals(RequestType.CHANGE_ACCOUNT_STATUS)){
 
-            ChangeStatusRequest csr = new ChangeStatusRequest();
-            csr.setStatus(AccountStatus.valueOf(rq.getData()));
-            accountService.changeAccountStatus(acc.getId() , csr);
+//            ChangeStatusRequest csr = new ChangeStatusRequest();
+//            csr.setStatus(AccountStatus.valueOf(rq.getData()));
+
+            ChangeStatusRequest payload;
+            payload = objectMapper.readValue(rq.getData(), ChangeStatusRequest.class);
+
+
+            accountService.changeAccountStatus(acc.getId() , payload);
 
         }
 

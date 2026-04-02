@@ -110,7 +110,15 @@ export default function RequestListPage() {
             </thead>
             <tbody>
               {requestList && requestList.length > 0 ? (
-                requestList.map((request) => (
+                requestList.map((request) => {
+                  let parsedData: any = {};
+                  try {
+                    parsedData = request.data ? JSON.parse(request.data) : {};
+                  } catch (e) {
+                    parsedData = { raw: request.data };
+                  }
+
+                  return (
                   <tr key={request.id}>
                     {/* Account Number */}
                     <td className={styles.mono}>
@@ -130,7 +138,7 @@ export default function RequestListPage() {
                             From: <span>{request.account?.accountType}</span>
                           </span>
                           <span className={styles.detailItem}>
-                            To: <span>{request.data}</span>
+                            To: <span>{parsedData?.accountType || request.data}</span>
                           </span>
                         </div>
                       )}
@@ -141,7 +149,7 @@ export default function RequestListPage() {
                             From: <span>{request.account?.status}</span>
                           </span>
                           <span className={styles.detailItem}>
-                            To: <span>{request.data}</span>
+                            To: <span>{parsedData?.status || request.data}</span>
                           </span>
                         </div>
                       )}
@@ -149,10 +157,10 @@ export default function RequestListPage() {
                       {request.requestType === "OPEN_ACCOUNT" && (
                         <div className={styles.detailBlock}>
                           <span className={styles.detailItem}>
-                            Type: <span>{request.account?.accountType}</span>
+                            Type: <span>{parsedData?.accountType || request.account?.accountType}</span>
                           </span>
                           <span className={styles.detailItem}>
-                            Balance: <span>{request.account?.balance?.toLocaleString()}</span>
+                            Balance: <span>{(parsedData?.initialDeposit ?? request.account?.balance)?.toLocaleString()}</span>
                           </span>
                         </div>
                       )}
@@ -182,7 +190,8 @@ export default function RequestListPage() {
                       <List onClick={() => setSelected(request)} style={{ cursor: "pointer" }} />
                     </td>
                   </tr>
-                ))
+                );
+              })
               ) : (
                 <tr>
                   <td colSpan={6}>

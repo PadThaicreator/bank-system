@@ -20,6 +20,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/users/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["changePassword"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/me": {
         parameters: {
             query?: never;
@@ -110,6 +126,22 @@ export interface paths {
         get: operations["getAllTransaction"];
         put?: never;
         post: operations["postTransaction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stocks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["importStock"];
         delete?: never;
         options?: never;
         head?: never;
@@ -347,6 +379,11 @@ export interface components {
             /** @enum {string} */
             gender?: "male" | "female" | "other";
         };
+        ChangePasswordDTO: {
+            email?: string;
+            oldPassword?: string;
+            newPassword?: string;
+        };
         UpdateProfileDTO: {
             fullName?: string;
             phone?: string;
@@ -366,8 +403,8 @@ export interface components {
             userLogin?: components["schemas"]["UserModel"];
             refreshToken?: string;
             error?: boolean;
-            code?: string;
             msg?: string;
+            code?: string;
             success?: boolean;
             MSG?: string;
             Code?: string;
@@ -443,6 +480,19 @@ export interface components {
             /** Format: date-time */
             timestamp?: string;
         };
+        ApiResponseListStockModel: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["StockModel"][];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        StockModel: {
+            symbol?: string;
+            name?: string;
+            type?: string;
+        };
         Account: {
             /** Format: uuid */
             id?: string;
@@ -494,6 +544,14 @@ export interface components {
             account?: components["schemas"]["Account"];
             approveBy?: components["schemas"]["UserModel"];
             accountRequest?: components["schemas"]["AccountResponse"];
+        };
+        ApiResponseRequestDTO: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["RequestDTO"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
         };
         CreateAccountRequest: {
             /** @enum {string} */
@@ -659,6 +717,30 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UserDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseUserModel"];
+                };
+            };
+        };
+    };
+    changePassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePasswordDTO"];
             };
         };
         responses: {
@@ -859,6 +941,26 @@ export interface operations {
             };
         };
     };
+    importStock: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseListStockModel"];
+                };
+            };
+        };
+    };
     getAllRequest: {
         parameters: {
             query: {
@@ -901,7 +1003,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
+                    "*/*": components["schemas"]["ApiResponseRequestDTO"];
                 };
             };
         };

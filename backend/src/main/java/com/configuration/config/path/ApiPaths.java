@@ -21,7 +21,7 @@ public class ApiPaths {
     public static final String[] ADMIN_PATHS = {
             "/users",
             "/transactions",
-
+            "/stocks",
             "/requests/{id}"
     };
 
