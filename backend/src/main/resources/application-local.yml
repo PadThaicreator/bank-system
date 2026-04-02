@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://dpg-d6s2h7kr85hc73emgo6g-a.singapore-postgres.render.com:5432/banksystem_a6cy
+    username: banksystem_a6cy_user
+    password: DnpQblWLecfZ1RMl3oTI38ZJBCb4wn4P
+  jwt:
+    secret: dev-secret-key-for-local-only-min-32-chars
+    access-token-expiry: 604800000
+    refresh-token-expiry: 604800000
+
+finnhub:
+  api:
+    key: cvvs11hr01qod00lrpj0cvvs11hr01qod00lrpjg
