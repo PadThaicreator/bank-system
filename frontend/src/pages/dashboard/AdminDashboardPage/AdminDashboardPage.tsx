@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Users, CreditCard, Activity, AlertTriangle, Search, Eye, Ban } from 'lucide-react';
 import styles from './AdminDashboardPage.module.css';
+import useGetAllUser from '../../../hooks/users/useGetAllUser';
+import { redirect, useNavigate } from 'react-router-dom';
+import ConfirmModal from '../../../components/common/ConfirmModal';
+import useEditUser from '../../../hooks/users/useEditUser';
 
 interface AdminStats {
   totalUsers: number;
@@ -58,18 +62,51 @@ const mockRecentUsers: User[] = [
 ];
 
 export default function AdminDashboardPage() {
+  const navigate = useNavigate();
+  const userSize = 10, userPage = 0;
+  const { users, loading: userLoading, error: userError, getAllUser } = useGetAllUser();
+  const { loading: editLoading, error: editError, editUser } = useEditUser();
   const [stats, setStats] = useState<AdminStats | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const isLoading = userLoading || editLoading;
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean;
+    userId: string | null;
+  }>({ isOpen: false, userId: null });
+
+  // Use an arrow function for refetch so it doesn't execute immediately on every render
+  const errors = [
+    { error: userError, refetch: () => getAllUser(userPage, userSize) }
+  ].filter(x => x.error);
 
   useEffect(() => {
     // Simulate API call
     setTimeout(() => {
       setStats(mockStats);
-      setUsers(mockRecentUsers);
-      setLoading(false);
+      getAllUser(userPage, userSize);
     }, 800);
-  }, []);
+  }, [getAllUser]);
+
+  if (errors.length > 0) {
+    return (
+      <div className={styles.errorContainer} style={{ padding: '2rem', textAlign: 'center' }}>
+        {errors.map((err, index) => (
+          <div key={index}>
+            <h1>Error</h1>
+            <p>{err.error}</p>
+            <button onClick={err.refetch} style={{ padding: '0.5rem 1rem', marginTop: '1rem' }}>Retry</button>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (isLoading || !stats) {
+    return (
+      <div className={styles.loaderContainer}>
+        <div className={styles.loader}></div>
+      </div>
+    );
+  }
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(amount);
@@ -85,12 +122,33 @@ export default function AdminDashboardPage() {
     });
   };
 
-  if (loading || !stats) {
-    return (
-      <div className={styles.loaderContainer}>
-        <div className={styles.loader}></div>
-      </div>
-    );
+  const handleSuspendClick = (userId: string) => {
+    setConfirmModal({ isOpen: true, userId });
+  }
+
+  const handleSuspendConfirm = () => {
+    if (confirmModal.userId) {
+      // ค้นหา User คนนี้จาก Array ที่มีอยู่แล้วเพื่อดึงฟิลด์เก่าทั้งหมด
+      const targetUser = users.find(u => u.id === confirmModal.userId);
+      
+      if (targetUser) {
+        // ก๊อปปี้ข้อมูลเดิมทั้งหมด และเจาะจงเปลี่ยนแค่สถานะเป็น 'SUSPENDED'
+        const payload = {
+          ...targetUser,
+          status: 'SUSPENDED' as "SUSPENDED"
+        };
+
+        editUser(payload).then(() => {
+          // สั่งปิด Modal 
+          setConfirmModal({ isOpen: false, userId: null });
+          // ดึงข้อมูลใหม่เพื่อสะท้อนผลลัพธ์
+          getAllUser(userPage, userSize);
+        }).catch((err) => {
+          console.error("Failed to suspend user:", err);
+          alert("Failed to suspend user.");
+        });
+      }
+    }
   }
 
   return (
@@ -170,7 +228,7 @@ export default function AdminDashboardPage() {
         <div className={styles.card}>
           <div className={styles.cardHeader}>
             <h3 className={styles.cardTitle}>Recent Users</h3>
-            <button className={styles.linkBtn}>View All Users</button>
+            <button className={styles.linkBtn} onClick={() => navigate('/admin/userList')}>View All Users</button>
           </div>
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
@@ -203,14 +261,14 @@ export default function AdminDashboardPage() {
                       </span>
                     </td>
                     <td className={styles.td}>
-                      <span className={styles.dateText}>{formatDate(u.createdAt)}</span>
+                      <span className={styles.dateText}>{formatDate(u.createdAt!)}</span>
                     </td>
                     <td className={styles.td}>
                       <div className={styles.actionsCell}>
-                        <button className={`${styles.actionBtn} ${styles.actionBtnView}`} title="View Details">
+                        <button className={`${styles.actionBtn} ${styles.actionBtnView}`} title="View Details" onClick={() => navigate(`/admin/userDetail/${u.id}`)}>
                           <Eye size={16} />
                         </button>
-                        <button className={`${styles.actionBtn} ${styles.actionBtnSuspend}`} title="Suspend User">
+                        <button className={`${styles.actionBtn} ${styles.actionBtnSuspend}`} title="Suspend User" onClick={() => handleSuspendClick(u.id!)}>
                           <Ban size={16} />
                         </button>
                       </div>
@@ -219,6 +277,13 @@ export default function AdminDashboardPage() {
                 ))}
               </tbody>
             </table>
+            <ConfirmModal
+              isOpen={confirmModal.isOpen}
+              title="Suspend User"
+              message="Are you sure you want to suspend this user?"
+              onConfirm={handleSuspendConfirm}
+              onCancel={() => setConfirmModal({ isOpen: false, userId: null })}
+            />
           </div>
         </div>
       </main>

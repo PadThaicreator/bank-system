@@ -8,7 +8,7 @@ const BASE = "/api/users";
 export const userService = {
     
     
-    getAllUser: () => api.get<UserDTO[]>(`${BASE}/getAllUser`),
+    getAllUser: (page: number = 0, size: number = 10) => api.get<UserDTO[]>(`${BASE}?page=${page}&size=${size}`),
 
     
     login: (data : LoginRequest) => api.post<LoginResponse>(`${BASE}/login` , data),
@@ -16,7 +16,7 @@ export const userService = {
     
     register: (data: UserModel) => api.post<UserModel>(`${BASE}/register` , data),
 
-   
+    editUser: (data: UserDTO) => api.put<UserModel>(`${BASE}` , data),
 }
 
 

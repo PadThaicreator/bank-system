@@ -18,58 +18,14 @@ interface Account {
   status: string;
 }
 
-// --- Mock Data ---
-// const mockAccounts: Account[] = [
-//   {
-//     id: "uuid-1",
-//     accountNumber: "001120240101-0042",
-//     accountType: "SAVINGS",
-//     accountCategory: "SAVINGS",
-//     balance: 15000.00,
-//     status: "ACTIVE"
-//   },
-//   {
-//     id: "uuid-2",
-//     accountNumber: "001120240101-0043",
-//     accountType: "CURRENT",
-//     accountCategory: "CURRENT",
-//     balance: 2450.50,
-//     status: "ACTIVE"
-//   }
-// ];
-
-// const mockTransactions: Transaction[] = [
-//   {
-//     id: "tx-1",
-//     transactionType: "DEPOSIT",
-//     amount: 5000.00,
-//     status: "SUCCESS",
-//     createdAt: "2024-01-15T10:30:00"
-//   },
-//   {
-//     id: "tx-2",
-//     transactionType: "TRANSFER",
-//     amount: 500.00,
-//     status: "SUCCESS",
-//     createdAt: "2024-01-14T14:20:00"
-//   },
-//   {
-//     id: "tx-3",
-//     transactionType: "WITHDRAWAL",
-//     amount: 1000.00,
-//     status: "FAILED",
-//     createdAt: "2024-01-13T09:15:00"
-//   }
-// ];
-
 export default function DashboardPage() {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const page = 0;
-  const size = 2;
-  const { accounts: userAccounts, loading: accountLoading, error: accountError, fetchUserAccount } = useUserAccount(page, size);
-  const { transactions: userTransactions, loading: transactionLoading, error: transactionError, pageInfo, refetch: fetchTransactions } = useGetTransactionByUser(page, size);
+  const accountPage = 0, transactionPage = 0;
+  const accountSize = 2, transactionSize = 10;
+  const { accounts: userAccounts, loading: accountLoading, error: accountError, fetchUserAccount } = useUserAccount(accountPage, accountSize);
+  const { transactions: userTransactions, loading: transactionLoading, error: transactionError, pageInfo, refetch: fetchTransactions } = useGetTransactionByUser(transactionPage, transactionSize);
   const [ accounts, setAccounts ] = useState<Account[]>([]);
   const [ transactions, setTransactions ] = useState<TransactionDTO[]>([]);
   const [ loading, setLoading ] = useState(true);
@@ -106,6 +62,7 @@ export default function DashboardPage() {
             reference_no: tx.reference_no,
             to_account_number: tx.to_account_number,
             from_account_number: tx.from_account_number,
+            created_at: tx.created_at,
     }));
     setTransactions(formattedTransaction);
   }, [userTransactions]);
@@ -123,7 +80,7 @@ export default function DashboardPage() {
     });
   };
 
-  if (loading || accountLoading) {
+  if (loading || accountLoading || transactionLoading) {
     return (
       <div className={styles.loaderContainer}>
         <div className={styles.loader}></div>
@@ -131,11 +88,17 @@ export default function DashboardPage() {
     );
   }
 
-  if (accountError) {
+  if (accountError || transactionError) {
     return (
       <div className={styles.errorContainer}>
-        <p className={styles.errorText}>{accountError}</p>
-        <button onClick={() => fetchUserAccount()}>Retry</button>
+        <p className={styles.errorText}>{accountError ?? transactionError}</p>
+        <button 
+            onClick={() => {
+              if (accountError) return fetchUserAccount()
+              if (transactionError) return fetchTransactions()
+            }}>
+          Retry
+        </button>
       </div>
     );
   }
@@ -216,10 +179,10 @@ export default function DashboardPage() {
                           <th className={styles.th}>Transaction</th>
                           <th className={styles.th}>Date</th>
                           <th style={{textAlign: 'right'}} className={styles.th}>Amount</th>
-                          <th style={{textAlign: 'center'}} className={styles.th}>Status</th>
                         </tr>
                       </thead>
                       <tbody>
+                        {/* {(() => { console.log('transactions data:', transactions); return null; })()} */}
                         {transactions.map(tx => (
                           <tr key={tx.reference_no} className={styles.tr}>
                             <td className={styles.td}>
@@ -237,7 +200,7 @@ export default function DashboardPage() {
                               </div>
                             </td>
                             <td className={styles.td}>
-                              <span className={styles.txDate}>{formatDate(new Date(tx.created_at!))}</span>
+                              <span className={styles.txDate}>{formatDate(tx.created_at!)}</span>
                             </td>
                             <td style={{textAlign: 'right'}} className={styles.td}>
                               <span className={styles.txAmount}>
