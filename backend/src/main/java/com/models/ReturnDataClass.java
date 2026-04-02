@@ -34,6 +34,16 @@ public class ReturnDataClass<T> {
     private boolean first;
     private boolean last;
 
+    public ReturnDataClass(Page<T> page) {
+        this.totalElements = page.getTotalElements();
+        this.totalPages = page.getTotalPages();
+        this.currentPage = page.getNumber();
+        this.pageSize = page.getSize();
+        this.first = page.isFirst();
+        this.last = page.isLast();
+        this.content = page.getContent();
+    }
+
 
     public static <T>   ReturnDataClass<T> fromEntity(Page<T> page) {
         if (page == null) return null;

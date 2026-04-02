@@ -2,9 +2,20 @@ package com.stock;
 
 
 
+import com.models.ReturnDataClass;
+import com.stock.dto.ProfileCompanyResponse;
+import com.stock.dto.StockDTO;
+import com.stock.dto.StockPriceDTO;
+import com.stock.dto.StockPriceResponse;
+import com.transaction.dto.TransactionDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,11 +40,14 @@ public class StockService {
     private String apiKey;
 
 
+    private String finnhubURL = "https://finnhub.io/api/v1";
+
+
     @Transactional
     public void importStock() {
 
 
-        String url = "https://finnhub.io/api/v1/stock/symbol?exchange=US&token=" + apiKey;
+        String url = finnhubURL+"/stock/symbol?exchange=US&token=" + apiKey;
 
         List<Map<String, Object>> response = restTemplate.getForObject(url, List.class);
 
@@ -51,46 +65,77 @@ public class StockService {
                 continue;
             }
 
+
             String symbol = (String) item.get("symbol");
             String name = (String) item.get("description");
 
             StockModel stock = new StockModel();
             stock.setSymbol(symbol);
-            stock.setName(name);
+
             stock.setType("Common Stock");
+
+            String profileUrl = finnhubURL + "/stock/profile2?symbol="+symbol+"&token=" + apiKey;
+
+            ResponseEntity<ProfileCompanyResponse> profileRes = restTemplate.getForEntity(profileUrl, ProfileCompanyResponse.class);
+
+            ProfileCompanyResponse stockResponse = profileRes.getBody();
+            stock.setName(stockResponse.getName());
+            stock.setIndustry(stockResponse.getFinnhubIndustry());
+            stock.setLogo(stockResponse.getLogo());
+            stock.setMarketCap(stockResponse.getMarketCapitalization());
+
 
             batch.add(stock);
             count++;
 
-
-            if (count >= 100) break;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // สำคัญ!
+                throw new RuntimeException(e);
+            }
+            if (count >= 200) break;
         }
 
         stockRepository.saveAll(batch);
 
     }
 
-    private boolean isCommonStock(String name) {
 
-        name = name.toLowerCase();
+    public StockPriceDTO getStockPrice(String symbol){
 
+        String priceUrl = finnhubURL + "/quote?symbol="+symbol+"&token="+apiKey;
+        ResponseEntity<StockPriceResponse> priceRes = restTemplate.getForEntity(priceUrl, StockPriceResponse.class);
 
-        if (name.contains("etf")) return false;
-        if (name.contains("warrant")) return false;
-        if (name.contains("right")) return false;
-        if (name.contains("unit")) return false;
-        if (name.contains("depositary")) return false; // ADR/ADS
+        StockPriceResponse p = priceRes.getBody();
+        StockPriceDTO price = StockPriceDTO.from(p);
 
+        return price;
 
-        return name.contains("common stock")
-                || name.contains("common shares")
-                || name.contains("ordinary share");
     }
 
-    private String cleanName(String name) {
-        return name.replaceAll(" -.*", "").trim();
-    }
+    public ReturnDataClass<StockDTO> getAllStock(int page , int size){
 
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("symbol").ascending());
+        Page<StockModel> rs = stockRepository.findAll(pageable);
+
+//        ReturnDataClass<StockDTO> list = new ReturnDataClass<>();
+//
+//        list.setTotalElements(rs.getTotalElements());
+//        list.setTotalPages(rs.getTotalPages());
+//        list.setCurrentPage(rs.getNumber());
+//        list.setPageSize(rs.getSize());
+//        list.setFirst(rs.isFirst());
+//        list.setLast(rs.isLast());
+//
+//        List<StockDTO> returnList = StockDTO.fromEntityList(rs.getContent());
+//        list.setContent(returnList);
+
+
+        return  new ReturnDataClass<>(rs.map(StockDTO::fromEntity));
+
+    }
 
 
 }

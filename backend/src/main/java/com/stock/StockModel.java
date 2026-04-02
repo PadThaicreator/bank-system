@@ -24,12 +24,13 @@ public class StockModel {
 
     @Id
     private String symbol;
-
-
     private String name;
-
-
+    private String industry;
+    private String logo;
     private  String type;
+
+    @Column(name = "market_cap")
+    private BigDecimal marketCap;
 
 
 }

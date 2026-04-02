@@ -7,7 +7,8 @@ public class ApiPaths {
             "/v3/api-docs/**",
             "/users/login",
             "/users/register",
-            "/users/refreshToken"
+            "/users/refreshToken",
+            "/stocks/price/{symbol}"
     };
 
 
