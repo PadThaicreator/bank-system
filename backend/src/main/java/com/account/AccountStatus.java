@@ -1,6 +1,7 @@
 package com.account;
 
 public enum AccountStatus {
+
     ACTIVE("active", "เปิดใช้งาน"),
     CLOSED("closed", "ยกเลิกการใช้งาน"),
     FROZEN("frozen", "ระงับการใช้งานชั่วคราว"),

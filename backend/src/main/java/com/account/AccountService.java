@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
-    private final RequestService requestService;
 
     // ======= POST METHOD
     // ========================================================================
@@ -34,9 +33,8 @@ public class AccountService {
     @Transactional
     public AccountResponse createAccount(CreateAccountRequest request) {
         String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
-        String userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ? "ADMIN" : "USER";
         UUID userId = UUID.fromString(userIdStr);
+
         Account account = Account.builder()
                 .userId(userId)
                 .accountNumber(generateAccountNumber(request.getAccountType()))
@@ -49,9 +47,8 @@ public class AccountService {
                 .build();
 
         Account saved = accountRepository.save(account);
-        requestService.createRequest(
-                saved.getId(),
-                RequestType.OPEN_ACCOUNT.toString());
+        // requestService.createRequest(saved.getId(),
+        // RequestType.OPEN_ACCOUNT.toString(), RequestType.OPEN_ACCOUNT);
 
         return AccountResponse.from(saved);
     }

@@ -9,34 +9,34 @@ public enum AccountType {
 
         // Savings
         SAVINGS(
-                "savings",
-                "บัญชีออมทรัพย์",
-                "1",
-                AccountCategory.SAVINGS),
+                        "savings",
+                        "บัญชีออมทรัพย์",
+                        "1",
+                        AccountCategory.SAVINGS),
 
         // Current
         CURRENT_PERSONAL(
-                "current_personal",
-                "บัญชีกระแสรายวัน (บุคคลทั่วไป)",
-                "2",
-                AccountCategory.CURRENT),
+                        "current_personal",
+                        "บัญชีกระแสรายวัน (บุคคลทั่วไป)",
+                        "2",
+                        AccountCategory.CURRENT),
         CURRENT_CORPORATE(
-                "current_corporate",
-                "บัญชีกระแสรายวัน (นิติบุคคล)",
-                "3",
-                AccountCategory.CURRENT),
+                        "current_corporate",
+                        "บัญชีกระแสรายวัน (นิติบุคคล)",
+                        "3",
+                        AccountCategory.CURRENT),
 
         // Fixed Deposit
         FIXED_DEPOSIT_PERSONAL(
-                "fixed_deposit_personal",
-                "บัญชีฝากประจำ (บุคคลธรรมดา)",
-                "4",
-                AccountCategory.FIXED_DEPOSIT),
+                        "fixed_deposit_personal",
+                        "บัญชีฝากประจำ (บุคคลธรรมดา)",
+                        "4",
+                        AccountCategory.FIXED_DEPOSIT),
         FIXED_DEPOSIT_CORPORATE(
-                "fixed_deposit_corporate",
-                "บัญชีฝากประจำ (นิติบุคคล/เงื่อนไขพิเศษ)",
-                "5",
-                AccountCategory.FIXED_DEPOSIT);
+                        "fixed_deposit_corporate",
+                        "บัญชีฝากประจำ (นิติบุคคล/เงื่อนไขพิเศษ)",
+                        "5",
+                        AccountCategory.FIXED_DEPOSIT);
 
         private final String value;
         private final String label;

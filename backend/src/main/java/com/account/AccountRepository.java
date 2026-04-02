@@ -11,18 +11,18 @@ import java.util.UUID;
 
 public interface AccountRepository extends JpaRepository<Account, UUID> {
 
-   @Query("""
-     SELECT new com.account.dto.UserAccountResponse(
-      a.id,
-      a.accountNumber,
-      a.balance,
-      a.status,
-      a.accountCategory
-    )
-    FROM Account a
-    WHERE a.userId = :userId and a.status = 'ACTIVE'
-    """)
-    List<UserAccountResponse> findByUserId(UUID userId);
+  @Query("""
+       SELECT new com.account.dto.UserAccountResponse(
+        a.id,
+        a.accountNumber,
+        a.balance,
+        a.status,
+        a.accountCategory
+      )
+      FROM Account a
+      WHERE a.userId = :userId and a.status = 'ACTIVE'
+      """)
+  List<UserAccountResponse> findByUserId(UUID userId);
 
-    Optional<Account> findByAccountNumber(String accountNumber);
+  Optional<Account> findByAccountNumber(String accountNumber);
 }
