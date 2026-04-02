@@ -26,10 +26,8 @@ export default function TransactionPage() {
     amount: 0,
     note: "",
   });
-  const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleTypeChange = (type: TransactionType) => {
-    setValidationError(null);
     setForm(prev => ({
       ...prev,
       type,
@@ -48,20 +46,6 @@ export default function TransactionPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setValidationError(null);
-
-    if (form.amount <= 0) {
-      setValidationError("Amount must be greater than 0");
-      return;
-    }
-
-    if (form.type === "TRANSFER") {
-      const selectedAccount = accounts?.find(acc => acc.id === form.from_account_id);
-      if (selectedAccount && selectedAccount.accountNumber === form.to_account_number) {
-        setValidationError("Cannot transfer to the same account");
-        return;
-      }
-    }
 
     console.log(form);
 
@@ -260,9 +244,9 @@ export default function TransactionPage() {
             </div>
 
             {/* Error Display */}
-            {(txError || validationError) && (
+            {txError && (
               <div className={styles.error}>
-                <p>Error occurred: {validationError || txError}</p>
+                <p>Error occurred: {txError}</p>
               </div>
             )}
 

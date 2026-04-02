@@ -1,0 +1,136 @@
+.container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+}
+@media (min-width: 768px) {
+  .container { flex-direction: row; }
+}
+
+.sidebar {
+  width: 100%;
+  background-color: white;
+  border-right: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 768px) {
+  .sidebar { width: 16rem; }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.brandIcon { height: 2rem; width: 2rem; color: #2563eb; }
+.brandText { font-size: 1.25rem; font-weight: bold; color: #111827; }
+
+.nav { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.navItem { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-weight: 500; color: #4b5563; text-decoration: none; }
+.navItem:hover { background-color: #f9fafb; }
+.navItemActive { background-color: #eff6ff; color: #1d4ed8; }
+.navIcon { height: 1.25rem; width: 1.25rem; }
+
+.userInfo { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; }
+.userName { font-size: 0.875rem; font-weight: 500; color: #111827; margin: 0; }
+.userEmail { font-size: 0.75rem; color: #6b7280; margin: 0; }
+
+.main { flex: 1; padding: 1.5rem; overflow-y: auto; }
+@media (min-width: 768px) { .main { padding: 2rem; } }
+
+.header { margin-bottom: 2rem; }
+.headerTitle { font-size: 1.5rem; font-weight: bold; color: #111827; margin: 0; }
+.headerSub { color: #6b7280; margin-top: 0.25rem; font-size: 1rem; }
+
+.balanceCard {
+  background: linear-gradient(to right, #2563eb, #4338ca);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  color: white;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.balanceLabel { color: #dbeafe; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem; }
+.balanceValue { font-size: 2.25rem; font-weight: bold; margin-bottom: 1rem; }
+.actionButtons { display: flex; gap: 1rem; }
+.btnPrimary {
+  display: flex; align-items: center; gap: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none; border-radius: 0.5rem; padding: 0.5rem 1rem;
+  color: white; font-size: 0.875rem; font-weight: 500;
+  cursor: pointer; transition: background-color 0.2s;
+}
+.btnPrimary:hover { background-color: rgba(255, 255, 255, 0.3); }
+
+.grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+@media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+.colSpan2 { display: flex; flex-direction: column; gap: 2rem; }
+@media (min-width: 1024px) { .colSpan2 { grid-column: span 2 / span 2; } }
+
+.sectionHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.sectionTitle { font-size: 1.125rem; font-weight: bold; color: #111827; margin: 0; }
+.linkBtn { font-size: 0.875rem; color: #2563eb; font-weight: 500; background: none; border: none; cursor: pointer; }
+.linkBtn:hover { text-decoration: underline; }
+
+.emptyState { background-color: white; border-radius: 0.75rem; border: 1px solid #e5e7eb; padding: 2rem; text-align: center; color: #6b7280; }
+
+.accountsGrid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 640px) { .accountsGrid { grid-template-columns: repeat(2, 1fr); } }
+
+.accountCard { background-color: white; border-radius: 0.75rem; border: 1px solid #e5e7eb; padding: 1.25rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); cursor: pointer; transition: box-shadow 0.2s; position: relative; overflow: hidden; }
+.accountCard:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+.accountCardDeco { position: absolute; top: 0; right: 0; width: 4rem; height: 4rem; background-color: #eff6ff; border-radius: 50%; margin-right: -2rem; margin-top: -2rem; }
+.accountCardTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; position: relative; z-index: 10; }
+.accountType { font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
+.accountNumber { color: #111827; font-weight: 500; margin-top: 0.25rem; font-size: 1rem; }
+.badge { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 9999px; font-weight: 500; }
+.badgeActive { background-color: #dcfce7; color: #15803d; }
+.badgeInactive { background-color: #fee2e2; color: #b91c1c; }
+.badgeWarning { background-color: #fef9c3; color: #a16207; }
+
+.accountBalance { font-size: 1.5rem; font-weight: bold; color: #111827; position: relative; z-index: 10; margin: 0; }
+
+.card { background-color: white; border-radius: 0.75rem; border: 1px solid #e5e7eb; overflow: hidden; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+
+.tableWrapper { overflow-x: auto; }
+.table { width: 100%; text-align: left; border-collapse: collapse; min-width: 100%; }
+.th { padding: 0.75rem 1.25rem; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb; white-space: nowrap; }
+.td { padding: 1rem 1.25rem; font-size: 0.875rem; border-bottom: 1px solid #f3f4f6; white-space: nowrap; }
+.tr:hover .td { background-color: #f9fafb; }
+.txCell { display: flex; align-items: center; gap: 0.75rem; }
+.txIconWrapper { padding: 0.5rem; border-radius: 9999px; }
+.txIconDeposit { background-color: #dcfce7; color: #16a34a; }
+.txIconWithdraw { background-color: #fee2e2; color: #dc2626; }
+.txIconTransfer { background-color: #eff6ff; color: #2563eb; }
+.txName { font-weight: 500; color: #111827; text-transform: capitalize; }
+.txDate { color: #6b7280; }
+.txAmount { font-weight: 500; color: #111827; text-align: right; }
+
+.quickActions { display: flex; flex-direction: column; gap: 1.5rem; }
+.actionList { display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem; }
+.actionItem { display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.75rem; background: none; border: 1px solid transparent; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s; justify-content: flex-start; text-align: left; }
+.actionItem:hover { background-color: #f9fafb; border-color: #e5e7eb; }
+.actionIcon { padding: 0.5rem; border-radius: 0.5rem; transition: all 0.2s; }
+.actionIconBlue { background-color: #dbeafe; color: #2563eb; }
+.actionItem:hover .actionIconBlue { background-color: #2563eb; color: white; }
+.actionIconIndigo { background-color: #e0e7ff; color: #4f46e5; }
+.actionItem:hover .actionIconIndigo { background-color: #4f46e5; color: white; }
+.actionIconGray { background-color: #f3f4f6; color: #4b5563; }
+.actionItem:hover .actionIconGray { background-color: #4b5563; color: white; }
+.actionText { font-weight: 500; color: #111827; }
+
+.promoBox { background-color: #eff6ff; border: 1px solid #dbeafe; border-radius: 0.75rem; padding: 1.25rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+.promoTitle { font-weight: 600; color: #1e3a8a; margin-bottom: 0.5rem; margin-top: 0; }
+.promoText { color: #1d4ed8; font-size: 0.875rem; margin-bottom: 1rem; line-height: 1.5; }
+.promoBtn { width: 100%; font-size: 0.875rem; font-weight: 500; background-color: #2563eb; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s; }
+.promoBtn:hover { background-color: #1d4ed8; }
+
+.loaderContainer { display: flex; height: 100vh; align-items: center; justify-content: center; background-color: #f9fafb; }
+.loader { width: 3rem; height: 3rem; border: 2px solid transparent; border-bottom-color: #2563eb; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
+@keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
