@@ -4,6 +4,7 @@ import com.account.Account;
 import com.configuration.common.response.ApiResponse;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
+import com.portfolio.dto.PortfolioDTO;
 import com.request.dto.RequestDTO;
 import com.transaction.TransactionService;
 import com.transaction.dto.TransactionDTO;
@@ -47,11 +48,30 @@ public class RequestController {
 
 
 
+
+
     @PutMapping("/{id}")
     public  ApiResponse<ReturnClass> approveRequest(@PathVariable  UUID id , @RequestParam Boolean isApprove ){
         ReturnClass rs =  requestService.approveRequest(id , isApprove);
 
         return   ApiResponse.success(rs.getMSG(), null);
+    }
+
+    @PostMapping("/portfolio")
+    public ApiResponse<RequestDTO> postPortfolioRequest(@RequestBody PortfolioDTO req , @RequestParam RequestType type) {
+
+
+        ReturnClass rs = requestService.createPortfolioRequest( req , type );
+
+        return ApiResponse.success(rs.getMSG() , null);
+    }
+
+
+    @PutMapping("/portfolio/{id}")
+    public  ApiResponse<ReturnClass> approvePortRequest(@PathVariable  UUID id , @RequestParam Boolean isApprove ){
+        requestService.approvePortRequest(id , isApprove);
+
+        return   ApiResponse.success("SUCCESS", null);
     }
 
 

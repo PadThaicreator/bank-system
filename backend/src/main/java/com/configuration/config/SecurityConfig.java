@@ -39,8 +39,6 @@ public class SecurityConfig {
                 .requestMatchers(PUBLIC_PATHS).permitAll()
                 .requestMatchers(HttpMethod.POST, PUBLIC_POST_PATHS).permitAll()
                 .requestMatchers(ADMIN_PATHS).hasRole("ADMIN")
-
-
                 .anyRequest().authenticated()
                 )
 //                .exceptionHandling(ex -> ex

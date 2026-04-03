@@ -7,34 +7,32 @@ import com.account.dto.ChangeAccountTypeRequest;
 import com.account.dto.ChangeStatusRequest;
 import com.account.dto.CreateAccountRequest;
 import com.models.*;
+import com.portfolio.PortfolioService;
+import com.portfolio.dto.PortfolioDTO;
 import com.request.dto.RequestDTO;
 import com.request.expception.RequestError;
-import com.transaction.TransactionModel;
 import com.transaction.TransactionRepository;
 import com.transaction.TransactionService;
 import com.transaction.dto.TransactionDTO;
 import com.transaction.expception.TransactionError;
 import com.user.UserModel;
 import com.user.UserRepository;
-import com.user.expception.AuthenError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
+
+import static com.utility.UserLoginInfo.checkRole;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +43,7 @@ public class RequestService {
     private  final  TransactionRepository transactionRepository;
     private final TransactionService transactionService;
     private final AccountService accountService ;
-
+    private final PortfolioService portfolioService ;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -128,6 +126,7 @@ public class RequestService {
         return rs;
     }
 
+
     @Transactional
     public  ReturnClass approveRequest(UUID id , boolean isApprove){
         ReturnClass rs = new ReturnClass();
@@ -144,10 +143,6 @@ public class RequestService {
         if(!isApprove){
             rq.setStatus(StatusType.REJECTED);
 
-//            if(rq.getRequestType().equals(RequestType.OPEN_ACCOUNT)){
-//                acc.setStatus(AccountStatus.REJECTED_REQUEST);
-//                accountRepository.save(acc);
-//            }
 
             requestRepository.save(rq);
             rs.setMSG("Rejected Success");
@@ -156,7 +151,6 @@ public class RequestService {
 
         if(rq.getRequestType().equals(RequestType.OPEN_ACCOUNT)){
 
-//            acc.setStatus(AccountStatus.ACTIVE);
             CreateAccountRequest payload;
             payload = objectMapper.readValue(rq.getData(), CreateAccountRequest.class);
 
@@ -175,8 +169,6 @@ public class RequestService {
 
         }else if (rq.getRequestType().equals(RequestType.CHANGE_ACCOUNT_TYPE)){
 
-//            ChangeAccountTypeRequest cat = new ChangeAccountTypeRequest();
-//            cat.setAccountType(rq.getData());
             ChangeAccountTypeRequest payload;
             payload = objectMapper.readValue(rq.getData(), ChangeAccountTypeRequest.class);
             accountService.changeAccountType(acc.getId() , payload);
@@ -184,8 +176,7 @@ public class RequestService {
 
         }else if (rq.getRequestType().equals(RequestType.CHANGE_ACCOUNT_STATUS)){
 
-//            ChangeStatusRequest csr = new ChangeStatusRequest();
-//            csr.setStatus(AccountStatus.valueOf(rq.getData()));
+
 
             ChangeStatusRequest payload;
             payload = objectMapper.readValue(rq.getData(), ChangeStatusRequest.class);
@@ -204,19 +195,73 @@ public class RequestService {
         return rs;
     }
 
+    @Transactional
+    public  ReturnClass createPortfolioRequest(PortfolioDTO portReq , RequestType requestType ){
+        ReturnClass rs = new ReturnClass();
+        RequestModel req = new RequestModel();
 
-    private UserRole checkRole() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth == null || !auth.isAuthenticated()) {
-            throw new RuntimeException("Unauthorized: No authentication found");
+        UserRole role = checkRole();
+        req.setCreatedAt(LocalDateTime.now());
+        if(requestType.equals(RequestType.OPEN_PORTFOLIO)){
+            req.setData(objectMapper.writeValueAsString(portReq));
+            req.setStatus(StatusType.PENDING);
+            req.setRequestType(RequestType.OPEN_PORTFOLIO);
         }
 
-        boolean isAdmin = auth.getAuthorities().stream()
-                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority())||UserRole.ADMIN.name().equals(a.getAuthority()));
+        RequestModel request = requestRepository.save(req);
 
-        return isAdmin ? UserRole.ADMIN : UserRole.CUSTOMER;
+
+
+        if(role.equals(UserRole.ADMIN)){
+            System.out.println("=================ADMIN REQUEST===================");
+            approvePortRequest(request.getId(),true);
+        }
+
+        return rs;
     }
+
+
+    @Transactional
+    public void approvePortRequest(UUID id , boolean isApprove){
+        ReturnClass rs = new ReturnClass();
+        RequestModel rq = requestRepository.findById(id).orElseThrow( () -> new RequestError.RequestInvalid("Request not found") );
+        Account acc = new Account();
+
+        UserModel apv_by = userRepository.findById(UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName())).orElseThrow(() -> new TransactionError.AccountInvalid("Account not found") );
+
+        rq.setApprovedAt(LocalDateTime.now());
+        rq.setApproveBy(apv_by);
+
+        if(!isApprove){
+            rq.setStatus(StatusType.REJECTED);
+
+
+            requestRepository.save(rq);
+            rs.setMSG("Rejected Success");
+            return;
+        }
+
+        if(rq.getRequestType().equals(RequestType.OPEN_PORTFOLIO)){
+
+            PortfolioDTO payload;
+            payload = objectMapper.readValue(rq.getData(), PortfolioDTO.class);
+
+            rs = portfolioService.createPortfolio(payload);
+
+
+
+        }
+
+
+
+        rq.setStatus(StatusType.APPROVED);
+        requestRepository.save(rq);
+
+        rs.setMSG("Approved Success");
+    }
+
+
+
 
 
 

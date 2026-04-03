@@ -13,7 +13,7 @@ public class ApiPaths {
 
 
     public static final String[] PUBLIC_POST_PATHS = {
-
+            "/requests/portfolio",
             "/transactions",
             "/requests",
 
@@ -23,7 +23,7 @@ public class ApiPaths {
             "/users",
             "/transactions",
             "/stocks",
-            "/requests/{id}"
+            "/requests/*"
     };
 
 

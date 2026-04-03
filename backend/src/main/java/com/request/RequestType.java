@@ -4,5 +4,6 @@ public enum RequestType {
 
         OPEN_ACCOUNT,
         CHANGE_ACCOUNT_STATUS,
-        CHANGE_ACCOUNT_TYPE
+        CHANGE_ACCOUNT_TYPE,
+        OPEN_PORTFOLIO
 }

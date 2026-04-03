@@ -22,6 +22,12 @@ public class UserError extends RuntimeException  {
         }
     }
 
+    public static class UserNotFound extends UserError {
+        public UserNotFound() {
+            super("NOT_FOUND", "User Not Found");
+        }
+    }
+
 
 
 }

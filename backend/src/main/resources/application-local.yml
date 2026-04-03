@@ -12,3 +12,9 @@ spring:
 finnhub:
   api:
     key: cvvs11hr01qod00lrpj0cvvs11hr01qod00lrpjg
+
+portfolio:
+  encode:
+    date: 7351
+    runningF : 97
+    runningS : 13

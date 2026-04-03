@@ -40,7 +40,7 @@ public class StockService {
     private String apiKey;
 
 
-    private String finnhubURL = "https://finnhub.io/api/v1";
+    private final String finnhubURL = "https://finnhub.io/api/v1";
 
 
     @Transactional
