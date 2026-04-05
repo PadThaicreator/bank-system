@@ -4,10 +4,12 @@ import com.account.Account;
 import com.configuration.common.response.ApiResponse;
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
+import com.models.StatusType;
 import com.portfolio.dto.PortfolioDTO;
 import com.request.dto.RequestDTO;
 import com.transaction.TransactionService;
 import com.transaction.dto.TransactionDTO;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,6 +57,17 @@ public class RequestController {
         ReturnClass rs =  requestService.approveRequest(id , isApprove);
 
         return   ApiResponse.success(rs.getMSG(), null);
+    }
+
+    @GetMapping("/portfolio")
+    public ApiResponse<ReturnDataClass<RequestDTO>> getPortfolioRequest(@RequestParam(required = false)  StatusType status,
+                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size) {
+
+
+        ReturnDataClass<RequestDTO> rs = requestService.getPortfolioRequest( page , size , status );
+
+        return ApiResponse.success("GET SUCCESS" , rs);
     }
 
     @PostMapping("/portfolio")

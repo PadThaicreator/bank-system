@@ -7,6 +7,8 @@ import com.account.dto.ChangeAccountTypeRequest;
 import com.account.dto.ChangeStatusRequest;
 import com.account.dto.CreateAccountRequest;
 import com.models.*;
+import com.portfolio.PortfolioModel;
+import com.portfolio.PortfolioRepository;
 import com.portfolio.PortfolioService;
 import com.portfolio.dto.PortfolioDTO;
 import com.request.dto.RequestDTO;
@@ -40,10 +42,11 @@ public class RequestService {
     private final RequestRepository requestRepository ;
     private final AccountRepository accountRepository ;
     private final UserRepository userRepository;
-    private  final  TransactionRepository transactionRepository;
     private final TransactionService transactionService;
     private final AccountService accountService ;
     private final PortfolioService portfolioService ;
+    private final PortfolioRepository portfolioRepository ;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -200,6 +203,13 @@ public class RequestService {
         ReturnClass rs = new ReturnClass();
         RequestModel req = new RequestModel();
 
+        long count = portfolioRepository.countPortfolioForUpdate(portReq.getUserId());
+
+        if (count >= 3) {
+            throw new RequestError.RequestInvalid("You have Portfolio at limit");
+        }
+
+
         UserRole role = checkRole();
         req.setCreatedAt(LocalDateTime.now());
         if(requestType.equals(RequestType.OPEN_PORTFOLIO)){
@@ -258,6 +268,32 @@ public class RequestService {
         requestRepository.save(rq);
 
         rs.setMSG("Approved Success");
+    }
+
+
+
+    public ReturnDataClass<RequestDTO> getPortfolioRequest(int page , int size , StatusType status){
+        ReturnDataClass<RequestDTO> rsData = new ReturnDataClass<>();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<RequestModel> rqList = null ;
+
+        if(status == null) {
+            rqList = requestRepository.findByRequestType(RequestType.OPEN_PORTFOLIO , pageable);
+        }else{
+            rqList = requestRepository.findByRequestTypeAndStatus(RequestType.OPEN_PORTFOLIO ,status, pageable);
+        }
+
+        List<RequestDTO> returnList = RequestDTO.fromEntityList(rqList.getContent());
+//        rsData = ReturnDataClass.fromEntity(rqList);
+        rsData.setTotalElements(rqList.getTotalElements());
+        rsData.setTotalPages(rqList.getTotalPages());
+        rsData.setCurrentPage(rqList.getNumber());
+        rsData.setPageSize(rqList.getSize());
+        rsData.setFirst(rqList.isFirst());
+        rsData.setLast(rqList.isLast());
+        rsData.setContent(returnList);
+
+        return rsData;
     }
 
 

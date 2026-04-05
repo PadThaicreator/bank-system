@@ -130,7 +130,7 @@ export default function RequestListPage() {
                       <RequestTypeBadge type={request.requestType ?? ""} />
                     </td>
 
-                    {/* Details — dynamic by type */}
+                    {/* Details*/}
                     <td>
                       {request.requestType === "CHANGE_ACCOUNT_TYPE" && (
                         <div className={styles.detailBlock}>

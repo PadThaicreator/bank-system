@@ -90,7 +90,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(RequestError.class)
-    public ResponseEntity<ApiResponse<Void>> handleRequestError(UserError ex) {
+    public ResponseEntity<ApiResponse<Void>> handleRequestError(RequestError ex) {
 
         return ResponseEntity.badRequest().body(
                 ApiResponse.error(
