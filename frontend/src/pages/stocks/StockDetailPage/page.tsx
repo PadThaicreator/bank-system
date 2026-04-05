@@ -8,7 +8,6 @@ import { ArrowLeft, TrendingUp, TrendingDown } from "lucide-react";
 import type { OrderDTO } from "../../../types/orderType";
 import { accountService } from "../../../services/accountService";
 import { useEffect } from "react";
-import useTransaction from "../../../hooks/transactions/useTransaction";
 
 export default function StockDetailPage() {
   const { symbol } = useParams<{ symbol: string }>();
@@ -26,7 +25,7 @@ export default function StockDetailPage() {
   const [localError, setLocalError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const { postTransaction, loading: txLoading } = useTransaction();
+
 
   useEffect(() => {
     accountService.getUserAccount().then((res: any) => {
@@ -247,16 +246,16 @@ export default function StockDetailPage() {
           <button
             className={styles.buyBtn}
             onClick={() => handleTrade("BUY")}
-            disabled={orderLoading || txLoading || estimatedShares <= 0 || !selectedPortfolioId || !selectedAccountId}
+            disabled={orderLoading || estimatedShares <= 0 || !selectedPortfolioId || !selectedAccountId}
           >
-            {orderLoading || txLoading ? "Processing..." : "Buy"}
+            {orderLoading ? "Processing..." : "Buy"}
           </button>
           <button
             className={styles.sellBtn}
             onClick={() => handleTrade("SELL")}
-            disabled={orderLoading || txLoading || estimatedShares <= 0 || !selectedPortfolioId || !selectedAccountId}
+            disabled={orderLoading || estimatedShares <= 0 || !selectedPortfolioId || !selectedAccountId}
           >
-            {orderLoading || txLoading ? "Processing..." : "Sell"}
+            {orderLoading ? "Processing..." : "Sell"}
           </button>
         </div>
       </div>
