@@ -48,16 +48,14 @@ public class RequestController {
     }
 
 
-
-
-
-
     @PutMapping("/{id}")
     public  ApiResponse<ReturnClass> approveRequest(@PathVariable  UUID id , @RequestParam Boolean isApprove ){
         ReturnClass rs =  requestService.approveRequest(id , isApprove);
 
         return   ApiResponse.success(rs.getMSG(), null);
     }
+
+
 
     @GetMapping("/portfolio")
     public ApiResponse<ReturnDataClass<RequestDTO>> getPortfolioRequest(@RequestParam(required = false)  StatusType status,
@@ -71,10 +69,10 @@ public class RequestController {
     }
 
     @PostMapping("/portfolio")
-    public ApiResponse<RequestDTO> postPortfolioRequest(@RequestBody PortfolioDTO req , @RequestParam RequestType type) {
+    public ApiResponse<RequestDTO> postPortfolioRequest(@RequestBody PortfolioDTO req ) {
 
 
-        ReturnClass rs = requestService.createPortfolioRequest( req , type );
+        ReturnClass rs = requestService.createPortfolioRequest( req , RequestType.OPEN_PORTFOLIO );
 
         return ApiResponse.success(rs.getMSG() , null);
     }

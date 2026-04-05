@@ -32,6 +32,9 @@ public class OrderModel {
     @Column(name = "remaining_amount")
     private BigDecimal remainingAmount;
 
+    @Column(name = "account_id")
+    private UUID accountId;
+
 
     @Enumerated(EnumType.STRING)
     private OrderType type;

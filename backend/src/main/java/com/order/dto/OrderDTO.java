@@ -36,6 +36,7 @@ public class OrderDTO {
 
     private UUID portfolioId;
     private String symbol;
+    private UUID accountId;
 
     private PortfolioModel portfolio;
 
@@ -53,6 +54,7 @@ public class OrderDTO {
                 .type(t.getType())
                 .portfolioId(t.getPortfolio().getId())
                 .symbol(t.getStock().getSymbol())
+                .accountId(t.getAccountId())
                 .portfolio(t.getPortfolio())
                 .stock(t.getStock());
 

@@ -3,6 +3,7 @@ package com.order;
 
 import com.models.ReturnClass;
 import com.models.ReturnDataClass;
+import com.models.TransactionType;
 import com.models.UserRole;
 import com.order.dto.OrderDTO;
 import com.portfolio.PortfolioModel;
@@ -11,6 +12,8 @@ import com.portfolioDetail.PortfolioDetailService;
 import com.stock.StockModel;
 import com.stock.StockRepository;
 import com.stock.dto.StockDTO;
+import com.transaction.TransactionService;
+import com.transaction.dto.TransactionDTO;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +40,7 @@ public class OrderService {
     private final StockRepository stockRepository ;
     private final PortfolioRepository portfolioRepository ;
     private final PortfolioDetailService portfolioDetailService;
-
+    private final TransactionService transactionService;
 
 
     @Transactional
@@ -65,6 +68,7 @@ public class OrderService {
 
       order.setPortfolio(port);
       order.setStock(stock);
+      order.setAccountId(data.getAccountId());
 
       OrderModel saved = orderRepository.save(order);
 
@@ -100,12 +104,30 @@ public class OrderService {
             order.setStatus(OrderStatus.OPEN);
             if(order.getType().equals(OrderType.BUY)){
                 portfolioDetailService.addStock(order);
+                TransactionDTO rq = new TransactionDTO();
+                rq.setNote("Buy Share");
+                rq.setType(TransactionType.WITHDRAW);
+                rq.setAmount(order.getAmount().multiply(order.getPrice()));
+                rq.setFromAccountId(order.getAccountId());
+                transactionService.createTransaction(rq);
             }
             else if (order.getType().equals(OrderType.SELL)){
                 portfolioDetailService.sellStock(order);
+                TransactionDTO rq = new TransactionDTO();
+                rq.setNote("Sell Share");
+                rq.setType(TransactionType.DEPOSIT);
+                rq.setAmount(order.getAmount().multiply(order.getPrice()));
+                rq.setFromAccountId(order.getAccountId());
+                transactionService.createTransaction(rq);
             }
         }else{
             order.setStatus(OrderStatus.CANCELLED);
+            TransactionDTO rq = new TransactionDTO();
+            rq.setNote("Refund Share");
+            rq.setType(TransactionType.DEPOSIT);
+            rq.setAmount(order.getAmount().multiply(order.getPrice()));
+            rq.setFromAccountId(order.getAccountId());
+            transactionService.createTransaction(rq);
         }
 
 

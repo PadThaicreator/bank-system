@@ -28,6 +28,16 @@ export const menuList: MenuItem[] = [
         { label: "History", path: "/transaction/history" , canAccess : ["ADMIN","CUSTOMER"]},
       ],
     },
+    {
+      label: "Stocks",
+      path: "/stocks/list",
+      canAccess : ["ADMIN", "CUSTOMER"],
+    },
+    {
+      label: "Portfolio",
+      path: "/portfolio/my",
+      canAccess: ["ADMIN", "CUSTOMER"],
+    },
      {
       label: "Admin",
       path: "/admin",
@@ -36,6 +46,7 @@ export const menuList: MenuItem[] = [
         { label: "User Management", path: "/admin/userList" , canAccess : ["ADMIN"] },
         { label: "Account Management", path: "/admin/accountList" , canAccess : ["ADMIN"] },
         { label: "Request Management", path: "/admin/requestList" , canAccess : ["ADMIN"] },
+        { label: "Portfolio Requests", path: "/admin/portfolio-requests", canAccess : ["ADMIN"] },
         
        
       ],

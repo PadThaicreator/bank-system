@@ -20,6 +20,10 @@ import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import DashboardPage from "./pages/account/DashboardPage/DashboardPage";
 import ProfilePage from "./pages/profile/ProfilePage/page";
 import RequestListPage from "./pages/admin/RequestMangement/requestListPage";
+import StockListPage from "./pages/stocks/StockListPage/page";
+import StockDetailPage from "./pages/stocks/StockDetailPage/page";
+import MyPortfolioPage from "./pages/portfolio/MyPortfolioPage/page";
+import PortfolioRequestManagementPage from "./pages/admin/PortfolioRequestManagement/page";
 
 function App() {
 
@@ -44,6 +48,7 @@ function App() {
                   <Route path="/admin/userDetail/:userId" element={<UserDetailPage />} />
                   <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
                   <Route path="/admin/requestList" element={<RequestListPage />} />
+                  <Route path="/admin/portfolio-requests" element={<PortfolioRequestManagementPage />} />
                 </Route>
                 
                 <Route path="/account/open" element={<AccountOpeningPage />} />
@@ -54,6 +59,13 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                
+                {/* Stocks */}
+                <Route path="/stocks/list" element={<StockListPage />} />
+                <Route path="/stocks/:symbol" element={<StockDetailPage />} />
+
+                {/* Portfolio */}
+                <Route path="/portfolio/my" element={<MyPortfolioPage />} />
               
               </Route>
             </Route>

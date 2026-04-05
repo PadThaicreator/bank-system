@@ -8,7 +8,8 @@ public class ApiPaths {
             "/users/login",
             "/users/register",
             "/users/refreshToken",
-            "/stocks/price/{symbol}"
+            "/stocks/price/{symbol}",
+            "/stocks"
     };
 
 
@@ -22,7 +23,6 @@ public class ApiPaths {
     public static final String[] ADMIN_PATHS = {
             "/users",
             "/transactions",
-            "/stocks",
             "/requests/*"
     };
 

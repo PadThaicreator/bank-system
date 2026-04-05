@@ -68,6 +68,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/requests/portfolio/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["approvePortRequest"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/orders/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["approveOrder"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/register": {
         parameters: {
             query?: never;
@@ -139,7 +171,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["getAllStock"];
         put?: never;
         post: operations["importStock"];
         delete?: never;
@@ -158,6 +190,38 @@ export interface paths {
         get: operations["getAllRequest"];
         put?: never;
         post: operations["postRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/requests/portfolio": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getPortfolioRequest"];
+        put?: never;
+        post: operations["postPortfolioRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllOrderByUser"];
+        put?: never;
+        post: operations["createOrder"];
         delete?: never;
         options?: never;
         head?: never;
@@ -268,6 +332,38 @@ export interface paths {
             cookie?: never;
         };
         get: operations["getHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/stocks/price/{symbol}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getStockPrice"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/portfolios/user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getPortfolioByUserId"];
         put?: never;
         post?: never;
         delete?: never;
@@ -403,8 +499,8 @@ export interface components {
             userLogin?: components["schemas"]["UserModel"];
             refreshToken?: string;
             error?: boolean;
-            msg?: string;
             code?: string;
+            msg?: string;
             success?: boolean;
             MSG?: string;
             Code?: string;
@@ -491,7 +587,10 @@ export interface components {
         StockModel: {
             symbol?: string;
             name?: string;
+            industry?: string;
+            logo?: string;
             type?: string;
+            marketCap?: number;
         };
         Account: {
             /** Format: uuid */
@@ -533,7 +632,7 @@ export interface components {
             /** Format: uuid */
             id?: string;
             /** @enum {string} */
-            requestType?: "OPEN_ACCOUNT" | "CHANGE_ACCOUNT_STATUS" | "CHANGE_ACCOUNT_TYPE";
+            requestType?: "OPEN_ACCOUNT" | "CHANGE_ACCOUNT_STATUS" | "CHANGE_ACCOUNT_TYPE" | "OPEN_PORTFOLIO";
             /** @enum {string} */
             status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING" | "APPROVED" | "CANCELLED" | "REJECTED";
             data?: string;
@@ -552,6 +651,59 @@ export interface components {
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
+        };
+        PortfolioDTO: {
+            accountNumber?: string;
+            reason?: string;
+            /** @enum {string} */
+            status?: "PENDING" | "ACTIVE" | "CLOSED" | "FROZEN";
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: uuid */
+            userId?: string;
+            /** Format: uuid */
+            portfolioId?: string;
+            user?: components["schemas"]["UserModel"];
+            details?: components["schemas"]["PortfolioDetailModel"][];
+        };
+        PortfolioDetailModel: {
+            /** Format: uuid */
+            id?: string;
+            amount?: number;
+            avg_price?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+            portfolio?: components["schemas"]["PortfolioModel"];
+            stock?: components["schemas"]["StockModel"];
+        };
+        PortfolioModel: {
+            /** Format: uuid */
+            id?: string;
+            accountNumber?: string;
+            reason?: string;
+            /** @enum {string} */
+            status?: "PENDING" | "ACTIVE" | "CLOSED" | "FROZEN";
+            /** Format: date-time */
+            createdAt?: string;
+            user?: components["schemas"]["UserModel"];
+            portfolioDetails?: components["schemas"]["PortfolioDetailModel"][];
+        };
+        OrderDTO: {
+            /** Format: uuid */
+            id?: string;
+            price?: number;
+            amount?: number;
+            /** @enum {string} */
+            type?: "BUY" | "SELL";
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: uuid */
+            portfolioId?: string;
+            symbol?: string;
+            portfolio?: components["schemas"]["PortfolioModel"];
+            stock?: components["schemas"]["StockModel"];
         };
         CreateAccountRequest: {
             /** @enum {string} */
@@ -621,6 +773,57 @@ export interface components {
             first?: boolean;
             last?: boolean;
         };
+        ApiResponseReturnDataClassStockDTO: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ReturnDataClassStockDTO"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        ReturnDataClassStockDTO: {
+            transactionList?: components["schemas"]["TransactionDTO"][];
+            userList?: components["schemas"]["UserDTO"][];
+            accountList?: components["schemas"]["UserAccountResponse"][];
+            content?: components["schemas"]["StockDTO"][];
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            /** Format: int32 */
+            currentPage?: number;
+            /** Format: int32 */
+            pageSize?: number;
+            first?: boolean;
+            last?: boolean;
+        };
+        StockDTO: {
+            symbol?: string;
+            name?: string;
+            industry?: string;
+            logo?: string;
+            type?: string;
+            marketCap?: number;
+        };
+        ApiResponseStockPriceDTO: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["StockPriceDTO"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        StockPriceDTO: {
+            currentPrice?: number;
+            change?: number;
+            percentChange?: number;
+            high?: number;
+            low?: number;
+            open?: number;
+            previousClose?: number;
+            /** Format: int64 */
+            timestamp?: number;
+        };
         ApiResponseReturnDataClassRequestDTO: {
             success?: boolean;
             message?: string;
@@ -634,6 +837,54 @@ export interface components {
             userList?: components["schemas"]["UserDTO"][];
             accountList?: components["schemas"]["UserAccountResponse"][];
             content?: components["schemas"]["RequestDTO"][];
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            /** Format: int32 */
+            currentPage?: number;
+            /** Format: int32 */
+            pageSize?: number;
+            first?: boolean;
+            last?: boolean;
+        };
+        ApiResponseReturnDataClassPortfolioDTO: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ReturnDataClassPortfolioDTO"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        ReturnDataClassPortfolioDTO: {
+            transactionList?: components["schemas"]["TransactionDTO"][];
+            userList?: components["schemas"]["UserDTO"][];
+            accountList?: components["schemas"]["UserAccountResponse"][];
+            content?: components["schemas"]["PortfolioDTO"][];
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            /** Format: int32 */
+            currentPage?: number;
+            /** Format: int32 */
+            pageSize?: number;
+            first?: boolean;
+            last?: boolean;
+        };
+        ApiResponseReturnDataClassOrderDTO: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["ReturnDataClassOrderDTO"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        ReturnDataClassOrderDTO: {
+            transactionList?: components["schemas"]["TransactionDTO"][];
+            userList?: components["schemas"]["UserDTO"][];
+            accountList?: components["schemas"]["UserAccountResponse"][];
+            content?: components["schemas"]["OrderDTO"][];
             /** Format: int64 */
             totalElements?: number;
             /** Format: int32 */
@@ -823,6 +1074,54 @@ export interface operations {
             };
         };
     };
+    approvePortRequest: {
+        parameters: {
+            query: {
+                isApprove: boolean;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnClass"];
+                };
+            };
+        };
+    };
+    approveOrder: {
+        parameters: {
+            query: {
+                isApprove: boolean;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnClass"];
+                };
+            };
+        };
+    };
     Register: {
         parameters: {
             query?: never;
@@ -941,6 +1240,29 @@ export interface operations {
             };
         };
     };
+    getAllStock: {
+        parameters: {
+            query: {
+                page: number;
+                size: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassStockDTO"];
+                };
+            };
+        };
+    };
     importStock: {
         parameters: {
             query?: never;
@@ -1004,6 +1326,101 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseRequestDTO"];
+                };
+            };
+        };
+    };
+    getPortfolioRequest: {
+        parameters: {
+            query?: {
+                status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING" | "APPROVED" | "CANCELLED" | "REJECTED";
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassRequestDTO"];
+                };
+            };
+        };
+    };
+    postPortfolioRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PortfolioDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseRequestDTO"];
+                };
+            };
+        };
+    };
+    getAllOrderByUser: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassOrderDTO"];
+                };
+            };
+        };
+    };
+    createOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderDTO"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnClass"];
                 };
             };
         };
@@ -1194,6 +1611,48 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseReturnDataClassTransactionDTO"];
+                };
+            };
+        };
+    };
+    getStockPrice: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                symbol: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseStockPriceDTO"];
+                };
+            };
+        };
+    };
+    getPortfolioByUserId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassPortfolioDTO"];
                 };
             };
         };

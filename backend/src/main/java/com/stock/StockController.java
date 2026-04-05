@@ -26,14 +26,14 @@ public class StockController {
     }
 
 
-    @PostMapping("")
-    public ApiResponse<List<StockModel>> importStock() {
+        @PostMapping("")
+        public ApiResponse<List<StockModel>> importStock() {
 
 
-        stockService.importStock();
+            stockService.importStock();
 
-        return ApiResponse.success("SUCCESS" , null);
-    }
+            return ApiResponse.success("SUCCESS" , null);
+        }
 
     @GetMapping("")
     public ApiResponse<ReturnDataClass<StockDTO>> getAllStock(@RequestParam int page , @RequestParam int size) {

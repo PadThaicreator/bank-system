@@ -31,6 +31,8 @@ public class PortfolioDTO {
 
     private LocalDateTime createdAt;
     private UUID userId;
+    private UUID portfolioId;
+
 
 
     private UserModel user;
@@ -45,6 +47,7 @@ public class PortfolioDTO {
                 .status(p.getStatus())
                 .createdAt(p.getCreatedAt())
                 .userId(p.getUser().getId())
+                .portfolioId(p.getId())
                 .build();
     }
 

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 import type { TransactionDTO } from "../../types/transactionType"
-import { transactiontService } from "../../services/transactionService"
+import { transactionService } from "../../services/transactionService"
 import { isAxiosError } from "axios"
 
 
@@ -15,7 +15,7 @@ export function useTransaction () {
         setLoading(true)
         setError(null)
         try{
-            const res = await transactiontService.postTransaction(data)
+            const res = await transactionService.postTransaction(data)
             setTransaction(res.data as TransactionDTO)
             console.log(res);
             return res.data;

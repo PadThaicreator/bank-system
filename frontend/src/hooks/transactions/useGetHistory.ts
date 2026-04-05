@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import type { TransactionDTO } from "../../types/transactionType"
-import { transactiontService } from "../../services/transactionService"
+import { transactionService } from "../../services/transactionService"
 
 export function useHistoryTransaction (accountId: string | undefined, page: number = 0, size: number = 10) {
     const [transaction, setTransaction] = useState<TransactionDTO[]>()
@@ -15,7 +15,7 @@ export function useHistoryTransaction (accountId: string | undefined, page: numb
         setError(null)
         try{
             
-            const res = await transactiontService.getTransactionHistory(accountId, pageNum, pageSize)
+            const res = await transactionService.getTransactionHistory(accountId, pageNum, pageSize)
            
             const actualResponse = res as unknown as import("../../types/transactionType").PaginatedTransactionResponse;
             const data = actualResponse.data;

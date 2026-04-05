@@ -5,7 +5,7 @@ import type { PaginatedTransactionResponse, TransactionDTO } from '../types/tran
 const BASE = "/api/transactions";
 
 
-export const transactiontService = {
+export const transactionService = {
 
     // Get /api/accounts
     getAllTransaction: () => api.get<PaginatedTransactionResponse>(`${BASE}`),

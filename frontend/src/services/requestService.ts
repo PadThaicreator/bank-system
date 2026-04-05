@@ -1,4 +1,5 @@
 import api from '../lib/axios'
+import type { PortfolioDTO } from '../types/portfolioType';
 import type { PaginatedRequestResponse } from '../types/requestType';
 
 
@@ -13,9 +14,10 @@ export const requestService = {
 
     approveRequest : (reqId : string , isApprove : boolean) => api.put(`${BASE}/${reqId}?isApprove=${isApprove}`),
 
-    // getTransactionHistory: (fromAccId: string, page: number = 0, size: number = 10) => api.get<PaginatedTransactionResponse>(`${BASE}/history/${fromAccId}`, { params: { page, size } }),
+    getAllPortfolioRequest: (page: number = 0, size: number = 10 ,  status : string) => api.get<PaginatedRequestResponse>(`${BASE}/portfolio`, { params: { page, size , status } }),
 
-    // postTransaction: (data: TransactionDTO) => api.post<TransactionDTO>(BASE, data),
+    approvePortfolioRequest : (reqId : string , isApprove : boolean) => api.put(`${BASE}/portfolio/${reqId}?isApprove=${isApprove}`),
 
-   
+    postPortfolioRequest : (portfolio : PortfolioDTO) => api.post(`${BASE}/portfolio`, portfolio ),
+
 }

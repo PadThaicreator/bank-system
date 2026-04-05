@@ -92,9 +92,10 @@ public class PortfolioService {
         List<PortfolioDTO> rsList = PortfolioDTO.fromEntityList(list);
 
 
-        List<PortfolioDetailModel> detailList = new ArrayList<>();
+        List<PortfolioDetailModel> detailList ;
         for(int i = 0 ; i < list.size() ; i++){
 
+            detailList = new ArrayList<>();
             for(int j = 0 ; j < list.get(i).getPortfolioDetails().size() ; j++){
                 PortfolioDetailModel detail = new PortfolioDetailModel();
 
