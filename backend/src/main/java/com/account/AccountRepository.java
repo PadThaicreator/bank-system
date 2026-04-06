@@ -12,4 +12,8 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
   Page<Account> findByUserId(UUID userId, Pageable pageable);
 
   Optional<Account> findByAccountNumber(String accountNumber);
+
+  long countByStatus(AccountStatus status);
+
+  java.util.List<Account> findAllByUserId(UUID userId);
 }
