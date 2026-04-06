@@ -205,7 +205,7 @@ public class RequestService {
 
         long count = portfolioRepository.countPortfolioForUpdate(portReq.getUserId());
 
-        if (count >= 3) {
+        if (count >= 300) {
             throw new RequestError.RequestInvalid("You have Portfolio at limit");
         }
 

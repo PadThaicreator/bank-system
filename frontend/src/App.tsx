@@ -23,7 +23,9 @@ import RequestListPage from "./pages/admin/RequestMangement/requestListPage";
 import StockListPage from "./pages/stocks/StockListPage/page";
 import StockDetailPage from "./pages/stocks/StockDetailPage/page";
 import MyPortfolioPage from "./pages/portfolio/MyPortfolioPage/page";
+import PortfolioDetailPage from "./pages/portfolio/PortfolioDetailPage/page";
 import PortfolioRequestManagementPage from "./pages/admin/PortfolioRequestManagement/page";
+import OrderManagementPage from "./pages/admin/OrderManagement/page";
 
 function App() {
 
@@ -49,6 +51,7 @@ function App() {
                   <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
                   <Route path="/admin/requestList" element={<RequestListPage />} />
                   <Route path="/admin/portfolio-requests" element={<PortfolioRequestManagementPage />} />
+                  <Route path="/admin/orders" element={<OrderManagementPage />} />
                 </Route>
                 
                 <Route path="/account/open" element={<AccountOpeningPage />} />
@@ -66,6 +69,7 @@ function App() {
 
                 {/* Portfolio */}
                 <Route path="/portfolio/my" element={<MyPortfolioPage />} />
+                <Route path="/portfolio/:id" element={<PortfolioDetailPage />} />
               
               </Route>
             </Route>

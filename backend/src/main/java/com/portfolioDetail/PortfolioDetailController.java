@@ -1,28 +1,35 @@
 package com.portfolioDetail;
 
+import com.configuration.common.response.ApiResponse;
 import com.portfolio.PortfolioService;
+import com.portfolioDetail.dto.PortfolioDetailDTO;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/portfolios/detai")
+@RequestMapping("/portfolios/detail")
 public class PortfolioDetailController {
 
 
-    private final PortfolioService portfolioService ;
+    private final PortfolioDetailService portfolioDetailService ;
 
-    public PortfolioDetailController(PortfolioService portfolioService) {
-        this.portfolioService = portfolioService;
+    public PortfolioDetailController(PortfolioDetailService portfolioDetailService) {
+        this.portfolioDetailService = portfolioDetailService;
+
     }
 
 
-//    @GetMapping("")
-//    public  ApiResponse<ReturnDataClass<RequestDTO>> getAllRequest(@RequestParam int page, @RequestParam int size){
-//        ReturnDataClass<RequestDTO> rs =  requestService.getAllRequest(page , size);
-//
-//        return   ApiResponse.success("Get Success", rs);
-//    }
+    @GetMapping("")
+    public  ApiResponse<PortfolioDetailDTO> getAllRequest(@RequestParam UUID portfolioId, @RequestParam String symbol){
+        PortfolioDetailDTO rs =  portfolioDetailService.getStockInPortfolio(portfolioId , symbol);
+
+        return   ApiResponse.success("Get Detail Success", rs);
+    }
 
 
 //    @PostMapping("")

@@ -219,7 +219,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["getAllOrderByUser"];
+        get: operations["getAllOrder"];
         put?: never;
         post: operations["createOrder"];
         delete?: never;
@@ -372,6 +372,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/portfolios/detail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllRequest_1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/orders/user": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllOrderByUserId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/accounts/{accountid}/getAccountBalance": {
         parameters: {
             query?: never;
@@ -499,8 +531,8 @@ export interface components {
             userLogin?: components["schemas"]["UserModel"];
             refreshToken?: string;
             error?: boolean;
-            code?: string;
             msg?: string;
+            code?: string;
             success?: boolean;
             MSG?: string;
             Code?: string;
@@ -699,9 +731,13 @@ export interface components {
             type?: "BUY" | "SELL";
             /** Format: date-time */
             createdAt?: string;
+            /** @enum {string} */
+            status?: "OPEN" | "MATCHED" | "PARTIAL" | "CANCELLED" | "PENDING";
             /** Format: uuid */
             portfolioId?: string;
             symbol?: string;
+            /** Format: uuid */
+            accountId?: string;
             portfolio?: components["schemas"]["PortfolioModel"];
             stock?: components["schemas"]["StockModel"];
         };
@@ -871,6 +907,21 @@ export interface components {
             pageSize?: number;
             first?: boolean;
             last?: boolean;
+        };
+        ApiResponsePortfolioDetailDTO: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["PortfolioDetailDTO"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        PortfolioDetailDTO: {
+            amount?: number;
+            avg_price?: number;
+            /** Format: uuid */
+            portfolioId?: string;
+            symbol?: string;
         };
         ApiResponseReturnDataClassOrderDTO: {
             success?: boolean;
@@ -1378,7 +1429,7 @@ export interface operations {
             };
         };
     };
-    getAllOrderByUser: {
+    getAllOrder: {
         parameters: {
             query?: {
                 page?: number;
@@ -1653,6 +1704,52 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseReturnDataClassPortfolioDTO"];
+                };
+            };
+        };
+    };
+    getAllRequest_1: {
+        parameters: {
+            query: {
+                portfolioId: string;
+                symbol: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePortfolioDetailDTO"];
+                };
+            };
+        };
+    };
+    getAllOrderByUserId: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseReturnDataClassOrderDTO"];
                 };
             };
         };

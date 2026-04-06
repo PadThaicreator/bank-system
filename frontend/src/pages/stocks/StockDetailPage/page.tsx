@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import useStockPrice from "../../../hooks/stocks/useStockPrice";
 import useMyPortfolio from "../../../hooks/stocks/useMyPortfolio";
 import useCreateOrder from "../../../hooks/stocks/useCreateOrder";
+import useGetStockInPortfolio from "../../../hooks/stocks/useGetStockInPortfolio";
 import styles from "./StockDetailPage.module.css";
 import { ArrowLeft, TrendingUp, TrendingDown } from "lucide-react";
 import type { OrderDTO } from "../../../types/orderType";
@@ -12,14 +13,16 @@ import { useEffect } from "react";
 export default function StockDetailPage() {
   const { symbol } = useParams<{ symbol: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { priceData, loading: priceLoading, error: priceError } = useStockPrice(symbol || "");
   const { portfolios, loading: portLoading } = useMyPortfolio();
   const { createOrder, loading: orderLoading } = useCreateOrder();
+  const { stockDetail, fetchStockInPortfolio } = useGetStockInPortfolio();
 
   const [inputValue, setInputValue] = useState<string>("0");
   const [inputMode, setInputMode] = useState<"SHARES" | "BAHT">("SHARES");
-  const [selectedPortfolioId, setSelectedPortfolioId] = useState<string>("");
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState<string>(location.state?.portfolioId || "");
   const [selectedAccountId, setSelectedAccountId] = useState<string>("");
   const [accounts, setAccounts] = useState<any[]>([]);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -39,6 +42,12 @@ export default function StockDetailPage() {
       }
     }).catch(err => console.error("Failed to load accounts", err));
   }, []);
+
+  useEffect(() => {
+    if (selectedPortfolioId && symbol) {
+      fetchStockInPortfolio(symbol, selectedPortfolioId);
+    }
+  }, [selectedPortfolioId, symbol, fetchStockInPortfolio]);
 
   const isPositive = useMemo(() => (priceData?.change ?? 0) >= 0, [priceData]);
 
@@ -81,6 +90,12 @@ export default function StockDetailPage() {
       const selectedAccount = accounts.find(a => (a.id === selectedAccountId || a.accountNumber === selectedAccountId));
       if (selectedAccount && selectedAccount.balance < estimatedTotal) {
         setLocalError("Insufficient balance in the selected account.");
+        return;
+      }
+    } else if (type === "SELL") {
+      const ownedAmount = stockDetail?.amount || 0;
+      if (estimatedShares > ownedAmount) {
+        setLocalError(`You cannot sell more than you own in this portfolio. (Owned: ${ownedAmount} shares)`);
         return;
       }
     }
@@ -177,6 +192,11 @@ export default function StockDetailPage() {
           {portfolios.length > 0 && activePortfolios.length === 0 && (
             <small style={{ color: 'red' }}>You don't have any ACTIVE portfolios.</small>
           )}
+          {selectedPortfolioId && (
+            <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#555' }}>
+              Currently Owned: <strong>{stockDetail?.amount || 0} shares</strong>
+            </div>
+          )}
         </div>
 
         <div className={styles.formGroup}>
@@ -201,6 +221,18 @@ export default function StockDetailPage() {
         <div className={styles.formGroup}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '0.5rem' }}>
             <label style={{ margin: 0 }}>Input Amount</label>
+            {(stockDetail?.amount || 0) > 0 && (
+              <button 
+                type="button"
+                style={{ background: 'none', border: 'none', color: '#007bff', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 600, padding: 0 }}
+                onClick={() => {
+                  setInputMode("SHARES");
+                  setInputValue((stockDetail?.amount || 0).toString());
+                }}
+              >
+                Sell All ({stockDetail?.amount || 0} Shares)
+              </button>
+            )}
           </div>
           <div className={styles.modeToggle}>
             <button

@@ -47,6 +47,7 @@ export const menuList: MenuItem[] = [
         { label: "Account Management", path: "/admin/accountList" , canAccess : ["ADMIN"] },
         { label: "Request Management", path: "/admin/requestList" , canAccess : ["ADMIN"] },
         { label: "Portfolio Requests", path: "/admin/portfolio-requests", canAccess : ["ADMIN"] },
+        { label: "Order Management", path: "/admin/orders", canAccess : ["ADMIN"] },
         
        
       ],

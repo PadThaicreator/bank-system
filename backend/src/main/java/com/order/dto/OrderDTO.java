@@ -32,6 +32,7 @@ public class OrderDTO {
 
 
     private LocalDateTime createdAt;
+    private OrderStatus status;
 
 
     private UUID portfolioId;
@@ -55,7 +56,8 @@ public class OrderDTO {
                 .portfolioId(t.getPortfolio().getId())
                 .symbol(t.getStock().getSymbol())
                 .accountId(t.getAccountId())
-                .portfolio(t.getPortfolio())
+                .portfolioId(t.getPortfolio().getId())
+                .status(t.getStatus())
                 .stock(t.getStock());
 
 

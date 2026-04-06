@@ -23,12 +23,21 @@ public class OrderController {
 
 
     @GetMapping("")
-    public  ApiResponse<ReturnDataClass<OrderDTO>> getAllOrderByUser( @RequestParam(defaultValue = "0") int page,
+    public  ApiResponse<ReturnDataClass<OrderDTO>> getAllOrder( @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size){
+        ReturnDataClass<OrderDTO> rs =  orderService.getAllOrder(page , size);
+
+        return   ApiResponse.success("Get Success", rs);
+    }
+
+    @GetMapping("/user")
+    public  ApiResponse<ReturnDataClass<OrderDTO>> getAllOrderByUserId( @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "10") int size){
         ReturnDataClass<OrderDTO> rs =  orderService.getAllOrderByUser(page , size);
 
         return   ApiResponse.success("Get Success", rs);
     }
+
 
 
     @PostMapping("")

@@ -1,5 +1,5 @@
 import api from '../lib/axios'
-import type { PortfolioDTO } from '../types/portfolioType';
+import type { PortfolioDTO, PortfolioDetailDTO } from '../types/portfolioType';
 
 
 
@@ -11,6 +11,11 @@ export const portfolioService = {
     
     getMyPortfolio : () => api.get<PortfolioDTO[]>(`${BASE}/user`),
 
-    
+    getStockInPortfolio : (symbol: string , portfolioId: string) => api.get<PortfolioDetailDTO>(`${BASE}/detail` , {
+        params: {
+            symbol,
+            portfolioId
+        }
+    }),
 
 }

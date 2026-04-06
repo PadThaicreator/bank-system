@@ -53,7 +53,9 @@ public class OrderService {
       order.setRemainingAmount(data.getAmount());
       order.setStatus(OrderStatus.PENDING);
       order.setType(data.getType());
-      order.setPrice(data.getPrice());
+      
+      // Round to 2 decimal places to ensure exact refund matching
+      order.setPrice(data.getPrice().setScale(2, java.math.RoundingMode.HALF_UP));
 
       UserRole role = checkRole();
 //      if(role.equals(UserRole.ADMIN)){
@@ -69,6 +71,14 @@ public class OrderService {
       order.setPortfolio(port);
       order.setStock(stock);
       order.setAccountId(data.getAccountId());
+      if(order.getType().equals(OrderType.BUY)){
+          TransactionDTO rq = new TransactionDTO();
+          rq.setNote("Buy"+ order.getAmount() +" Shares of " + order.getStock().getSymbol() );
+          rq.setType(TransactionType.WITHDRAW);
+          rq.setAmount(order.getAmount().multiply(order.getPrice()));
+          rq.setFromAccountId(order.getAccountId());
+          transactionService.createTransaction(rq);
+      }
 
       OrderModel saved = orderRepository.save(order);
 
@@ -83,6 +93,16 @@ public class OrderService {
 
       return rs;
     }
+
+    public ReturnDataClass<OrderDTO> getAllOrder (int page  , int size){
+        ReturnDataClass<OrderDTO> rs = new ReturnDataClass<>();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<OrderModel> list = orderRepository.findAll( pageable);
+
+        return  new ReturnDataClass<>(list.map(OrderDTO::fromEntity));
+    }
+
 
     public ReturnDataClass<OrderDTO> getAllOrderByUser (int page  , int size){
         ReturnDataClass<OrderDTO> rs = new ReturnDataClass<>();
@@ -104,12 +124,12 @@ public class OrderService {
             order.setStatus(OrderStatus.OPEN);
             if(order.getType().equals(OrderType.BUY)){
                 portfolioDetailService.addStock(order);
-                TransactionDTO rq = new TransactionDTO();
-                rq.setNote("Buy Share");
-                rq.setType(TransactionType.WITHDRAW);
-                rq.setAmount(order.getAmount().multiply(order.getPrice()));
-                rq.setFromAccountId(order.getAccountId());
-                transactionService.createTransaction(rq);
+//                TransactionDTO rq = new TransactionDTO();
+//                rq.setNote("Buy Share");
+//                rq.setType(TransactionType.WITHDRAW);
+//                rq.setAmount(order.getAmount().multiply(order.getPrice()));
+//                rq.setFromAccountId(order.getAccountId());
+//                transactionService.createTransaction(rq);
             }
             else if (order.getType().equals(OrderType.SELL)){
                 portfolioDetailService.sellStock(order);

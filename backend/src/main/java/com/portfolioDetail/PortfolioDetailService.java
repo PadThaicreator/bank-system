@@ -7,6 +7,7 @@ import com.portfolio.PortfolioModel;
 import com.portfolio.PortfolioRepository;
 import com.portfolio.PortfolioStatus;
 import com.portfolio.dto.PortfolioDTO;
+import com.portfolioDetail.dto.PortfolioDetailDTO;
 import com.stock.StockRepository;
 import com.user.UserModel;
 import com.user.UserRepository;
@@ -106,6 +107,25 @@ public class PortfolioDetailService {
         portfolioDetailRepository.save(detail);
 
 
+
+
+        return rs;
+    }
+
+
+    public  PortfolioDetailDTO getStockInPortfolio(UUID portfolioId , String symbol){
+
+
+
+        PortfolioDetailModel detail = portfolioDetailRepository.findByPortfolio_IdAndStock_Symbol(portfolioId,symbol);
+
+
+        PortfolioDetailDTO rs = new PortfolioDetailDTO();
+
+        rs.setPortfolioId(detail.getPortfolio().getId());
+        rs.setAmount(detail.getAmount());
+        rs.setAvg_price(detail.getAvg_price());
+        rs.setSymbol(detail.getStock().getSymbol());
 
 
         return rs;
