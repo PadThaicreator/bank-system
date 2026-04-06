@@ -9,9 +9,6 @@ export interface AdminDashboardStats {
     suspendedAccounts: number;
 }
 
-interface GraphQLResponse<T> {
-    data: T;
-}
 
 export interface AccountData {
     id: string;
@@ -59,18 +56,12 @@ export const adminService = {
             const variables = { date };
             const response = await api.post('/api/graphql', { query, variables });
             
-            // The response itself is the data body. For GraphQL, data lives inside response.data
-            // depending on how the interceptor handles non-ApiResponse wrappers. 
-            // If the interceptor unwrap is just `response.data`, then graphQL's payload is here:
-            const graphqlResponse = response as unknown as GraphQLResponse<{ adminDashboardStats: AdminDashboardStats }>;
-            
-            if ((graphqlResponse as any).errors) {
-                throw new Error((graphqlResponse as any).errors[0]?.message || 'GraphQL Error');
+            const graphqlResponse = response as any;
+            if (graphqlResponse.errors && graphqlResponse.errors.length > 0) {
+                throw new Error(graphqlResponse.errors[0]?.message || 'GraphQL Error');
             }
             
-            // Sometimes the axios unwrap in the interceptor might leave it as response.data.data
-            const actualData = (graphqlResponse as any).data || graphqlResponse;
-            return response.data.data.adminDashboardStats;
+            return graphqlResponse.data.adminDashboardStats;
         } catch (error) {
             console.error("GraphQL Error fetching Dashboard Stats:", error);
             throw error;
@@ -108,7 +99,13 @@ export const adminService = {
         try {
             const variables = { searchTerm, page, size };
             const response = await api.post('/api/graphql', { query, variables });
-            return response.data.data.usersTree;
+            
+            const graphqlResponse = response as any;
+            if (graphqlResponse.errors && graphqlResponse.errors.length > 0) {
+                throw new Error(graphqlResponse.errors[0]?.message || 'GraphQL Error');
+            }
+            
+            return graphqlResponse.data.usersTree;
         } catch (error) {
             console.error("GraphQL Error fetching Users Tree:", error);
             throw error;
