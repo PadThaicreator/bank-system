@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Users, CreditCard, Activity, AlertTriangle, Search, Eye, Ban } from 'lucide-react';
 import styles from './AdminDashboardPage.module.css';
 import useGetAllUser from '../../../hooks/users/useGetAllUser';
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ConfirmModal from '../../../components/common/ConfirmModal';
 import useEditUser from '../../../hooks/users/useEditUser';
 
@@ -15,15 +15,6 @@ interface AdminStats {
   suspendedAccounts: number;
 }
 
-interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  role: string;
-  status: string;
-  createdAt: string;
-}
-
 // --- Mock Data ---
 const mockStats: AdminStats = {
   totalUsers: 150,
@@ -34,38 +25,13 @@ const mockStats: AdminStats = {
   suspendedAccounts: 3
 };
 
-const mockRecentUsers: User[] = [
-  {
-    id: "uuid-u1",
-    fullName: "สมชาย ใจดี",
-    email: "somchai@example.com",
-    role: "CUSTOMER",
-    status: "ACTIVE",
-    createdAt: "2024-01-15T10:30:00"
-  },
-  {
-    id: "uuid-u2",
-    fullName: "สมหญิง รักไทย",
-    email: "somying@example.com",
-    role: "CUSTOMER",
-    status: "ACTIVE",
-    createdAt: "2024-01-14T09:15:00"
-  },
-  {
-    id: "uuid-u3",
-    fullName: "แฮกเกอร์ ตัวแสบ",
-    email: "hacker@example.com",
-    role: "CUSTOMER",
-    status: "SUSPENDED",
-    createdAt: "2024-01-13T16:45:00"
-  }
-];
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
-  const userSize = 10, userPage = 0;
-  const { users, loading: userLoading, error: userError, getAllUser } = useGetAllUser();
-  const { loading: editLoading, error: editError, editUser } = useEditUser();
+  const userSize = 10;
+  const [userPage, setUserPage] = useState(0);
+  const { users, loading: userLoading, error: userError, pageInfo, getAllUser } = useGetAllUser();
+  const { loading: editLoading, editUser } = useEditUser();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const isLoading = userLoading || editLoading;
   const [confirmModal, setConfirmModal] = useState<{
@@ -80,11 +46,16 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     // Simulate API call
-    setTimeout(() => {
-      setStats(mockStats);
-      getAllUser(userPage, userSize);
-    }, 800);
-  }, [getAllUser]);
+    if (!stats) {
+      setTimeout(() => {
+        setStats(mockStats);
+      }, 800);
+    }
+  }, [stats]);
+
+  useEffect(() => {
+    getAllUser(userPage, userSize);
+  }, [getAllUser, userPage, userSize]);
 
   if (errors.length > 0) {
     return (
@@ -277,6 +248,32 @@ export default function AdminDashboardPage() {
                 ))}
               </tbody>
             </table>
+
+            {/* Pagination Controls */}
+            {pageInfo && pageInfo.totalPages > 0 && (
+              <div className={styles.paginationWrapper}>
+                <div className={styles.paginationInfo}>
+                  Showing page {pageInfo.currentPage + 1} of {pageInfo.totalPages}
+                </div>
+                <div className={styles.paginationControls}>
+                  <button 
+                    className={styles.pageBtn} 
+                    disabled={userPage === 0} 
+                    onClick={() => setUserPage(p => Math.max(0, p - 1))}
+                  >
+                    Previous
+                  </button>
+                  <button 
+                    className={styles.pageBtn} 
+                    disabled={userPage >= pageInfo.totalPages - 1} 
+                    onClick={() => setUserPage(p => p + 1)}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+
             <ConfirmModal
               isOpen={confirmModal.isOpen}
               title="Suspend User"

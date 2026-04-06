@@ -25,7 +25,7 @@ export default function DashboardPage() {
   const accountPage = 0, transactionPage = 0;
   const accountSize = 2, transactionSize = 10;
   const { accounts: userAccounts, loading: accountLoading, error: accountError, fetchUserAccount } = useUserAccount(accountPage, accountSize);
-  const { transactions: userTransactions, loading: transactionLoading, error: transactionError, pageInfo, refetch: fetchTransactions } = useGetTransactionByUser(transactionPage, transactionSize);
+  const { transactions: userTransactions, loading: transactionLoading, error: transactionError, refetch: fetchTransactions } = useGetTransactionByUser(transactionPage, transactionSize);
   const [ accounts, setAccounts ] = useState<Account[]>([]);
   const [ transactions, setTransactions ] = useState<TransactionDTO[]>([]);
   const [ loading, setLoading ] = useState(true);
@@ -117,12 +117,12 @@ export default function DashboardPage() {
           <p className={styles.balanceLabel}>Total Balance</p>
           <h2 className={styles.balanceValue}>{formatCurrency(totalBalance)}</h2>
           <div className={styles.actionButtons}>
-            <button className={styles.btnPrimary}>
+            {/* <button className={styles.btnPrimary}>
               <Plus size={16} /> Add Money
             </button>
             <button className={styles.btnPrimary}>
               <ArrowRightLeft size={16} /> Transfer
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -252,13 +252,13 @@ export default function DashboardPage() {
               </button>
             </div>
             
-            <div className={styles.promoBox}>
+            {/* <div className={styles.promoBox}>
               <h4 className={styles.promoTitle}>Haloooooooooooooooo</h4>
               <p className={styles.promoText}>Halooooooooooooooooooooooooooooooooooooooooooo.</p>
               <button className={styles.promoBtn}>
                 Halooooo
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </main>
