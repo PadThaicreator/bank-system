@@ -57,9 +57,9 @@ api.interceptors.response.use(
         }
 
         // ส่ง error message จาก ApiResponse ถ้ามี
-        error.message = error.response?.data?.message || error.message || "Something went wrong";
+        const message = error.response?.data?.message || error.message || "Something went wrong";
 
-        return Promise.reject(error);
+        return Promise.reject(new Error(message));
     }
 )
 

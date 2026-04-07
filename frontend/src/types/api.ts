@@ -244,39 +244,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/accounts/{accountId}/deleteAcount": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["deleteAccount"];
-        trace?: never;
-    };
-    "/accounts/{accountId}/changeBalance": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["changeBalance"];
-        trace?: never;
-    };
-    "/accounts/{accountId}/changeAccountType": {
+    "/accounts/{accountId}/type": {
         parameters: {
             query?: never;
             header?: never;
@@ -292,7 +260,7 @@ export interface paths {
         patch: operations["changeAccountType"];
         trace?: never;
     };
-    "/accounts/{accountId}/changeAccountStatus": {
+    "/accounts/{accountId}/status": {
         parameters: {
             query?: never;
             header?: never;
@@ -306,6 +274,22 @@ export interface paths {
         options?: never;
         head?: never;
         patch: operations["changeAccountStatus"];
+        trace?: never;
+    };
+    "/accounts/{accountId}/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["changeBalance"];
         trace?: never;
     };
     "/transactions/user": {
@@ -405,6 +389,7 @@ export interface paths {
         trace?: never;
     };
     "/accounts/{accountid}/getAccountBalance": {
+    "/accounts/{accountid}/balance": {
         parameters: {
             query?: never;
             header?: never;
@@ -430,7 +415,7 @@ export interface paths {
         get: operations["getAccountFromId"];
         put?: never;
         post?: never;
-        delete?: never;
+        delete: operations["deleteAccount"];
         options?: never;
         head?: never;
         patch?: never;
@@ -444,6 +429,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["getAccountByUserId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/admin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllAccountAdmin"];
         put?: never;
         post?: never;
         delete?: never;
@@ -665,6 +666,7 @@ export interface components {
             id?: string;
             /** @enum {string} */
             requestType?: "OPEN_ACCOUNT" | "CHANGE_ACCOUNT_STATUS" | "CHANGE_ACCOUNT_TYPE" | "OPEN_PORTFOLIO";
+            requestType?: "OPEN_ACCOUNT" | "CHANGE_ACCOUNT_STATUS" | "CHANGE_ACCOUNT_TYPE";
             /** @enum {string} */
             status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING" | "APPROVED" | "CANCELLED" | "REJECTED";
             data?: string;
@@ -969,13 +971,92 @@ export interface components {
             /** Format: date-time */
             updatedAt?: string;
         };
-        ApiResponseListUserAccountResponse: {
+        ApiResponsePageAccountResponse: {
             success?: boolean;
             message?: string;
-            data?: components["schemas"]["UserAccountResponse"][];
+            data?: components["schemas"]["PageAccountResponse"];
             error?: components["schemas"]["ErrorDetail"];
             /** Format: date-time */
             timestamp?: string;
+        };
+        PageAccountResponse: {
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            first?: boolean;
+            last?: boolean;
+            /** Format: int32 */
+            size?: number;
+            content?: components["schemas"]["AccountResponse"][];
+            /** Format: int32 */
+            number?: number;
+            sort?: components["schemas"]["SortObject"];
+            /** Format: int32 */
+            numberOfElements?: number;
+            pageable?: components["schemas"]["PageableObject"];
+            empty?: boolean;
+        };
+        PageableObject: {
+            /** Format: int64 */
+            offset?: number;
+            sort?: components["schemas"]["SortObject"];
+            paged?: boolean;
+            /** Format: int32 */
+            pageNumber?: number;
+            /** Format: int32 */
+            pageSize?: number;
+            unpaged?: boolean;
+        };
+        SortObject: {
+            empty?: boolean;
+            sorted?: boolean;
+            unsorted?: boolean;
+        };
+        AccountWithOwnerResponse: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            userId?: string;
+            accountNumber?: string;
+            /** @enum {string} */
+            accountType?: "SAVINGS" | "CURRENT_PERSONAL" | "CURRENT_CORPORATE" | "FIXED_DEPOSIT_PERSONAL" | "FIXED_DEPOSIT_CORPORATE";
+            /** @enum {string} */
+            accountCategory?: "SAVINGS" | "CURRENT" | "FIXED_DEPOSIT";
+            balance?: number;
+            /** @enum {string} */
+            status?: "ACTIVE" | "CLOSED" | "FROZEN" | "PENDING" | "REJECTED_REQUEST";
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+            ownerName?: string;
+        };
+        ApiResponsePageAccountWithOwnerResponse: {
+            success?: boolean;
+            message?: string;
+            data?: components["schemas"]["PageAccountWithOwnerResponse"];
+            error?: components["schemas"]["ErrorDetail"];
+            /** Format: date-time */
+            timestamp?: string;
+        };
+        PageAccountWithOwnerResponse: {
+            /** Format: int64 */
+            totalElements?: number;
+            /** Format: int32 */
+            totalPages?: number;
+            first?: boolean;
+            last?: boolean;
+            /** Format: int32 */
+            size?: number;
+            content?: components["schemas"]["AccountWithOwnerResponse"][];
+            /** Format: int32 */
+            number?: number;
+            sort?: components["schemas"]["SortObject"];
+            /** Format: int32 */
+            numberOfElements?: number;
+            pageable?: components["schemas"]["PageableObject"];
+            empty?: boolean;
         };
     };
     responses: never;
@@ -1472,6 +1553,7 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseReturnClass"];
+                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
                 };
             };
         };
@@ -1508,52 +1590,6 @@ export interface operations {
                 "application/json": components["schemas"]["CreateAccountRequest"];
             };
         };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
-                };
-            };
-        };
-    };
-    deleteAccount: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                accountId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
-                };
-            };
-        };
-    };
-    changeBalance: {
-        parameters: {
-            query: {
-                amount: number;
-            };
-            header?: never;
-            path: {
-                accountId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
@@ -1606,6 +1642,30 @@ export interface operations {
                 "application/json": components["schemas"]["ChangeStatusRequest"];
             };
         };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
+                };
+            };
+        };
+    };
+    changeBalance: {
+        parameters: {
+            query: {
+                amount: number;
+            };
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description OK */
             200: {
@@ -1798,9 +1858,34 @@ export interface operations {
             };
         };
     };
-    getAccountByUserId: {
+    deleteAccount: {
         parameters: {
             query?: never;
+            header?: never;
+            path: {
+                accountId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponseAccountResponse"];
+                };
+            };
+        };
+    };
+    getAccountByUserId: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1813,7 +1898,30 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ApiResponseListUserAccountResponse"];
+                    "*/*": components["schemas"]["ApiResponsePageAccountResponse"];
+                };
+            };
+        };
+    };
+    getAllAccountAdmin: {
+        parameters: {
+            query?: {
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiResponsePageAccountWithOwnerResponse"];
                 };
             };
         };

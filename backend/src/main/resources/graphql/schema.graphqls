@@ -1,0 +1,40 @@
+type Query {
+    adminDashboardStats(date: String!): AdminDashboardStats!
+    usersTree(searchTerm: String, page: Int!, size: Int!): UserPage!
+}
+
+type AdminDashboardStats {
+    totalUsers: Int!
+    totalAccounts: Int!
+    todayTransactionCount: Int!
+    todayTransactionValue: Float!
+    suspendedUsers: Int!
+    suspendedAccounts: Int!
+}
+
+type UserPage {
+    content: [User!]!
+    totalElements: Int!
+    totalPages: Int!
+    size: Int!
+    number: Int!
+}
+
+type User {
+    id: ID!
+    fullName: String!
+    email: String!
+    role: String!
+    status: String!
+    createdAt: String!
+    accounts: [Account!]!
+}
+
+type Account {
+    id: ID!
+    accountNumber: String!
+    accountType: String!
+    accountCategory: String!
+    balance: Float!
+    status: String!
+}

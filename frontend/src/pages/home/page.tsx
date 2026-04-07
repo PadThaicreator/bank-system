@@ -108,7 +108,7 @@ function HomePage() {
                 <>
                   <div 
                     className={styles.actionCard}
-                    onClick={() => navigate("/admin/userList")}
+                    onClick={() => navigate("/admin/user")}
                   >
                     <div className={`${styles.iconWrapper} ${styles.iconAdminUsers}`}>
                       <UserCog className={styles.actionIcon} />

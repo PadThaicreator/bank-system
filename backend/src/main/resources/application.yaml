@@ -4,8 +4,25 @@ spring:
   profiles:
     active: local
 
+  datasource:
+    #    url: jdbc:postgresql://localhost:5432/banking_db
+    #    username: postgres
+    #    password: postgres
+
+    #    LOCALHOST
+    url: jdbc:postgresql://dpg-d6s2h7kr85hc73emgo6g-a.singapore-postgres.render.com:5432/banksystem_a6cy
+    username: banksystem_a6cy_user
+    password: DnpQblWLecfZ1RMl3oTI38ZJBCb4wn4P
+
+  #    Production
+  #     url: ${DATABASE_URL}
+  #     username: ${DATABASE_USERNAME}
+  #     password: ${DATABASE_PASSWORD}
+  #     driver-class-name: org.postgresql.Driver
   jackson:
     default-property-inclusion: non_null
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+    time-zone: Asia/Bangkok
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,7 +32,7 @@ spring:
     show-sql: true
 
   flyway:
-    enabled: false   # ปิดไว้ก่อน เปิดทีหลังเมื่อพร้อม
+    enabled: false # ปิดไว้ก่อน เปิดทีหลังเมื่อพร้อม
 
   # # Flyway — จัดการ DB migration (แนะนำใช้แทน ddl-auto: create)
   # flyway:
@@ -27,12 +44,12 @@ spring:
 server:
   port: 8080
   servlet:
-    context-path: /api          # ทุก endpoint จะขึ้นต้นด้วย /api
+    context-path: /api # ทุก endpoint จะขึ้นต้นด้วย /api
 
 # JWT
 jwt:
   secret: ${JWT_SECRET:dev-secret-key-for-local-only-min-32-chars}
-  access-token-expiry: 604800000   # 15 นาที
+  access-token-expiry: 604800000 # 15 นาที
   refresh-token-expiry: 604800000 # 7 วัน
 
 # App custom config
@@ -42,7 +59,7 @@ app:
 # Logging
 logging:
   level:
-    com.banking: DEBUG           # log แค่ package ของเรา
+    com.banking: DEBUG # log แค่ package ของเรา
     org.springframework.security: INFO
   pattern:
     console: "%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
@@ -53,6 +70,3 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     path: /v3/api-docs
-
-
-

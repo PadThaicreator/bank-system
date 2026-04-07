@@ -42,4 +42,10 @@ public interface TransactionRepository extends JpaRepository<TransactionModel, U
     """, nativeQuery = true)
     Page<TransactionModel> findUserTransactionsNative(@Param("userId") UUID userId , Pageable pageable);
 
+    @Query(value = "SELECT COUNT(*) FROM transactions WHERE TO_CHAR(created_at, 'YYYY-MM-DD') = :date", nativeQuery = true)
+    long countTransactionsByDate(@Param("date") String date);
+
+    @Query(value = "SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE TO_CHAR(created_at, 'YYYY-MM-DD') = :date", nativeQuery = true)
+    double sumTransactionAmountByDate(@Param("date") String date);
+
 }

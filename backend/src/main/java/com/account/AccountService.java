@@ -4,11 +4,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import com.user.UserRepository;
+import com.user.UserModel;
+import com.account.dto.AccountWithOwnerResponse;
 
-import com.account.dto.UserAccountResponse;
-
-import com.request.RequestService;
-import com.request.RequestType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
-
-
+    private final UserRepository userRepository;
 
     // ======= POST METHOD
     // ========================================================================
@@ -48,11 +48,7 @@ public class AccountService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-
-
         Account saved = accountRepository.save(account);
-//        requestService.createRequest(saved.getId(), RequestType.OPEN_ACCOUNT.toString(), RequestType.OPEN_ACCOUNT);
-
         return AccountResponse.from(saved);
     }
 
@@ -81,8 +77,6 @@ public class AccountService {
 
         account.setStatus(request.getStatus());
         Account saved = accountRepository.save(account);
-//        requestService.createRequest(saved.getId(), request.getStatus().toString(), RequestType.CHANGE_ACCOUNT_STATUS);
-
         return AccountResponse.from(saved);
     }
 
@@ -94,10 +88,11 @@ public class AccountService {
 
         verifyOwnershipOrAdmin(account.getUserId());
 
-        account.setAccountType(AccountType.valueOf(request.getAccountType()));
+        account.setAccountType(
+                AccountType.valueOf(request.getAccountType()));
+        account.setAccountCategory(
+                AccountType.valueOf(request.getAccountType()).getCategory());
         Account saved = accountRepository.save(account);
-//        requestService.createRequest(saved.getId(), request.getAccountType(), RequestType.CHANGE_ACCOUNT_TYPE);
-
         return AccountResponse.from(saved);
     }
 
@@ -136,6 +131,16 @@ public class AccountService {
                 .toList();
     }
 
+    public Page<AccountWithOwnerResponse> getAllAccountsWithOwner(Pageable pageable) {
+        verifyAdmin();
+
+        Page<Account> accounts = accountRepository.findAll(pageable);
+        return accounts.map(account -> {
+            UserModel user = userRepository.findById(account.getUserId()).orElse(null);
+            return AccountWithOwnerResponse.from(account, user);
+        });
+    }
+
     public AccountResponse getAccountById(UUID accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
@@ -144,17 +149,14 @@ public class AccountService {
         return AccountResponse.from(account);
     }
 
-    public List<UserAccountResponse> getAccountByUserId() {
+    public Page<AccountResponse> getAccountByUserId(Pageable pageable) {
         String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
         UUID userId = UUID.fromString(userIdStr);
 
-        List<UserAccountResponse> accounts = accountRepository.findByUserId(userId);
+        Page<Account> accounts = accountRepository.findByUserId(userId, pageable);
 
-        return accounts;
+        return accounts.map(AccountResponse::from);
     }
-
-
-
 
     // ======= PRIVATE HELPER
     // ======================================================================
@@ -200,8 +202,4 @@ public class AccountService {
 
         return branchNumber + typeNumber + random;
     }
-
-
-
-
 }

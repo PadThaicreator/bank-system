@@ -3,6 +3,10 @@ import { useSelector } from 'react-redux';
 import { ArrowRightLeft, Plus, History, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import type { RootState } from '../../../redux/store';
 import styles from './DashboardPage.module.css';
+import useUserAccount from '../../../hooks/useUserAccount';
+import { useNavigate } from 'react-router-dom';
+import useGetTransactionByUser from '../../../hooks/transactions/useGetTransactionByUser';
+import type { TransactionDTO } from '../../../types/transactionType';
 
 // --- Types ---
 interface Account {
@@ -14,73 +18,54 @@ interface Account {
   status: string;
 }
 
-interface Transaction {
-  id: string;
-  transactionType: string;
-  amount: number;
-  status: string;
-  createdAt: string;
-}
-
-// --- Mock Data ---
-const mockAccounts: Account[] = [
-  {
-    id: "uuid-1",
-    accountNumber: "001120240101-0042",
-    accountType: "SAVINGS",
-    accountCategory: "SAVINGS",
-    balance: 15000.00,
-    status: "ACTIVE"
-  },
-  {
-    id: "uuid-2",
-    accountNumber: "001120240101-0043",
-    accountType: "CURRENT",
-    accountCategory: "CURRENT",
-    balance: 2450.50,
-    status: "ACTIVE"
-  }
-];
-
-const mockTransactions: Transaction[] = [
-  {
-    id: "tx-1",
-    transactionType: "DEPOSIT",
-    amount: 5000.00,
-    status: "SUCCESS",
-    createdAt: "2024-01-15T10:30:00"
-  },
-  {
-    id: "tx-2",
-    transactionType: "TRANSFER",
-    amount: 500.00,
-    status: "SUCCESS",
-    createdAt: "2024-01-14T14:20:00"
-  },
-  {
-    id: "tx-3",
-    transactionType: "WITHDRAWAL",
-    amount: 1000.00,
-    status: "FAILED",
-    createdAt: "2024-01-13T09:15:00"
-  }
-];
-
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const accountPage = 0, transactionPage = 0;
+  const accountSize = 2, transactionSize = 10;
+  const { accounts: userAccounts, loading: accountLoading, error: accountError, fetchUserAccount } = useUserAccount(accountPage, accountSize);
+  const { transactions: userTransactions, loading: transactionLoading, error: transactionError, refetch: fetchTransactions } = useGetTransactionByUser(transactionPage, transactionSize);
+  const [ accounts, setAccounts ] = useState<Account[]>([]);
+  const [ transactions, setTransactions ] = useState<TransactionDTO[]>([]);
+  const [ loading, setLoading ] = useState(true);
 
   useEffect(() => {
     // Simulate API call
     setTimeout(() => {
-      setAccounts(mockAccounts);
-      setTransactions(mockTransactions);
+      if (!userAccounts) return;
+      
+      // ต้องทำการ Mapping เพื่อแปลงจาก AccountResponse (ที่บางฟิลด์เป็น optional)
+      // ให้กลายเป็น Account (ที่ทุกฟิลด์ required)
+      const formattedAccounts: Account[] = userAccounts.map(acc => ({
+        id: acc.id || '',
+        accountNumber: acc.accountNumber || '',
+        accountType: (acc as any).accountType || acc.accountCategory || '',
+        accountCategory: acc.accountCategory || '',
+        balance: acc.balance || 0,
+        status: acc.status || ''
+      }));
+      setAccounts(formattedAccounts);
       setLoading(false);
     }, 800);
-  }, []);
+  }, [userAccounts]);
+
+  useEffect(() => {
+    if (!userTransactions) return;
+
+    const formattedTransaction: TransactionDTO[] = userTransactions.map(tx => ({
+            to_account_id: tx.to_account_id,
+            from_account_id: tx.from_account_id,
+            type: tx.type,
+            amount: tx.amount,
+            note: tx.note,
+            reference_no: tx.reference_no,
+            to_account_number: tx.to_account_number,
+            from_account_number: tx.from_account_number,
+            created_at: tx.created_at,
+    }));
+    setTransactions(formattedTransaction);
+  }, [userTransactions]);
 
   const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0);
 
@@ -95,10 +80,25 @@ export default function DashboardPage() {
     });
   };
 
-  if (loading) {
+  if (loading || accountLoading || transactionLoading) {
     return (
       <div className={styles.loaderContainer}>
         <div className={styles.loader}></div>
+      </div>
+    );
+  }
+
+  if (accountError || transactionError) {
+    return (
+      <div className={styles.errorContainer}>
+        <p className={styles.errorText}>{accountError ?? transactionError}</p>
+        <button 
+            onClick={() => {
+              if (accountError) return fetchUserAccount()
+              if (transactionError) return fetchTransactions()
+            }}>
+          Retry
+        </button>
       </div>
     );
   }
@@ -117,12 +117,12 @@ export default function DashboardPage() {
           <p className={styles.balanceLabel}>Total Balance</p>
           <h2 className={styles.balanceValue}>{formatCurrency(totalBalance)}</h2>
           <div className={styles.actionButtons}>
-            <button className={styles.btnPrimary}>
+            {/* <button className={styles.btnPrimary}>
               <Plus size={16} /> Add Money
             </button>
             <button className={styles.btnPrimary}>
               <ArrowRightLeft size={16} /> Transfer
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -133,7 +133,7 @@ export default function DashboardPage() {
             <div>
               <div className={styles.sectionHeader}>
                 <h3 className={styles.sectionTitle}>Your Accounts</h3>
-                <button className={styles.linkBtn}>View All</button>
+                <button className={styles.linkBtn} onClick={() => navigate("/account/list")}>View All</button>
               </div>
               
               {accounts.length === 0 ? (
@@ -165,7 +165,7 @@ export default function DashboardPage() {
             <div>
               <div className={styles.sectionHeader}>
                 <h3 className={styles.sectionTitle}>Recent Transactions</h3>
-                <button className={styles.linkBtn}>Full History</button>
+                <button className={styles.linkBtn} onClick={() => navigate("/transaction/history")}>Full History</button>
               </div>
               
               <div className={styles.card}>
@@ -179,35 +179,35 @@ export default function DashboardPage() {
                           <th className={styles.th}>Transaction</th>
                           <th className={styles.th}>Date</th>
                           <th style={{textAlign: 'right'}} className={styles.th}>Amount</th>
-                          <th style={{textAlign: 'center'}} className={styles.th}>Status</th>
                         </tr>
                       </thead>
                       <tbody>
+                        {/* {(() => { console.log('transactions data:', transactions); return null; })()} */}
                         {transactions.map(tx => (
-                          <tr key={tx.id} className={styles.tr}>
+                          <tr key={tx.reference_no} className={styles.tr}>
                             <td className={styles.td}>
                               <div className={styles.txCell}>
                                 <div className={`${styles.txIconWrapper} ${
-                                  tx.transactionType === 'DEPOSIT' ? styles.txIconDeposit :
-                                  tx.transactionType === 'WITHDRAWAL' ? styles.txIconWithdraw :
+                                  tx.type === 'DEPOSIT' ? styles.txIconDeposit :
+                                  tx.type === 'WITHDRAW' ? styles.txIconWithdraw :
                                   styles.txIconTransfer
                                 }`}>
-                                  {tx.transactionType === 'DEPOSIT' && <ArrowDownLeft size={16} />}
-                                  {tx.transactionType === 'WITHDRAWAL' && <ArrowUpRight size={16} />}
-                                  {tx.transactionType === 'TRANSFER' && <ArrowRightLeft size={16} />}
+                                  {tx.type === 'DEPOSIT' && <ArrowDownLeft size={16} />}
+                                  {tx.type === 'WITHDRAW' && <ArrowUpRight size={16} />}
+                                  {tx.type === 'TRANSFER' && <ArrowRightLeft size={16} />}
                                 </div>
-                                <span className={styles.txName}>{tx.transactionType.toLowerCase()}</span>
+                                <span className={styles.txName}>{tx.type!.toLowerCase()}</span>
                               </div>
                             </td>
                             <td className={styles.td}>
-                              <span className={styles.txDate}>{formatDate(tx.createdAt)}</span>
+                              <span className={styles.txDate}>{formatDate(tx.created_at!)}</span>
                             </td>
                             <td style={{textAlign: 'right'}} className={styles.td}>
                               <span className={styles.txAmount}>
-                                {tx.transactionType === 'DEPOSIT' ? '+' : '-'}{formatCurrency(tx.amount)}
+                                {tx.type === 'DEPOSIT' ? '+' : '-'}{formatCurrency(tx.amount!)}
                               </span>
                             </td>
-                            <td style={{textAlign: 'center'}} className={styles.td}>
+                            {/* <td style={{textAlign: 'center'}} className={styles.td}>
                               <span className={`${styles.badge} ${
                                 tx.status === 'SUCCESS' ? styles.badgeActive :
                                 tx.status === 'FAILED' ? styles.badgeInactive :
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                               }`}>
                                 {tx.status}
                               </span>
-                            </td>
+                            </td> */}
                           </tr>
                         ))}
                       </tbody>
@@ -230,21 +230,21 @@ export default function DashboardPage() {
           <div className={styles.quickActions}>
             <h3 className={styles.sectionTitle}>Quick Actions</h3>
             <div className={`${styles.card} ${styles.actionList}`}>
-              <button className={styles.actionItem}>
+              <button className={styles.actionItem} onClick={() => navigate(`/transaction/service`)}>
                 <div className={`${styles.actionIcon} ${styles.actionIconBlue}`}>
                   <ArrowRightLeft size={20} />
                 </div>
                 <span className={styles.actionText}>Transfer Money</span>
               </button>
               
-              <button className={styles.actionItem}>
+              <button className={styles.actionItem} onClick={() => navigate(`/account/open`)}>
                 <div className={`${styles.actionIcon} ${styles.actionIconIndigo}`}>
                   <Plus size={20} />
                 </div>
                 <span className={styles.actionText}>Open New Account</span>
               </button>
               
-              <button className={styles.actionItem}>
+              <button className={styles.actionItem} onClick={() => navigate(`/transaction/history`)}>
                 <div className={`${styles.actionIcon} ${styles.actionIconGray}`}>
                   <History size={20} />
                 </div>
@@ -252,13 +252,13 @@ export default function DashboardPage() {
               </button>
             </div>
             
-            <div className={styles.promoBox}>
-              <h4 className={styles.promoTitle}>Need a higher limit?</h4>
-              <p className={styles.promoText}>Upgrade your account tier to enjoy higher transfer limits and premium features.</p>
+            {/* <div className={styles.promoBox}>
+              <h4 className={styles.promoTitle}>Haloooooooooooooooo</h4>
+              <p className={styles.promoText}>Halooooooooooooooooooooooooooooooooooooooooooo.</p>
               <button className={styles.promoBtn}>
-                Explore Tiers
+                Halooooo
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </main>
