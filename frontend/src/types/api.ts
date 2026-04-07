@@ -388,7 +388,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/accounts/{accountid}/getAccountBalance": {
     "/accounts/{accountid}/balance": {
         parameters: {
             query?: never;
@@ -666,7 +665,6 @@ export interface components {
             id?: string;
             /** @enum {string} */
             requestType?: "OPEN_ACCOUNT" | "CHANGE_ACCOUNT_STATUS" | "CHANGE_ACCOUNT_TYPE" | "OPEN_PORTFOLIO";
-            requestType?: "OPEN_ACCOUNT" | "CHANGE_ACCOUNT_STATUS" | "CHANGE_ACCOUNT_TYPE";
             /** @enum {string} */
             status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "PENDING" | "APPROVED" | "CANCELLED" | "REJECTED";
             data?: string;
@@ -980,10 +978,10 @@ export interface components {
             timestamp?: string;
         };
         PageAccountResponse: {
-            /** Format: int64 */
-            totalElements?: number;
             /** Format: int32 */
             totalPages?: number;
+            /** Format: int64 */
+            totalElements?: number;
             first?: boolean;
             last?: boolean;
             /** Format: int32 */
@@ -1041,10 +1039,10 @@ export interface components {
             timestamp?: string;
         };
         PageAccountWithOwnerResponse: {
-            /** Format: int64 */
-            totalElements?: number;
             /** Format: int32 */
             totalPages?: number;
+            /** Format: int64 */
+            totalElements?: number;
             first?: boolean;
             last?: boolean;
             /** Format: int32 */
@@ -1070,8 +1068,8 @@ export interface operations {
     getAllUser: {
         parameters: {
             query: {
-                size: number;
                 page: number;
+                size: number;
             };
             header?: never;
             path?: never;
@@ -1553,7 +1551,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ApiResponseReturnClass"];
-                    "*/*": components["schemas"]["ApiResponseListTransactionDTO"];
                 };
             };
         };
