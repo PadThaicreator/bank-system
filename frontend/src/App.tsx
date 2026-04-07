@@ -15,8 +15,7 @@ import AdminRoute from "./middleware/AdminRoute";
 import AccountOpeningPage from "./pages/account/AccountOpeningPage/AccountOpeningPage";
 import UserListPage from "./pages/admin/UserMangement/userListPage";
 import UserDetailPage from "./pages/admin/UserMangement/userDetailPage";
-// import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
-import DashboardPage from "./pages/account/DashboardPage/DashboardPage";
+
 import ProfilePage from "./pages/profile/ProfilePage/page";
 import RequestListPage from "./pages/admin/RequestMangement/requestListPage";
 import StockListPage from "./pages/stocks/StockListPage/page";
@@ -30,13 +29,13 @@ import HomeRedirect from "./components/layout/HomeRedirect";
 
 function App() {
 
-  
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
           <Routes>
-            
+
             {/* Authen Route */}
             <Route element={<AuthenComponent />}>
               <Route path="/login" element={<LoginPage />} />
@@ -53,7 +52,7 @@ function App() {
                   <Route path="/admin/portfolio-requests" element={<PortfolioRequestManagementPage />} />
                   <Route path="/admin/orders" element={<OrderManagementPage />} />
                 </Route>
-                
+
                 <Route path="/account/open" element={<AccountOpeningPage />} />
                 <Route path="/account/list" element={<AccountListPage />} />
                 <Route path="/account/detail/:accountId" element={<AccountDetailPage />} />
@@ -63,7 +62,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/dashboard" element={<DashboardPage />} /> */}
                 <Route path="/profile" element={<ProfilePage />} />
-                
+
                 {/* Stocks */}
                 <Route path="/stocks/list" element={<StockListPage />} />
                 <Route path="/stocks/:symbol" element={<StockDetailPage />} />
@@ -71,7 +70,7 @@ function App() {
                 {/* Portfolio */}
                 <Route path="/portfolio/my" element={<MyPortfolioPage />} />
                 <Route path="/portfolio/:id" element={<PortfolioDetailPage />} />
-              
+
                 <Route path="/home" element={<HomeRedirect />} />
                 <Route path="/" element={<HomeRedirect />} />
               </Route>
