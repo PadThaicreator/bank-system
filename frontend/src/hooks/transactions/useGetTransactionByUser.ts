@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import type { TransactionDTO } from "../../types/transactionType"
-import { transactiontService } from "../../services/transactionService"
+import { transactionService } from "../../services/transactionService"
 
 interface PageInfo {
     number: number
@@ -22,7 +22,7 @@ export function useGetTransactionByUser(initialPage: number = 0, initialSize: nu
         setLoading(true)
         setError(null)
         try {
-            const res = await transactiontService.getTransactionByUser(page, size)
+            const res = await transactionService.getTransactionByUser(page, size)
             const body = (res.data as any)?.data ?? res.data
 
             // backend returns ReturnDataClass ที่มี transactionList + pagination fields

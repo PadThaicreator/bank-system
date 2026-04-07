@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @PutMapping("")
-    public ApiResponse<UserModel> editUser(@Valid @RequestBody UserDTO data) {
+    public ApiResponse<UserModel> editUser( @RequestBody UserDTO data) {
 
         ReturnClass rs = userService.editUser(data);
 

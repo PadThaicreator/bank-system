@@ -46,7 +46,7 @@ public class UserModel {
         @Size(min = 6, message = "Password must be at least 6 characters")
         private String passwordHash;
 
-        @Column(nullable=false)
+        @Column(nullable=true)
         private String phone;
 
         @Enumerated(EnumType.STRING)
