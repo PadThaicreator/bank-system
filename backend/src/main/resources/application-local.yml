@@ -1,8 +1,11 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-d6s2h7kr85hc73emgo6g-a.singapore-postgres.render.com:5432/banksystem_a6cy
-    username: banksystem_a6cy_user
-    password: DnpQblWLecfZ1RMl3oTI38ZJBCb4wn4P
+#    url: jdbc:postgresql://dpg-d6s2h7kr85hc73emgo6g-a.singapore-postgres.render.com:5432/banksystem_a6cy
+#    username: banksystem_a6cy_user
+#    password: DnpQblWLecfZ1RMl3oTI38ZJBCb4wn4P
+    url: jdbc:postgresql://dpg-d7g4c4pj2pic738606b0-a.virginia-postgres.render.com:5432/bank_system_akhs
+    username: bank_system_akhs_user
+    password: Gpb7ts2U270fIFdfMOlUVamD6ix3zIga
 
   jwt:
     secret: dev-secret-key-for-local-only-min-32-chars
