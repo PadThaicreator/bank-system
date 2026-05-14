@@ -62,9 +62,6 @@ dependencies {
 
     // GraphQL
     implementation 'org.springframework.boot:spring-boot-starter-graphql'
-
-    // Dotenv
-    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 }
 
 tasks.named('test') {
